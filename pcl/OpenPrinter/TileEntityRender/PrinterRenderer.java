@@ -1,0 +1,90 @@
+package pcl.OpenPrinter.TileEntityRender;
+
+import org.lwjgl.opengl.GL11;
+
+import pcl.OpenPrinter.OpenPrinter;
+import pcl.OpenPrinter.Blocks.BlockPrinter;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.model.AdvancedModelLoader;
+import net.minecraftforge.client.model.IModelCustom;
+import net.minecraftforge.client.model.obj.WavefrontObject;
+
+public class PrinterRenderer implements ISimpleBlockRenderingHandler
+{
+	private WavefrontObject model;
+	private WavefrontObject model90;
+	private WavefrontObject model180;
+	private WavefrontObject model270;
+	private final ResourceLocation texture = new ResourceLocation("openprinter", "textures/obj/OpenPrinter.png");
+	
+	public PrinterRenderer()
+	{
+		model = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer.obj");
+		model90 = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer-90.obj");
+		model180 = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer-180.obj");
+		model270 = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer-270.obj");
+		assert null != model : "WTF, model didn't load!";
+	}
+
+	@Override
+	public void renderInventoryBlock(Block block, int metadata, int modelID,
+			RenderBlocks renderer)
+	{
+		GL11.glPushMatrix();
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(texture);
+		model.renderAll();
+		GL11.glPopMatrix();
+	}
+
+	@Override
+	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
+	{
+		// Stop the tesselator from messing with us
+		int previousGLRenderType = Tessellator.instance.drawMode;
+		Tessellator.instance.setColorOpaque_F(1, 1, 1);
+		Tessellator.instance.draw();
+		
+		// Draw our stuff
+		GL11.glPushMatrix();
+		GL11.glTranslated((double)x, (double)y, (double)z);
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(texture);
+		int dir = world.getBlockMetadata(x, y, z);
+		if (dir == 1)
+			model90.renderAll();
+		else if (dir == 0)
+			model180.renderAll();
+		else if (dir == 2)
+			model.renderAll();
+		else if (dir == 3)
+			model270.renderAll();
+		GL11.glPopMatrix();
+
+		// Restart the Tesselator
+		FMLClientHandler.instance().getClient().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+		Tessellator.instance.startDrawing(previousGLRenderType);
+		return true;
+	}
+
+	@Override
+	public boolean shouldRender3DInInventory()
+	{
+		return true;
+	}
+
+	@Override
+	public int getRenderId()
+	{
+		return BlockPrinter.block.getRenderType();
+	}
+
+}
