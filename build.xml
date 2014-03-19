@@ -1,5 +1,5 @@
-<!-- nallar's BuildCraft ant build script edited for OpenBlocks and again edited for SGCraft-Reloaded-->
-<project name="OpenPrinter" default="main">
+<!-- nallar's BuildCraft ant build script edited for OpenBlocks and again edited for PowerConverters-Michiyo-->
+<project name="LanteaCraft" default="main">
         <property environment="env" />
         <!-- Properties -->
 
@@ -12,20 +12,20 @@
         <property name="jar.dir"           value="${build.dir}/dist" />
         <property name="forge.dir"         value="${build.dir}/forge" />
         <property name="mcp.dir"           value="${forge.dir}/mcp" />
-            <property name="mcpsrc.dir"        value="${mcp.dir}/src/minecraft" />
-            <property name="sgsrc.dir"        value="${mcp.dir}/src/minecraft/pcl/OpenPrinter/" />
+        <property name="mcpsrc.dir"        value="${mcp.dir}/src/minecraft" />
+        <property name="pcsrc.dir"        value="${mcp.dir}/src/minecraft/pcl/OpenPrinter" />
         
         <condition property="python.exe"   value="${mcp.dir}/runtime/bin/python/python_mcp" else="python">
                 <os family="Windows" />
         </condition>
 
         <property name="mc.version"        value="1.6.4"/>
-        <property name="forge.version"     value="9.11.1.933"/>
+        <property name="forge.version"     value="9.11.1.953"/>
         <property name="mod.version"       value="0.1.0"/>
         <property name="mod.build"         value="${env.BUILD_NUMBER}" />
         <property name="mod.name"          value="OpenPrinter"/>
-        <property name="forge.name"        value="minecraftforge-src-${mc.version}-${forge.version}.zip"/>
-        
+        <property name="forge.name"        value="forge-${mc.version}-${forge.version}-src.zip"/>
+
         <available property="forge-exists" file="${download.dir}/${forge.name}"/>
 
         <condition property="out-of-date">
@@ -56,7 +56,7 @@
         
         <!-- Download forge (if it doesn't exist) -->
         <target name="download-forge" unless="forge-exists" >
-                <get src="http://files.minecraftforge.net/${forge.name}" dest="${download.dir}" usetimestamp="True"/>
+                  <get src="http://files.minecraftforge.net/maven/net/minecraftforge/forge/${mc.version}-${forge.version}/${forge.name}" dest="${download.dir}" usetimestamp="True"/>
         </target>
 
         <!-- Setup mcp and forge -->
@@ -82,13 +82,9 @@
         <target name="compile" depends="initialize-version,setup">
 
                 <delete dir="${classes.dir}"/>
-                <delete dir="${sgsrc.dir}"/>
+                <delete dir="${pcsrc.dir}"/>
                 <mkdir dir="${classes.dir}"/>
-                <mkdir dir="${sgsrc.dir}"/>
-                
-                <delete includeEmptyDirs="true" failonerror="false">
-                        <fileset dir="${mcpsrc.dir}/dan200" />
-                </delete>
+                <mkdir dir="${pcsrc.dir}"/>
 
                 <copy todir="${mcpsrc.dir}">
                         <fileset dir="${src.dir}"/>
@@ -97,8 +93,8 @@
                         </filterset>
                 </copy>
                 
-                <replace dir="${sgsrc.dir}" token="@VERSION@" value="${mod.version}" />
-                <replace dir="${sgsrc.dir}" token="@BUILD@" value="${mod.build}" />
+                <replace dir="${pcsrc.dir}" token="@VERSION@" value="${mod.version}" />
+                <replace dir="${pcsrc.dir}" token="@BUILD@" value="${mod.build}" />
 
                 <!-- Recompile -->
                 <exec executable="${python.exe}" dir="${mcp.dir}" failonerror="true">
@@ -112,20 +108,19 @@
                 </exec>
 
                 <!-- Copy classes -->
-                <copy todir="${classes.dir}/pcl">
-                        <fileset dir="${mcp.dir}/reobf/minecraft/pcl" />
+                <copy todir="${classes.dir}/pcl/OpenPrinter">
+                        <fileset dir="${mcp.dir}/reobf/minecraft/pcl/OpenPrinter" />
                 </copy>
                 
                 <!-- Copy resources -->
                 <copy todir="${classes.dir}/assets/openprinter">
-                        <fileset dir="assets/openprinter" />
+                        <fileset dir="resources/assets/openprinter" />
                 </copy>
                 
                 <!-- Copy resources -->
                 <copy todir="${classes.dir}">
                         <fileset dir=".">
-                                <include name="mcmod.info" />
-                                <include name="pack.mcmeta" />
+                                <include name="resources/mcmod.info" />
                         </fileset>
                         <filterset>
                                 <filter token="VERSION" value="${mod.version}"/>
