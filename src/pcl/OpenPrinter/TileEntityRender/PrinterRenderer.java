@@ -22,17 +22,11 @@ import net.minecraftforge.client.model.obj.WavefrontObject;
 public class PrinterRenderer implements ISimpleBlockRenderingHandler
 {
 	private WavefrontObject model;
-	private WavefrontObject model90;
-	private WavefrontObject model180;
-	private WavefrontObject model270;
 	private final ResourceLocation texture = new ResourceLocation("openprinter", "textures/obj/OpenPrinter.png");
 	
 	public PrinterRenderer()
 	{
-		model = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer.obj");
-		model90 = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer-90.obj");
-		model180 = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer-180.obj");
-		model270 = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer-270.obj");
+		model = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer-master.obj");
 		assert null != model : "WTF, model didn't load!";
 	}
 
@@ -60,13 +54,13 @@ public class PrinterRenderer implements ISimpleBlockRenderingHandler
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(texture);
 		int dir = world.getBlockMetadata(x, y, z);
 		if (dir == 1)
-			model90.renderAll();
+			model.renderOnly("90");
 		else if (dir == 0)
-			model180.renderAll();
+			model.renderOnly("180");
 		else if (dir == 2)
-			model.renderAll();
+			model.renderOnly("0");
 		else if (dir == 3)
-			model270.renderAll();
+			model.renderOnly("270");
 		GL11.glPopMatrix();
 
 		// Restart the Tesselator

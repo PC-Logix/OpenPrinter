@@ -42,7 +42,7 @@ public class BlockPrinter extends BlockContainer
     	private BlockPrinter(int blockID)
     	{
     		super(blockID, Material.rock);
-    		setCreativeTab(CreativeTabs.tabDecorations);
+    		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
     		renderID = RenderingRegistry.getNextAvailableRenderId();
     	}
         
