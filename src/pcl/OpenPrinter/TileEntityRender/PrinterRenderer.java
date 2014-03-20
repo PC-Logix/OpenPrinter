@@ -26,7 +26,7 @@ public class PrinterRenderer implements ISimpleBlockRenderingHandler
 	
 	public PrinterRenderer()
 	{
-		model = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer-master.obj");
+		model = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer.obj");
 		assert null != model : "WTF, model didn't load!";
 	}
 
