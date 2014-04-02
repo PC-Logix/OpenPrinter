@@ -3,7 +3,7 @@ package pcl.OpenPrinter.TileEntityRender;
 import org.lwjgl.opengl.GL11;
 
 import pcl.OpenPrinter.OpenPrinter;
-import pcl.OpenPrinter.Blocks.BlockPrinter;
+import pcl.OpenPrinter.Blocks.Printer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.block.Block;
@@ -31,12 +31,11 @@ public class PrinterRenderer implements ISimpleBlockRenderingHandler
 	}
 
 	@Override
-	public void renderInventoryBlock(Block block, int metadata, int modelID,
-			RenderBlocks renderer)
+	public void renderInventoryBlock(Block block, int metadata, int modelID, RenderBlocks renderer)
 	{
 		GL11.glPushMatrix();
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(texture);
-		model.renderAll();
+		model.renderOnly("0");
 		GL11.glPopMatrix();
 	}
 
@@ -78,7 +77,7 @@ public class PrinterRenderer implements ISimpleBlockRenderingHandler
 	@Override
 	public int getRenderId()
 	{
-		return BlockPrinter.block.getRenderType();
+		return Printer.block.getRenderType();
 	}
 
 }

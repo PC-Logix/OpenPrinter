@@ -1,0 +1,9 @@
+tile.printer.name=Open Printer
+item.printerPaper.name=Printer Paper
+item.printerPaperRoll.name=Printer Paper Roll
+item.printedPage.name=Printed Page
+gui.string.printer=Open Printer
+gui.string.blackInk=Black Ink
+gui.string.colorInk=Color Ink
+gui.string.paperInput=Paper Input
+gui.string.paperOutput=Paper Output

@@ -13,18 +13,18 @@ import net.minecraft.item.Item;
  * @author Caitlyn
  *
  */
-public class PrintedPaper extends Item{
+public class PrinterPaper extends Item{
 
-	public PrintedPaper(int par1) {
+	public PrinterPaper(int par1) {
 		super(par1);
 		maxStackSize = 64;
 	}
 
 	public static void init(int itemID) {
-		PrintedPaper item = new PrintedPaper(itemID);
+		PrinterPaper item = new PrinterPaper(itemID);
 		item.setTextureName("minecraft:paper");
-		GameRegistry.registerItem(item, "openprinter.printedPage");
-		LanguageRegistry.addName(item, "OC Printed Page");
+		GameRegistry.registerItem(item, "openprinter.printerPaper");
+		item.setUnlocalizedName("printerPaper");
+		item.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 	}
-
 }
