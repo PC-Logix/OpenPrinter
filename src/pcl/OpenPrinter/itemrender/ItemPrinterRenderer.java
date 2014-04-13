@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pcl.OpenPrinter.itemrender;
+package pcl.openprinter.itemrender;
 
 import org.lwjgl.opengl.GL11;
 
@@ -16,8 +16,8 @@ import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.obj.WavefrontObject;
-import pcl.OpenPrinter.OpenPrinter;
-import pcl.OpenPrinter.TileEntity.PrinterTE;
+import pcl.openprinter.OpenPrinter;
+import pcl.openprinter.tileentity.PrinterTE;
 
 /**
  * @author Caitlyn
@@ -27,12 +27,8 @@ public class ItemPrinterRenderer implements IItemRenderer {
 	private float scale = 1;
 	WavefrontObject model = null;
 	private final ResourceLocation theTexture = new ResourceLocation("openprinter", "textures/obj/OpenPrinter.png");
-	TileEntitySpecialRenderer render;
-	private TileEntity dummytile;
 
-    public ItemPrinterRenderer(TileEntitySpecialRenderer render, TileEntity dummy) {
-	    this.render = render;
-	    this.dummytile = dummy;
+    public ItemPrinterRenderer(TileEntitySpecialRenderer render, TileEntity TE) {
 	    model = (WavefrontObject)AdvancedModelLoader.loadModel("/assets/" + OpenPrinter.MODID + "/models/printer.obj");
 	}
 
@@ -52,9 +48,6 @@ public class ItemPrinterRenderer implements IItemRenderer {
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glScalef(scale, scale, scale);
-			//GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-				//GL11.glRotatef(-180F, 0F, 1F, 0F);
-			//GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 			FMLClientHandler.instance().getClient().renderEngine.bindTexture(theTexture);
 			model.renderAll();
 			GL11.glEnable(GL11.GL_LIGHTING);

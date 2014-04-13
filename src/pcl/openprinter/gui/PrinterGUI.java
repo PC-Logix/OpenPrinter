@@ -1,17 +1,20 @@
-package pcl.OpenPrinter.TileEntity;
+package pcl.openprinter.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.texture.TextureObject;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+
 /**
  * @author Caitlyn
  *
  */
 import org.lwjgl.opengl.GL11;
 
-import pcl.OpenPrinter.OpenPrinter;
+import pcl.openprinter.OpenPrinter;
+import pcl.openprinter.tileentity.PrinterContainer;
+import pcl.openprinter.tileentity.PrinterTE;
 
 public class PrinterGUI extends GuiContainer {
 
@@ -23,10 +26,9 @@ public class PrinterGUI extends GuiContainer {
         @Override
         protected void drawGuiContainerForegroundLayer(int param1, int param2) {
         	//the parameters for drawString are: string, x, y, color
-        	fontRenderer.drawSplitString(StatCollector.translateToLocal("gui.string.blackInk"), 25, ySize - 130, 40, 4210752);
-        	fontRenderer.drawSplitString(StatCollector.translateToLocal("gui.string.colorInk"), 55, ySize - 130, 40, 4210752);
-        	fontRenderer.drawSplitString(StatCollector.translateToLocal("gui.string.paperInput"), 125, ySize - 130, 40, 4210752);
-        	fontRenderer.drawString(StatCollector.translateToLocal("gui.string.paperOutput"), 8, ySize - 91, 4210752);
+        	fontRenderer.drawSplitString(StatCollector.translateToLocal("gui.string.blackInk"), 25, ySize - 128, 40, 4210752);
+        	fontRenderer.drawSplitString(StatCollector.translateToLocal("gui.string.colorInk"), 55, ySize - 128, 40, 4210752);
+        	fontRenderer.drawSplitString(StatCollector.translateToLocal("gui.string.paperInput"), 125, ySize - 128, 40, 4210752);
         	fontRenderer.drawString(StatCollector.translateToLocal("gui.string.printer"), 55, 2, 4210752);
         }
 

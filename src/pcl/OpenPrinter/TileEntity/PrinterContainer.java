@@ -1,5 +1,8 @@
-package pcl.OpenPrinter.TileEntity;
+package pcl.openprinter.tileentity;
 
+import pcl.openprinter.gui.PrinterInkBlackSlot;
+import pcl.openprinter.gui.PrinterInkColorSlot;
+import pcl.openprinter.gui.PrinterPaperSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -14,14 +17,16 @@ public class PrinterContainer extends Container{
 
     public PrinterContainer (InventoryPlayer inventoryPlayer, PrinterTE te){
             tileEntity = te;
-            addSlotToContainer(new Slot(tileEntity, 1, 30, 15));
-            addSlotToContainer(new Slot(tileEntity, 2, 60, 15));
-            addSlotToContainer(new Slot(tileEntity, 3, 128, 15));
+            //Color Ink
+            addSlotToContainer(new PrinterInkBlackSlot(tileEntity, 0, 30, 17));
+            //Black Ink
+            addSlotToContainer(new PrinterInkColorSlot(tileEntity, 1, 60, 17));
+            //Blank Paper
+            addSlotToContainer(new PrinterPaperSlot(tileEntity, 2, 129, 17));
 
-            //the Slot constructor takes the IInventory and the slot number in that it binds to
-            //and the x-y coordinates it resides on-screen
-            for (int i = 4; i < 13; i++) {
-            	addSlotToContainer(new Slot(tileEntity, i, 8 + i * 18 - 72, 59));
+            //Output slots
+            for (int i = 3; i < 12; i++) {
+            	addSlotToContainer(new Slot(tileEntity, i, 8 + i * 18 - 54, 57));
             }
             
             //commonly used vanilla code that adds the player's inventory
@@ -37,8 +42,7 @@ public class PrinterContainer extends Container{
     protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
             for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 9; j++) {
-                            addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-                                            8 + j * 18, 84 + i * 18));
+                            addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
                     }
             }
 

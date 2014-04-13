@@ -1,18 +1,20 @@
 /**
  * 
  */
-package pcl.OpenPrinter;
+package pcl.openprinter;
 
 /**
  * @author Caitlyn
  *
  */
-import pcl.OpenPrinter.Blocks.Printer;
-import pcl.OpenPrinter.TileEntity.PrinterGUIHandler;
-import pcl.OpenPrinter.TileEntity.PrinterTE;
-import pcl.OpenPrinter.items.PrintedPage;
-import pcl.OpenPrinter.items.PrinterPaper;
-import pcl.OpenPrinter.items.PrinterPaperRoll;
+import pcl.openprinter.blocks.Printer;
+import pcl.openprinter.tileentity.PrinterTE;
+import pcl.openprinter.gui.PrinterGUIHandler;
+import pcl.openprinter.items.PrintedPage;
+import pcl.openprinter.items.PrinterInkBlack;
+import pcl.openprinter.items.PrinterInkColor;
+import pcl.openprinter.items.PrinterPaper;
+import pcl.openprinter.items.PrinterPaperRoll;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import net.minecraft.block.Block;
@@ -41,7 +43,7 @@ public class OpenPrinter {
         @Instance(value = MODID)
         public static OpenPrinter instance;
         
-        @SidedProxy(clientSide="pcl.OpenPrinter.ClientProxy", serverSide="pcl.OpenPrinter.CommonProxy")
+        @SidedProxy(clientSide="pcl.openprinter.ClientProxy", serverSide="pcl.openprinter.CommonProxy")
         public static CommonProxy proxy;
         public static Config cfg = null;
         public static boolean render3D = true;
@@ -55,6 +57,8 @@ public class OpenPrinter {
         	PrintedPage.init(cfg.printedPageID);
         	PrinterPaper.init(cfg.printerPaperID);
         	PrinterPaperRoll.init(cfg.printerPaperRollID);
+        	PrinterInkColor.init(cfg.printerInkColor);
+        	PrinterInkBlack.init(cfg.printerInkBlack);
         }
         
         @EventHandler

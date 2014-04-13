@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pcl.OpenPrinter.TileEntity;
+package pcl.openprinter.tileentity;
 
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
@@ -13,9 +13,11 @@ import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
@@ -26,18 +28,43 @@ import net.minecraft.world.World;
  * @author Caitlyn
  *
  */
-public class PrinterTE extends TileEntity implements SimpleComponent, ISidedInventory {
-	   @Override
-	   public void writeToNBT(NBTTagCompound par1)
-	   {
-	      super.writeToNBT(par1);
-	   }
+public class PrinterTE extends TileEntity implements SimpleComponent, IInventory, ISidedInventory {
+	private ItemStack[] printerItemStacks = new ItemStack[20];
 
 	   @Override
-	   public void readFromNBT(NBTTagCompound par1)
-	   {
-	      super.readFromNBT(par1);
-	   }
+       public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+       {
+               super.readFromNBT(par1NBTTagCompound);
+               NBTTagList var2 = par1NBTTagCompound.getTagList("Items");
+               this.printerItemStacks = new ItemStack[this.getSizeInventory()];
+               for (int var3 = 0; var3 < var2.tagCount(); ++var3)
+               {
+                       NBTTagCompound var4 = (NBTTagCompound)var2.tagAt(var3);
+                       byte var5 = var4.getByte("Slot");
+                       if (var5 >= 0 && var5 < this.printerItemStacks.length)
+                       {
+                               this.printerItemStacks[var5] = ItemStack.loadItemStackFromNBT(var4);
+                       }
+               }
+       }
+
+	   @Override
+       public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+       {
+               super.writeToNBT(par1NBTTagCompound);
+               NBTTagList var2 = new NBTTagList();
+               for (int var3 = 0; var3 < this.printerItemStacks.length; ++var3)
+               {
+                       if (this.printerItemStacks[var3] != null)
+                       {
+                               NBTTagCompound var4 = new NBTTagCompound();
+                               var4.setByte("Slot", (byte)var3);
+                               this.printerItemStacks[var3].writeToNBT(var4);
+                               var2.appendTag(var4);
+                       }
+               }
+               par1NBTTagCompound.setTag("Items", var2);
+       }
  
 	   public PrinterTE() { }
 	@Override
@@ -65,6 +92,10 @@ public class PrinterTE extends TileEntity implements SimpleComponent, ISidedInve
 	//Real Printer methods follow:
 	@Callback
 	public Object[] write(Context context, Arguments args) {
+		printerItemStacks[3] = new ItemStack(printerItemStacks[2].getItem());
+		printerItemStacks[3].setTagCompound(new NBTTagCompound());
+		printerItemStacks[3].stackTagCompound.setString("line1", "TEXT!");
+		
 		return new Object[] { "I'm sorry, Dave, I'm afraid I can't do that." };
 	}
 	@Callback
@@ -78,14 +109,12 @@ public class PrinterTE extends TileEntity implements SimpleComponent, ISidedInve
 
 	@Override
 	public int getSizeInventory() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.printerItemStacks.length;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int i) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.printerItemStacks[i];
 	}
 
 	@Override
@@ -96,14 +125,25 @@ public class PrinterTE extends TileEntity implements SimpleComponent, ISidedInve
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
-		// TODO Auto-generated method stub
-		return null;
+        if (this.printerItemStacks[i] != null)
+        {
+                ItemStack var2 = this.printerItemStacks[i];
+                this.printerItemStacks[i] = null;
+                return var2;
+        }
+        else
+        {
+                return null;
+        }
 	}
 
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
-		// TODO Auto-generated method stub
-		
+        this.printerItemStacks[i] = itemstack;
+        if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
+        {
+        	itemstack.stackSize = this.getInventoryStackLimit();
+        }
 	}
 
 	@Override
@@ -121,7 +161,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, ISidedInve
 	@Override
 	public int getInventoryStackLimit() {
 		// TODO Auto-generated method stub
-		return 0;
+		return 64;
 	}
 
 	@Override

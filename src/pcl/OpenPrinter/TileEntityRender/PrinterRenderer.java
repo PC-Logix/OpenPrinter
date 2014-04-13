@@ -1,4 +1,4 @@
-package pcl.OpenPrinter.TileEntityRender;
+package pcl.openprinter.tileentityrender;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -8,8 +8,8 @@ import net.minecraftforge.client.model.obj.WavefrontObject;
 
 import org.lwjgl.opengl.GL11;
 
-import pcl.OpenPrinter.Config;
-import pcl.OpenPrinter.OpenPrinter;
+import pcl.openprinter.Config;
+import pcl.openprinter.OpenPrinter;
 import cpw.mods.fml.client.FMLClientHandler;
 
 public class PrinterRenderer extends TileEntitySpecialRenderer {

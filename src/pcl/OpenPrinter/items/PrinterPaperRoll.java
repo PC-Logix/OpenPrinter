@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pcl.OpenPrinter.items;
+package pcl.openprinter.items;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -18,12 +18,12 @@ public class PrinterPaperRoll extends Item {
 	 */
 	public PrinterPaperRoll(int par1) {
 		super(par1);
-		maxStackSize = 64;
+		maxStackSize = 1;
 	}
 
 	public static void init(int itemID) {
 		PrinterPaperRoll item = new PrinterPaperRoll(itemID);
-		item.setTextureName("minecraft:paper");
+		item.setTextureName("openprinter:PrinterPaperRoll");
 		GameRegistry.registerItem(item, "openprinter.printerPaperRoll");
 		item.setUnlocalizedName("printerPaperRoll");
 		item.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);

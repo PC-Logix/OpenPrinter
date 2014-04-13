@@ -1,9 +1,9 @@
 /**
  * 
  */
-package pcl.OpenPrinter.items;
+package pcl.openprinter.items;
 
-import pcl.OpenPrinter.Blocks.Printer;
+import pcl.openprinter.blocks.Printer;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.creativetab.CreativeTabs;

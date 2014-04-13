@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pcl.OpenPrinter;
+package pcl.openprinter;
 
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
@@ -25,6 +25,12 @@ public class Config
     public final int printerPaperRollID;
     
     public final boolean render3D;
+    
+    private int defaultPrinterInkColor = 17803;
+	public final int printerInkColor;
+	
+	private int defaultPrinterInkBlack = 17804;
+	public final int printerInkBlack;
 
     public Config(Configuration config)
     {
@@ -33,6 +39,8 @@ public class Config
         printedPageID = config.get("items", "PrintedPageID", defaultPrintedPageID).getInt(defaultPrintedPageID);
         printerPaperID = config.get("items", "PrinterPaperID", defaultPrinterPaperID).getInt(defaultPrinterPaperID);
         printerPaperRollID = config.get("items", "PrinterPaperRollID", defaultPrinterPaperRollID).getInt(defaultPrinterPaperRollID);
+        printerInkColor = config.get("items", "PrinterInkColor", defaultPrinterInkColor).getInt(defaultPrinterInkColor);
+        printerInkBlack = config.get("items", "PrinterInkBlack", defaultPrinterInkBlack).getInt(defaultPrinterInkBlack);
         render3D = config.get("options", "Render3D", true, "Should we use the 3D Model, or a block").getBoolean(true);
         if( config.hasChanged() )
         {

@@ -1,12 +1,14 @@
 /**
  * 
  */
-package pcl.OpenPrinter.TileEntity;
+package pcl.openprinter.gui;
 
 /**
  * @author Caitlyn
  *
  */
+import pcl.openprinter.tileentity.PrinterContainer;
+import pcl.openprinter.tileentity.PrinterTE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -33,6 +35,5 @@ public class PrinterGUIHandler implements IGuiHandler {
                         return new PrinterGUI(player.inventory, (PrinterTE) tileEntity);
                 }
                 return null;
-
         }
 }
