@@ -45,8 +45,8 @@ public class OpenPrinter {
 	public static final String MODID = "openprinter";
 	
 		public static Block printerBlock;
-		public static Item  printerPaper;
 		public static Item  printedPage;
+		public static Item  printerPaper;
 		public static Item  printerPaperRoll;
 		public static Item  printerInkColor;
 		public static Item  printerInkBlack;
@@ -68,32 +68,52 @@ public class OpenPrinter {
         	//Register Blocks
         	printerBlock = new Printer(cfg.printerBlockID, Material.iron);
     		GameRegistry.registerBlock(printerBlock, "openprinter.printer");
+    		printerBlock.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
     		
         	
         	printerPaper = new PrinterPaper(cfg.printerPaperID);
     		GameRegistry.registerItem(printerPaper, "openprinter.printerPaper");
     		printerPaper.setUnlocalizedName("printerPaper");
+    		printerPaper.setTextureName("minecraft:paper");
+    		printerPaper.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
     		
         	printerPaperRoll = new PrinterPaperRoll(cfg.printerPaperRollID);
     		GameRegistry.registerItem(printerPaperRoll, "openprinter.printerPaperRoll");
     		printerPaperRoll.setUnlocalizedName("printerPaperRoll");
+    		printerPaperRoll.setTextureName("openprinter:PrinterPaperRoll");
+    		printerPaperRoll.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
         	
         	printerInkColor = new PrinterInkColor(cfg.printerInkColorID);
     		GameRegistry.registerItem(printerInkColor, "openprinter.printerInkColor");
     		printerInkColor.setUnlocalizedName("printerInkColor");
-        	
+    		printerInkColor.setTextureName("openprinter:PrinterInkColor");
+    		printerInkColor.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+    		
         	printerInkBlack = new PrinterInkBlack(cfg.printerInkBlackID);
     		GameRegistry.registerItem(printerInkBlack, "openprinter.printerInkBlack");
     		printerInkBlack.setUnlocalizedName("printerInkBlack");
+    		printerInkBlack.setTextureName("openprinter:PrinterInkBlack");
+    		printerInkBlack.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
         	
     		printedPage = new PrintedPage(cfg.printedPageID);
     		GameRegistry.registerItem(printedPage, "openprinter.printedPage");
     		printedPage.setUnlocalizedName("printedPage");
-        	
-        	ItemStack nuggetIron = Items.IronNugget;
-        	ItemStack redstone   = new ItemStack(Item.redstone);
-        	ItemStack microchip  = Items.MicrochipTier1;
-        	ItemStack pcb		 = Items.PrintedCircuitBoard;
+    		printedPage.setTextureName("minecraft:paper");
+        }
+        
+        @EventHandler
+    	public void load(FMLInitializationEvent event)
+    	{
+        	ItemStack nuggetIron   = Items.IronNugget;
+        	ItemStack redstone     = new ItemStack(Item.redstone);
+        	ItemStack microchip    = Items.MicrochipTier1;
+        	ItemStack pcb		   = Items.PrintedCircuitBoard;
+        	ItemStack blackInk	   = new ItemStack(Item.dyePowder, 1, 0);
+        	ItemStack redInk	   = new ItemStack(Item.dyePowder, 1, 1);
+        	ItemStack greenInk	   = new ItemStack(Item.dyePowder, 1, 2);
+        	ItemStack blueInk	   = new ItemStack(Item.dyePowder, 1, 4);
+        	ItemStack paper        = new ItemStack(Item.paper);
+        	ItemStack lprinterPaper	= new ItemStack(printerPaper,64);
         	
         	GameRegistry.addRecipe( new ItemStack(printerBlock, 1), 
         			"IRI",
@@ -101,11 +121,24 @@ public class OpenPrinter {
         			"IRI",
         			'I', nuggetIron, 'R', redstone, 'M', microchip, 'P', pcb);
         	
-        }
-        
-        @EventHandler
-    	public void load(FMLInitializationEvent event)
-    	{
+        	GameRegistry.addRecipe( new ItemStack(printerInkBlack, 1), 
+        			"BBB",
+        			" I ",
+        			'B', blackInk, 'I', nuggetIron);
+        	
+        	GameRegistry.addRecipe( new ItemStack(printerInkColor, 1), 
+        			"RGB",
+        			" I ",
+        			'R', redInk, 'G', greenInk, 'B', blueInk, 'I', nuggetIron);
+        	
+        	GameRegistry.addShapelessRecipe( new ItemStack(printerPaper, 2), paper, paper);
+        	
+        	GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
+        			"PP",
+        			"PP",
+        			'P', lprinterPaper);
+        	
+        	
     		proxy.registerRenderers();
     	}
 }

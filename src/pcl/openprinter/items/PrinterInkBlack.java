@@ -23,7 +23,6 @@ public class PrinterInkBlack extends Item {
 
 	public static void init(int itemID) {
 		PrinterInkBlack item = new PrinterInkBlack(itemID);
-		item.setTextureName("openprinter:PrinterInkBlack");
-		item.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+
 	}
 }

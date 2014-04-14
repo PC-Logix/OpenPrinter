@@ -27,7 +27,6 @@ public class PrintedPage extends Item{
 
 	public static void init(int itemID) {
 		PrintedPage item = new PrintedPage(itemID);
-		item.setTextureName("minecraft:paper");
 	}
 	
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player)

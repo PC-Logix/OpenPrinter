@@ -29,6 +29,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
@@ -42,6 +43,7 @@ import net.minecraft.world.World;
 public class PrinterTE extends TileEntity implements SimpleComponent, IInventory, ISidedInventory {
 	private ItemStack[] printerItemStacks = new ItemStack[20];
 	private List<String> lines = new ArrayList<String>();
+	private List<String> align = new ArrayList<String>();
 	private List<Integer> colors = new ArrayList<Integer>();
 	private String pageTitle = "";
 	   @Override
@@ -109,11 +111,13 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 							printerItemStacks[x].setTagCompound(new NBTTagCompound());
 							if(pageTitle != "") {
 								printerItemStacks[x].stackTagCompound.setString("pageTitle", pageTitle);
+								printerItemStacks[x].setItemName(pageTitle);
 							}
 							int iter = 0;
 							for (String s : lines) { 
 								printerItemStacks[x].stackTagCompound.setString("line"+iter, lines.get(iter)); 
 								printerItemStacks[x].stackTagCompound.setInteger("color"+iter, colors.get(iter));
+								printerItemStacks[x].stackTagCompound.setString("alignment"+iter, align.get(iter));
 								if (colors.get(iter) != 0x000000) {
 									getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + 1);
 								} else {
@@ -145,15 +149,30 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	
 	@Callback
 	public Object[] writeln(Context context, Arguments args) throws Exception{
-		if(lines.size() > 10) {
+		if(lines.size() > 20) {
 			throw new Exception("To many lines.");
 		}
 		int color = 0x000000;
-		if (args.count() > 1){
-			color = args.checkInteger(1);
-		}
+		String alignment = "left";
+		if (args.count() == 2){
+			if (args.isInteger(1)) {
+				color = args.checkInteger(1);
+			} else if (args.isString(1)) {
+				alignment = args.checkString(1);
+			}
+		} 
+		
+		if (args.count() == 3){
+			if (args.isInteger(1)) {
+				color = args.checkInteger(1);
+			} else if (args.isString(2)) {
+				alignment = args.checkString(2);
+			}
+		} 
+		
 		lines.add(args.checkString(0));
 		colors.add(color);
+		align.add(alignment);
 		return new Object[] { true };
 	}
 	
@@ -163,6 +182,45 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 		return new Object[] { true };
 	}
 
+	@Callback
+	public Object[] getPaperLevel(Context context, Arguments args) { 
+		if(getStackInSlot(2) != null) { 
+			if (getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
+				return new Object[] { 256 - getStackInSlot(2).getItemDamage() };
+			} else {
+				return new Object[] { getStackInSlot(2).stackSize };
+			}
+		} else {
+			return new Object[] { false };
+		}
+	}
+	
+	@Callback
+	public Object[] getBlackInkLevel(Context context, Arguments args) { 
+		if(getStackInSlot(0) != null) { 
+			if (getStackInSlot(0).getItem() instanceof PrinterInkBlack) {
+				return new Object[] { OpenPrinter.cfg.printerInkUse - getStackInSlot(0).getItemDamage()};
+			} else {
+				return new Object[] { false };
+			}
+		} else {
+			return new Object[] { false };
+		}
+	}
+	
+	@Callback
+	public Object[] getColorInkLevel(Context context, Arguments args) { 
+		if(getStackInSlot(1) != null) { 
+			if (getStackInSlot(1).getItem() instanceof PrinterInkColor) {
+				return new Object[] { OpenPrinter.cfg.printerInkUse - getStackInSlot(1).getItemDamage() };
+			} else {
+				return new Object[] { false };
+			}
+		} else {
+			return new Object[] { false };
+		}
+	}
+	
 	@Callback
 	public Object[] clear(Context context, Arguments args) {
 		lines.clear();

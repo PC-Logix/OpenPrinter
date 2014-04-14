@@ -13,9 +13,6 @@ import net.minecraft.item.Item;
  */
 public class PrinterPaperRoll extends Item {
 
-	/**
-	 * 
-	 */
 	public PrinterPaperRoll(int par1) {
 		super(par1);
 		maxStackSize = 1;
@@ -25,8 +22,6 @@ public class PrinterPaperRoll extends Item {
 
 	public static void init(int itemID) {
 		PrinterPaperRoll item = new PrinterPaperRoll(itemID);
-		item.setTextureName("openprinter:PrinterPaperRoll");
-		item.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 	}
 	
 }
