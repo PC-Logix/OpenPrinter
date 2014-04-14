@@ -26,11 +26,14 @@ public class Config
     
     public final boolean render3D;
     
-    private int defaultPrinterInkColor = 17803;
-	public final int printerInkColor;
+    private int defaultPrinterInkColorID = 17803;
+	public final int printerInkColorID;
 	
-	private int defaultPrinterInkBlack = 17804;
-	public final int printerInkBlack;
+	private int defaultPrinterInkBlackID = 17804;
+	public final int printerInkBlackID;
+	
+	private int defaultInkUse = 100;
+	public final int printerInkUse;
 
     public Config(Configuration config)
     {
@@ -39,8 +42,9 @@ public class Config
         printedPageID = config.get("items", "PrintedPageID", defaultPrintedPageID).getInt(defaultPrintedPageID);
         printerPaperID = config.get("items", "PrinterPaperID", defaultPrinterPaperID).getInt(defaultPrinterPaperID);
         printerPaperRollID = config.get("items", "PrinterPaperRollID", defaultPrinterPaperRollID).getInt(defaultPrinterPaperRollID);
-        printerInkColor = config.get("items", "PrinterInkColor", defaultPrinterInkColor).getInt(defaultPrinterInkColor);
-        printerInkBlack = config.get("items", "PrinterInkBlack", defaultPrinterInkBlack).getInt(defaultPrinterInkBlack);
+        printerInkColorID = config.get("items", "PrinterInkColor", defaultPrinterInkColorID).getInt(defaultPrinterInkColorID);
+        printerInkBlackID = config.get("items", "PrinterInkBlack", defaultPrinterInkBlackID).getInt(defaultPrinterInkBlackID);
+        printerInkUse = config.get("options", "inkUses", defaultInkUse, "How many times you can print with a ink cartridge").getInt(defaultInkUse);
         render3D = config.get("options", "Render3D", true, "Should we use the 3D Model, or a block").getBoolean(true);
         if( config.hasChanged() )
         {

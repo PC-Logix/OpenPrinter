@@ -22,23 +22,14 @@ import net.minecraft.world.World;
 
 public class Printer extends BlockContainer {
 
-	public static Printer block = null;
-
-	public static void init(int blockID) {
-		if (null == block) {
-			block = new Printer(blockID);
-		}
-		GameRegistry.registerBlock(block, "openprinter.printer");
-		block.setUnlocalizedName("printer");
-		// LanguageRegistry.addName(block, "Open Printer");
-	}
 
 	public void breakBlock(World world, int x, int y, int z, int i, int j) {
 		world.removeBlockTileEntity(x, y, z);
 	}
 
-	private Printer(int blockID) {
-		super(blockID, Material.rock);
+	public Printer(Integer blockID, Material material) {
+		super(blockID, material);
+		this.setUnlocalizedName("printer");
 		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 		if (OpenPrinter.render3D) {
 			renderID = RenderingRegistry.getNextAvailableRenderId();
@@ -47,10 +38,6 @@ public class Printer extends BlockContainer {
 
 	private Icon icon;
 	private int renderID;
-
-	public Printer(int id, Material material) {
-		super(id, material);
-	}
 
 	@Override
 	public boolean isOpaqueCube() {

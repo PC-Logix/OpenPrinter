@@ -3,6 +3,15 @@
  */
 package pcl.openprinter.tileentity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import pcl.openprinter.OpenPrinter;
+import pcl.openprinter.items.PrintedPage;
+import pcl.openprinter.items.PrinterInkBlack;
+import pcl.openprinter.items.PrinterInkColor;
+import pcl.openprinter.items.PrinterPaper;
+import pcl.openprinter.items.PrinterPaperRoll;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
 import li.cil.oc.api.network.Callback;
@@ -12,9 +21,11 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
 import li.cil.oc.api.network.Visibility;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -30,7 +41,9 @@ import net.minecraft.world.World;
  */
 public class PrinterTE extends TileEntity implements SimpleComponent, IInventory, ISidedInventory {
 	private ItemStack[] printerItemStacks = new ItemStack[20];
-
+	private List<String> lines = new ArrayList<String>();
+	private List<Integer> colors = new ArrayList<Integer>();
+	private String pageTitle = "";
 	   @Override
        public void readFromNBT(NBTTagCompound par1NBTTagCompound)
        {
@@ -73,14 +86,10 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 		return "openprinter";
 	}
 	
+	
 	@Callback
 	public Object[] greet(Context context, Arguments args) {
 		return new Object[] { "Lasciate ogne speranza, voi ch'intrate" };
-	}
-	
-	@Callback
-	public Object[] print(Context context, Arguments args) {
-		return new Object[] { "I'm sorry, Dave, I'm afraid I can't do that." };
 	}
 	
 	@Callback
@@ -88,25 +97,78 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 		return new Object[] { "I'm sorry, Dave, I'm afraid I can't do that." };
 	}
 	
-	
 	//Real Printer methods follow:
 	@Callback
-	public Object[] write(Context context, Arguments args) {
-		printerItemStacks[3] = new ItemStack(printerItemStacks[2].getItem());
-		printerItemStacks[3].setTagCompound(new NBTTagCompound());
-		printerItemStacks[3].stackTagCompound.setString("line1", "TEXT!");
-		
-		return new Object[] { "I'm sorry, Dave, I'm afraid I can't do that." };
+	public Object[] print(Context context, Arguments args) throws Exception {
+		if(getStackInSlot(0) != null) { //No black ink
+			if(getStackInSlot(1) != null) { //No color ink
+				if(getStackInSlot(2) != null) { //No paper
+					for (int x = 3; x <= 12; x++) { //Loop the 9 output slots checking for a empty one
+						if (getStackInSlot(x) == null) { //The slot is empty lets make us a new page
+							printerItemStacks[x] = new ItemStack(OpenPrinter.cfg.printedPageID + 256, 1, 0);
+							printerItemStacks[x].setTagCompound(new NBTTagCompound());
+							if(pageTitle != "") {
+								printerItemStacks[x].stackTagCompound.setString("pageTitle", pageTitle);
+							}
+							int iter = 0;
+							for (String s : lines) { 
+								printerItemStacks[x].stackTagCompound.setString("line"+iter, lines.get(iter)); 
+								printerItemStacks[x].stackTagCompound.setInteger("color"+iter, colors.get(iter));
+								if (colors.get(iter) != 0x000000) {
+									getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + 1);
+								} else {
+									getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + 1);
+								}
+								iter++; 
+							}
+							lines.clear();
+							colors.clear();
+							if (getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
+								getStackInSlot(2).setItemDamage(getStackInSlot(2).getItemDamage() + 1);
+							} else {
+								decrStackSize(2, 1);
+							}
+							return new Object[] { true };
+						}
+					}
+				} else {
+					throw new Exception("Please load Paper.");
+				}
+			} else {
+				throw new Exception("Please load Color Ink.");
+			}
+		} else {
+			throw new Exception("Please load Black Ink.");
+		}
+		return new Object[] { false };
 	}
+	
 	@Callback
-	public Object[] writeln(Context context, Arguments args) {
-		return new Object[] { "I'm sorry, Dave, I'm afraid I can't do that." };
+	public Object[] writeln(Context context, Arguments args) throws Exception{
+		if(lines.size() > 10) {
+			throw new Exception("To many lines.");
+		}
+		int color = 0x000000;
+		if (args.count() > 1){
+			color = args.checkInteger(1);
+		}
+		lines.add(args.checkString(0));
+		colors.add(color);
+		return new Object[] { true };
 	}
+	
 	@Callback
 	public Object[] setTitle(Context context, Arguments args) {
-		return new Object[] { "I'm sorry, Dave, I'm afraid I can't do that." };
+		pageTitle = args.checkString(0);
+		return new Object[] { true };
 	}
 
+	@Callback
+	public Object[] clear(Context context, Arguments args) {
+		lines.clear();
+		return new Object[] { true };
+	}
+	
 	@Override
 	public int getSizeInventory() {
 		return this.printerItemStacks.length;
@@ -117,10 +179,14 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 		return this.printerItemStacks[i];
 	}
 
+	//Thanks AfterLifeLochie
 	@Override
-	public ItemStack decrStackSize(int i, int j) {
-		// TODO Auto-generated method stub
-		return null;
+	public ItemStack decrStackSize(int slot, int take) {
+		if (printerItemStacks[slot] == null)
+			return null;
+		if (printerItemStacks[slot].stackSize == 0)
+			return null;
+		return printerItemStacks[slot].splitStack(Math.min(take, printerItemStacks[slot].stackSize));
 	}
 
 	@Override
@@ -180,7 +246,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	@Override
 	public void closeChest() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

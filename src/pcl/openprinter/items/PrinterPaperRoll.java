@@ -19,13 +19,13 @@ public class PrinterPaperRoll extends Item {
 	public PrinterPaperRoll(int par1) {
 		super(par1);
 		maxStackSize = 1;
+		this.setMaxDamage(256);
+		setNoRepair();
 	}
 
 	public static void init(int itemID) {
 		PrinterPaperRoll item = new PrinterPaperRoll(itemID);
 		item.setTextureName("openprinter:PrinterPaperRoll");
-		GameRegistry.registerItem(item, "openprinter.printerPaperRoll");
-		item.setUnlocalizedName("printerPaperRoll");
 		item.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 	}
 	

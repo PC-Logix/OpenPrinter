@@ -23,8 +23,6 @@ public class PrinterPaper extends Item{
 	public static void init(int itemID) {
 		PrinterPaper item = new PrinterPaper(itemID);
 		item.setTextureName("minecraft:paper");
-		GameRegistry.registerItem(item, "openprinter.printerPaper");
-		item.setUnlocalizedName("printerPaper");
 		item.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 	}
 }
