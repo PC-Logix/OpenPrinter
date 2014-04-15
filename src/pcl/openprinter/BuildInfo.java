@@ -10,9 +10,6 @@ public class BuildInfo {
 	public static final String modName = "LanteaCraft";
 	public static final String modID = "LanteaCraft";
 
-	public static final String versionNumber = "0.1.0";
-	public static final String buildNumber = "13";
-
 	/**
 	 * Enable or disable the SoundSystem debugging; often this is useful for
 	 * recording all the operations on the SoundDevice, meaning that clients
