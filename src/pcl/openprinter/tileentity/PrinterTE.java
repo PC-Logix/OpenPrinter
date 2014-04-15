@@ -122,6 +122,9 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 							}
 							int iter = 0;
 							for (String s : lines) { 
+								if(lines.get(iter).contains("§")) {
+									markColor = true;
+								}
 								printerItemStacks[x].stackTagCompound.setString("line"+iter, lines.get(iter)); 
 								printerItemStacks[x].stackTagCompound.setInteger("color"+iter, colors.get(iter));
 								printerItemStacks[x].stackTagCompound.setString("alignment"+iter, align.get(iter));
@@ -137,14 +140,23 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 							align.clear();
 							if (getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
 								getStackInSlot(2).setItemDamage(getStackInSlot(2).getItemDamage() + 1);
+								if(getStackInSlot(2).getItemDamage() == getStackInSlot(2).getMaxDamage()) {
+									setInventorySlotContents(2, null);
+								}
 							} else {
 								decrStackSize(2, 1);
 							}
 							if (markColor) {
 								getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + 1);
+								if(getStackInSlot(1).getItemDamage() == getStackInSlot(1).getMaxDamage()) {
+									setInventorySlotContents(1, null);
+								}
 							}
 							if (markBlack) {
 								getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + 1);
+								if(getStackInSlot(0).getItemDamage() == getStackInSlot(0).getMaxDamage()) {
+									setInventorySlotContents(0, null);
+								}
 							}
 							return new Object[] { true };
 						}
