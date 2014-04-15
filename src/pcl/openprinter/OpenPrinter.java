@@ -173,15 +173,15 @@ public class OpenPrinter {
         			"PP",
         			'P', stackPaper);
         	
-        	GameRegistry.addRecipe( new ItemStack(printerInkColor),
+        	GameRegistry.addRecipe( new ItemStack(printerInkColor, 1),
         			"RGB",
         			" Z ",
-        			'R', redInk, 'G', greenInk, 'B', blueInk, 'Z', printerInkColor);
+        			'R', redInk, 'G', greenInk, 'B', blueInk, 'Z', new ItemStack(printerInkColor, 1, OreDictionary.WILDCARD_VALUE));
         	
         	GameRegistry.addRecipe( new ItemStack(printerInkBlack, 1), 
         			"BBB",
         			" Z ",
-        			'B', blackInk, 'Z', printerInkBlack);
+        			'B', blackInk, 'Z', new ItemStack(printerInkBlack, 1, OreDictionary.WILDCARD_VALUE));
         			
         	
         	
