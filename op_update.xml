@@ -1,9 +1,0 @@
-<mod modid="battlegear2">
-	<mcVersion version="1.6.4">
-	  <release type="release" version="0.0.1"
-             url="http://lanteacraft.com/jenkins/job/OpenPrinter/"
-             download="http://lanteacraft.com/jenkins/job/OpenPrinter/#/OpenPrinter-#.jar"
-             md5="d23a255871c101363cb372a1a748bd98"
-    />
-  </mcVersion>
-</mod>
