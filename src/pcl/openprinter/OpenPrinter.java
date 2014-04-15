@@ -82,7 +82,7 @@ public class OpenPrinter {
                 try {
                     Class.forName("pcl.openprinter.mud.ModUpdateDetector").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null,
                             FMLCommonHandler.instance().findContainerFor(this),
-                            new URL("http://PC-Logix.com/OpenPrinter/op_update.xml"),
+                            new URL("http://PC-Logix.com/OpenPrinter/get_latest_build.php"),
                             new URL("http://PC-Logix.com/OpenPrinter/changelog.txt")
                     );
                 } catch (Throwable e) {

@@ -107,6 +107,8 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	//Real Printer methods follow:
 	@Callback
 	public Object[] print(Context context, Arguments args) throws Exception {
+		boolean markColor = false;
+		boolean markBlack = false;
 		if(getStackInSlot(0) != null) { //No black ink
 			if(getStackInSlot(1) != null) { //No color ink
 				if(getStackInSlot(2) != null) { //No paper
@@ -124,9 +126,9 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 								printerItemStacks[x].stackTagCompound.setInteger("color"+iter, colors.get(iter));
 								printerItemStacks[x].stackTagCompound.setString("alignment"+iter, align.get(iter));
 								if (colors.get(iter) != 0x000000) {
-									getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + 1);
+									markColor = true;
 								} else {
-									getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + 1);
+									markBlack = true;
 								}
 								iter++; 
 							}
@@ -137,6 +139,12 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 								getStackInSlot(2).setItemDamage(getStackInSlot(2).getItemDamage() + 1);
 							} else {
 								decrStackSize(2, 1);
+							}
+							if (markColor) {
+								getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + 1);
+							}
+							if (markBlack) {
+								getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + 1);
 							}
 							return new Object[] { true };
 						}
