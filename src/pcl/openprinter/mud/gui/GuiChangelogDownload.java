@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.List;
@@ -124,8 +125,7 @@ public class GuiChangelogDownload extends GuiScreen
                         return;
                     case 4:
                         ModContainer mc = selectedMod.getMc();
-                        String filename = String.format("[%s] %s - %s.jar",
-                                Loader.instance().getMCVersionString().replaceAll("Minecraft", "").trim(),
+                        String filename = String.format("%s-%s.jar",
                                 mc.getName(),
                                 selectedMod.getLatest().getVersionString());
                         File newFile = new File(mc.getSource().getParent(), filename);
@@ -384,7 +384,7 @@ public class GuiChangelogDownload extends GuiScreen
         private byte[] expectedMd5;
 
         public Downloader(String url, File location, File originalFile, String md5){
-            this.downloadUrl = url;
+            this.downloadUrl = URLDecoder.decode(url);
             this.file = location;
             this.orginial = originalFile;
             if(md5 != null){
