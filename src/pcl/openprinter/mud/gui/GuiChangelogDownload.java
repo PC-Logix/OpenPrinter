@@ -481,7 +481,7 @@ public class GuiChangelogDownload extends GuiScreen
                     System.out.println("Deleting: "+orginial.getAbsolutePath());
                     if(!orginial.delete()){
                         System.out.println("Deleting failed, spawning new process to delete");
-                        String cmd = "java -classpath \""+file.getAbsolutePath()+"\" mods.mud.utils.FileDeleter \""+orginial.getAbsolutePath()+"\"";
+                        String cmd = "java -classpath \""+file.getAbsolutePath()+"\" pcl.openprinter.mud.utils.FileDeleter \""+orginial.getAbsolutePath()+"\"";
                         System.out.println(cmd);
                         Runtime.getRuntime().exec(cmd);
                     }
