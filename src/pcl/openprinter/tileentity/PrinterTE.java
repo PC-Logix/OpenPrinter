@@ -149,7 +149,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	
 	@Callback
 	public Object[] writeln(Context context, Arguments args) throws Exception{
-		if(lines.size() > 20) {
+		if(lines.size() >= 20) {
 			throw new Exception("To many lines.");
 		}
 		int color = 0x000000;
