@@ -224,6 +224,8 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	@Callback
 	public Object[] clear(Context context, Arguments args) {
 		lines.clear();
+		colors.clear();
+		align.clear();
 		return new Object[] { true };
 	}
 	

@@ -80,7 +80,7 @@ public class OpenPrinter {
         	printerPaperRoll = new PrinterPaperRoll(cfg.printerPaperRollID);
     		GameRegistry.registerItem(printerPaperRoll, "openprinter.printerPaperRoll");
     		printerPaperRoll.setUnlocalizedName("printerPaperRoll");
-    		printerPaperRoll.setTextureName("openprinter:PrinterPaperRoll");
+    		printerPaperRoll.setTextureName("openprinter:printerpaperroll");
     		printerPaperRoll.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
         	
         	printerInkColor = new PrinterInkColor(cfg.printerInkColorID);
