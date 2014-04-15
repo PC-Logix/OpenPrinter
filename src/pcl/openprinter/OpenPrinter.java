@@ -144,6 +144,7 @@ public class OpenPrinter {
         	ItemStack paper        = new ItemStack(Item.paper);
         	ItemStack lprinterPaper	= new ItemStack(printerPaper,64);
         	ItemStack stackPaper	= new ItemStack(Item.paper,64);
+
         	
         	GameRegistry.addRecipe( new ItemStack(printerBlock, 1), 
         			"IRI",
@@ -171,6 +172,17 @@ public class OpenPrinter {
         			"PP",
         			"PP",
         			'P', stackPaper);
+        	
+        	GameRegistry.addRecipe( new ItemStack(printerInkColor),
+        			"RGB",
+        			" Z ",
+        			'R', redInk, 'G', greenInk, 'B', blueInk, 'Z', printerInkColor);
+        	
+        	GameRegistry.addRecipe( new ItemStack(printerInkBlack, 1), 
+        			"BBB",
+        			" Z ",
+        			'B', blackInk, 'Z', printerInkBlack);
+        			
         	
         	
     		proxy.registerRenderers();
