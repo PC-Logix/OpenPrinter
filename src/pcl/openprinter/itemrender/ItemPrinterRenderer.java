@@ -44,7 +44,7 @@ public class ItemPrinterRenderer implements IItemRenderer {
 
     @Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		if (OpenPrinter.render3D) {
+		//if (OpenPrinter.render3D) {
 			GL11.glPushMatrix();
 			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glScalef(scale, scale, scale);
@@ -52,7 +52,7 @@ public class ItemPrinterRenderer implements IItemRenderer {
 			model.renderAll();
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glPopMatrix();
-		}
+		//}
 	}
 
 }

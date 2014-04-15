@@ -46,6 +46,11 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	private List<String> align = new ArrayList<String>();
 	private List<Integer> colors = new ArrayList<Integer>();
 	private String pageTitle = "";
+	
+	private static final int[] slots_top = new int[] {2};
+	private static final int[] slots_bottom = new int[] {3,4,5,6,7,8,9};
+	private static final int[] slots_sides = new int[] {0,1};
+	
 	   @Override
        public void readFromNBT(NBTTagCompound par1NBTTagCompound)
        {
@@ -127,6 +132,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 							}
 							lines.clear();
 							colors.clear();
+							align.clear();
 							if (getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
 								getStackInSlot(2).setItemDamage(getStackInSlot(2).getItemDamage() + 1);
 							} else {
@@ -239,22 +245,28 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 		return this.printerItemStacks[i];
 	}
 
-	//Thanks AfterLifeLochie
-	@Override
-	public ItemStack decrStackSize(int slot, int take) {
-		if (printerItemStacks[slot] == null)
-			return null;
-		if (printerItemStacks[slot].stackSize == 0)
-			return null;
-		return printerItemStacks[slot].splitStack(Math.min(take, printerItemStacks[slot].stackSize));
-	}
+    @Override
+    public ItemStack decrStackSize(int slot, int amt) {
+            ItemStack stack = getStackInSlot(slot);
+            if (stack != null) {
+                    if (stack.stackSize <= amt) {
+                            setInventorySlotContents(slot, null);
+                    } else {
+                            stack = stack.splitStack(amt);
+                            if (stack.stackSize == 0) {
+                                    setInventorySlotContents(slot, null);
+                            }
+                    }
+            }
+            return stack;
+    }
 
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i) {
-        if (this.printerItemStacks[i] != null)
+        if (getStackInSlot(i) != null)
         {
-                ItemStack var2 = this.printerItemStacks[i];
-                this.printerItemStacks[i] = null;
+                ItemStack var2 = getStackInSlot(i);
+                setInventorySlotContents(i,null);
                 return var2;
         }
         else
@@ -311,25 +323,35 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		// TODO Auto-generated method stub
+		if (i == 0) {
+			if (itemstack.getItem() instanceof PrinterInkBlack) {
+				return true;
+			}
+		} else if(i == 1) {
+			if (itemstack.getItem() instanceof PrinterInkColor) {
+				return true;
+			}
+		} else if (i == 2) {
+			if (itemstack.getItem() instanceof PrinterPaper || itemstack.getItem() instanceof PrinterPaperRoll || itemstack.getItem().equals(Item.paper)) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int var1) {
-		// TODO Auto-generated method stub
-		return null;
+	public int[] getAccessibleSlotsFromSide(int par1) {
+		return par1 == 0 ? slots_bottom : (par1 == 1 ? slots_top : slots_sides);
 	}
 
 	@Override
 	public boolean canInsertItem(int i, ItemStack itemstack, int j) {
-		// TODO Auto-generated method stub
-		return false;
+		return this.isItemValidForSlot(i, itemstack);
 	}
 
 	@Override
 	public boolean canExtractItem(int i, ItemStack itemstack, int j) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }

@@ -7,6 +7,7 @@ import pcl.openprinter.items.PrinterPaperRoll;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 
@@ -25,6 +26,9 @@ public class PrinterPaperSlot extends Slot {
             	return true;
             } 
             else if (itemstack.getItem() instanceof PrinterPaper) {
+            	return true;
+            }
+            else if (itemstack.getItem().equals(Item.paper)) {
             	return true;
             }
             return false;

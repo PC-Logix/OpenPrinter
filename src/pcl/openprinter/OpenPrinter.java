@@ -7,14 +7,19 @@ package pcl.openprinter;
  * @author Caitlyn
  *
  */
+import java.net.URL;
+import java.util.logging.Logger;
+
 import pcl.openprinter.blocks.Printer;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.gui.PrinterGUIHandler;
+import pcl.openprinter.items.ItemPrinterBlock;
 import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaper;
 import pcl.openprinter.items.PrinterPaperRoll;
+import pcl.openprinter.BuildInfo;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
 import net.minecraftforge.oredict.OreDictionary;
@@ -22,10 +27,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -38,7 +46,7 @@ import li.cil.oc.api.Blocks;
 import li.cil.oc.api.CreativeTab;
 import li.cil.oc.api.Items;
 
-@Mod(modid=OpenPrinter.MODID, name="OpenPrinter", version="0.0.1")
+@Mod(modid=OpenPrinter.MODID, name="OpenPrinter", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "after:OpenComputers")
 @NetworkMod(clientSideRequired=true)
 public class OpenPrinter {
 	
@@ -50,6 +58,7 @@ public class OpenPrinter {
 		public static Item  printerPaperRoll;
 		public static Item  printerInkColor;
 		public static Item  printerInkBlack;
+		public static ItemBlock  printeritemBlock;
 		
         @Instance(value = MODID)
         public static OpenPrinter instance;
@@ -58,18 +67,38 @@ public class OpenPrinter {
         public static CommonProxy proxy;
         public static Config cfg = null;
         public static boolean render3D = true;
+        
+        private static boolean debug = true;
+        public static Logger logger;
+        
         @EventHandler
         public void preInit(FMLPreInitializationEvent event) {
+        	
+        	
         	cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
         	render3D = cfg.render3D;
+        	
+            if((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient()){
+                try {
+                    Class.forName("pcl.openprinter.mud.ModUpdateDetector").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null,
+                            FMLCommonHandler.instance().findContainerFor(this),
+                            new URL("http://PC-Logix.com/OpenPrinter/op_update.xml"),
+                            new URL("http://PC-Logix.com/OpenPrinter/changelog.txt")
+                    );
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+            }
+            logger = event.getModLog();
+        	
+        	
         	NetworkRegistry.instance().registerGuiHandler(this, new PrinterGUIHandler());
         	GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
         	
         	//Register Blocks
         	printerBlock = new Printer(cfg.printerBlockID, Material.iron);
-    		GameRegistry.registerBlock(printerBlock, "openprinter.printer");
+        	GameRegistry.registerBlock(printerBlock, ItemPrinterBlock.class, "openprinter.printer");
     		printerBlock.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
-    		
         	
         	printerPaper = new PrinterPaper(cfg.printerPaperID);
     		GameRegistry.registerItem(printerPaper, "openprinter.printerPaper");
@@ -114,6 +143,7 @@ public class OpenPrinter {
         	ItemStack blueInk	   = new ItemStack(Item.dyePowder, 1, 4);
         	ItemStack paper        = new ItemStack(Item.paper);
         	ItemStack lprinterPaper	= new ItemStack(printerPaper,64);
+        	ItemStack stackPaper	= new ItemStack(Item.paper,64);
         	
         	GameRegistry.addRecipe( new ItemStack(printerBlock, 1), 
         			"IRI",
@@ -131,12 +161,16 @@ public class OpenPrinter {
         			" I ",
         			'R', redInk, 'G', greenInk, 'B', blueInk, 'I', nuggetIron);
         	
-        	GameRegistry.addShapelessRecipe( new ItemStack(printerPaper, 2), paper, paper);
         	
         	GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
         			"PP",
         			"PP",
         			'P', lprinterPaper);
+        	
+        	GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
+        			"PP",
+        			"PP",
+        			'P', stackPaper);
         	
         	
     		proxy.registerRenderers();
