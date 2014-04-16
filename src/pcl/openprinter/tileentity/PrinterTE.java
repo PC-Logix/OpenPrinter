@@ -5,6 +5,7 @@ package pcl.openprinter.tileentity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.*;
 
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.items.PrintedPage;
@@ -46,6 +47,9 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	private List<String> align = new ArrayList<String>();
 	private List<Integer> colors = new ArrayList<Integer>();
 	private String pageTitle = "";
+	
+	Integer colorUses = 0;
+	
 	
 	private static final int[] slots_top = new int[] {2};
 	private static final int[] slots_bottom = new int[] {3,4,5,6,7,8,9};
@@ -107,6 +111,8 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	//Real Printer methods follow:
 	@Callback
 	public Object[] print(Context context, Arguments args) throws Exception {
+		
+		
 		boolean markColor = false;
 		boolean markBlack = false;
 		if(getStackInSlot(0) != null) { //No black ink
@@ -133,6 +139,10 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 								if(lines.get(iter).matches(".*§[0-9a-f].*")) {
 									markColor = true;
 									markBlack = false;
+							        Pattern regex = Pattern.compile("§[0-9a-f]*");
+							        Matcher matcher = regex.matcher(lines.get(iter));
+							        while (matcher.find())
+							            colorUses++;
 								}
 								iter++; 
 							}
@@ -148,7 +158,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 								decrStackSize(2, 1);
 							}
 							if (markColor) {
-								getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + 1);
+								getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + colorUses++);
 								if(getStackInSlot(1).getItemDamage() == getStackInSlot(1).getMaxDamage()) {
 									setInventorySlotContents(1, null);
 								}
