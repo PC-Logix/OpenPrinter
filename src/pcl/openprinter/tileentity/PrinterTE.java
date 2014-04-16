@@ -122,9 +122,6 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 							}
 							int iter = 0;
 							for (String s : lines) { 
-								if(lines.get(iter).contains("§")) {
-									markColor = true;
-								}
 								printerItemStacks[x].stackTagCompound.setString("line"+iter, lines.get(iter)); 
 								printerItemStacks[x].stackTagCompound.setInteger("color"+iter, colors.get(iter));
 								printerItemStacks[x].stackTagCompound.setString("alignment"+iter, align.get(iter));
@@ -132,6 +129,10 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 									markColor = true;
 								} else {
 									markBlack = true;
+								}
+								if(lines.get(iter).matches(".*§[0-9a-f].*")) {
+									markColor = true;
+									markBlack = false;
 								}
 								iter++; 
 							}

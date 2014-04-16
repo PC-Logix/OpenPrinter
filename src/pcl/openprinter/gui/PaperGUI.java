@@ -52,7 +52,10 @@ public class PaperGUI extends GuiScreen {
 	drawCenteredString(fontRenderer, stack.stackTagCompound.getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
 	for (int x = 0; x <= stack.stackTagCompound.getTags().size(); x++) {
 		String output = stack.stackTagCompound.getString("line"+x);
-		output = limit(output,30);
+		Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
+		if (outleng > 30) {
+			output = limit(output,30);
+		}
 		Integer color = stack.stackTagCompound.getInteger("color"+x);
 		String alignment = stack.stackTagCompound.getString("alignment"+x);
 		if (alignment.equalsIgnoreCase("center")) {
