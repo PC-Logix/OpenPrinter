@@ -8,6 +8,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
@@ -27,7 +28,8 @@ public class ClientProxy extends CommonProxy {
 		if (OpenPrinter.render3D) {
 			TileEntitySpecialRenderer render = new PrinterRenderer();
 			ClientRegistry.bindTileEntitySpecialRenderer(pcl.openprinter.tileentity.PrinterTE.class, render);
-			//MinecraftForgeClient.registerItemRenderer(null, new ItemPrinterRenderer(render, new PrinterTE()));
+			NetworkRegistry.INSTANCE.registerGuiHandler(OpenPrinter.instance, new PrinterGUIHandler());
+			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(OpenPrinter.printerBlock), new ItemPrinterRenderer(render, new PrinterTE()));
 		}
 	}
 	

@@ -59,7 +59,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.readFromNBT(par1NBTTagCompound);
-		NBTTagList var2 = par1NBTTagCompound.getTagList("Items",12);
+		NBTTagList var2 = par1NBTTagCompound.getTagList("Items",par1NBTTagCompound.getId());
 		this.printerItemStacks = new ItemStack[this.getSizeInventory()];
 		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
 		{

@@ -21,7 +21,6 @@ public class PrinterGUIHandler implements IGuiHandler {
         	if (id == 0) {
                 TileEntity tileEntity = world.getTileEntity(x, y, z);
                 if(tileEntity instanceof PrinterTE){
-                	System.out.println(TileEntity.class);
                         return new PrinterContainer(player.inventory, (PrinterTE) tileEntity);
                 }
         	}
@@ -34,7 +33,6 @@ public class PrinterGUIHandler implements IGuiHandler {
         public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
         	if (id == 0) {
                 TileEntity tileEntity = world.getTileEntity(x, y, z);
-                System.out.println(TileEntity.class);
                 if(tileEntity instanceof PrinterTE){
                         return new PrinterGUI(player.inventory, (PrinterTE) tileEntity);
                 }
