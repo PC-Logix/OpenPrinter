@@ -14,7 +14,6 @@ import pcl.openprinter.items.ItemPrinterBlock;
 import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
-import pcl.openprinter.items.PrinterPaper;
 import pcl.openprinter.items.PrinterPaperRoll;
 import pcl.openprinter.BuildInfo;
 import net.minecraftforge.common.config.Configuration;
@@ -79,7 +78,7 @@ public class OpenPrinter {
 				Class.forName("pcl.openprinter.mud.ModUpdateDetector").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null,
 						FMLCommonHandler.instance().findContainerFor(this),
 						new URL("http://PC-Logix.com/OpenPrinter/get_latest_build_1.7.php"),
-						new URL("http://PC-Logix.com/OpenPrinter/changelog_1.7.txt")
+						new URL("http://PC-Logix.com/OpenPrinter/changelog1.7.txt")
 						);
 			} catch (Throwable e) {
 				e.printStackTrace();
@@ -96,12 +95,6 @@ public class OpenPrinter {
 		GameRegistry.registerBlock(printerBlock, ItemPrinterBlock.class, "openprinter.printer");
 		printerBlock.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 		printerBlock.setBlockName("printer");
-
-		printerPaper = new PrinterPaper();
-		GameRegistry.registerItem(printerPaper, "openprinter.printerPaper");
-		printerPaper.setUnlocalizedName("printerPaper");
-		printerPaper.setTextureName("minecraft:paper");
-		printerPaper.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 
 		printerPaperRoll = new PrinterPaperRoll();
 		GameRegistry.registerItem(printerPaperRoll, "openprinter.printerPaperRoll");
@@ -123,6 +116,8 @@ public class OpenPrinter {
 
 		printedPage = new PrintedPage();
 		GameRegistry.registerItem(printedPage, "openprinter.printedPage");
+		printedPage.setUnlocalizedName("printedPage");
+		printedPage.setTextureName("minecraft:paper");
 	}
 
 	@EventHandler

@@ -11,7 +11,6 @@ import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
-import pcl.openprinter.items.PrinterPaper;
 import pcl.openprinter.items.PrinterPaperRoll;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.network.Arguments;
@@ -354,7 +353,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 				return true;
 			}
 		} else if (i == 2) {
-			if (itemstack.getItem() instanceof PrinterPaper || itemstack.getItem() instanceof PrinterPaperRoll || itemstack.getItem().equals(Items.paper)) {
+			if (itemstack.getItem() instanceof PrinterPaperRoll || itemstack.getItem().equals(Items.paper)) {
 				return true;
 			}
 		}
