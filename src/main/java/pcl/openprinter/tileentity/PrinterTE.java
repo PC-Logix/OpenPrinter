@@ -132,7 +132,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 				if(getStackInSlot(2) != null) { //No paper
 					for (int x = 3; x <= 12; x++) { //Loop the 9 output slots checking for a empty one
 						if (getStackInSlot(x) == null) { //The slot is empty lets make us a new page
-							printerItemStacks[x] = new ItemStack(new PrintedPage());
+							printerItemStacks[x] = new ItemStack(OpenPrinter.printedPage);
 							printerItemStacks[x].setTagCompound(new NBTTagCompound());
 							if(pageTitle != "") {
 								printerItemStacks[x].stackTagCompound.setString("pageTitle", pageTitle);

@@ -21,12 +21,9 @@ public class PrinterInkColor extends Item {
 		maxStackSize = 1;
 		this.setMaxDamage(OpenPrinter.cfg.printerInkUse);
 		setNoRepair();
-	}
-
-	public static void init() {
-		PrinterInkColor item = new PrinterInkColor();
-		item.setTextureName("openprinter:PrinterInkColor");
-		item.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+		setUnlocalizedName("printerInkColor");
+		setTextureName("openprinter:PrinterInkColor");
+		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 	}
 	
 	@Override

@@ -22,8 +22,10 @@ public class PrintedPage extends Item{
 
 	public PrintedPage() {
 		super();
-		this.maxStackSize = 1;
-		this.setCreativeTab(CreativeTabs.tabMaterials);
+		maxStackSize = 1;
+		setCreativeTab(CreativeTabs.tabMaterials);
+		setUnlocalizedName("printedPage");
+		setTextureName("minecraft:paper");
 	}
 	
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player)

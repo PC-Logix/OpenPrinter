@@ -93,31 +93,23 @@ public class OpenPrinter {
 		//Register Blocks)
 		printerBlock = new Printer();
 		GameRegistry.registerBlock(printerBlock, ItemPrinterBlock.class, "openprinter.printer");
-		printerBlock.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
-		printerBlock.setBlockName("printer");
+
 
 		printerPaperRoll = new PrinterPaperRoll();
 		GameRegistry.registerItem(printerPaperRoll, "openprinter.printerPaperRoll");
-		printerPaperRoll.setUnlocalizedName("printerPaperRoll");
-		printerPaperRoll.setTextureName("openprinter:printerpaperroll");
-		printerPaperRoll.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+
 
 		printerInkColor = new PrinterInkColor();
 		GameRegistry.registerItem(printerInkColor, "openprinter.printerInkColor");
-		printerInkColor.setUnlocalizedName("printerInkColor");
-		printerInkColor.setTextureName("openprinter:PrinterInkColor");
-		printerInkColor.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+
 
 		printerInkBlack = new PrinterInkBlack();
 		GameRegistry.registerItem(printerInkBlack, "openprinter.printerInkBlack");
-		printerInkBlack.setUnlocalizedName("printerInkBlack");
-		printerInkBlack.setTextureName("openprinter:PrinterInkBlack");
-		printerInkBlack.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+
 
 		printedPage = new PrintedPage();
 		GameRegistry.registerItem(printedPage, "openprinter.printedPage");
-		printedPage.setUnlocalizedName("printedPage");
-		printedPage.setTextureName("minecraft:paper");
+
 	}
 
 	@EventHandler

@@ -74,6 +74,7 @@ public class Printer extends BlockContainer {
 	public Printer() {
 		super(Material.iron );
 		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+		setBlockName("printer");
 		if (OpenPrinter.render3D) {
 			renderID = RenderingRegistry.getNextAvailableRenderId();
 		}

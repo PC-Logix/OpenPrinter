@@ -21,12 +21,11 @@ public class PrinterPaperRoll extends Item {
 		maxStackSize = 1;
 		this.setMaxDamage(256);
 		setNoRepair();
+		setUnlocalizedName("printerPaperRoll");
+		setTextureName("openprinter:printerpaperroll");
+		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 	}
 
-	public static void init() {
-		PrinterPaperRoll item = new PrinterPaperRoll();
-	}
-	
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int n,
 			boolean b) {

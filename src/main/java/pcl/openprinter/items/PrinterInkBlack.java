@@ -21,12 +21,11 @@ public class PrinterInkBlack extends Item {
 		maxStackSize = 1;
 		this.setMaxDamage(OpenPrinter.cfg.printerInkUse);
 		setNoRepair();
+		setUnlocalizedName("printerInkBlack");
+		setTextureName("openprinter:PrinterInkBlack");
+		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 	}
 
-	public static void init() {
-		PrinterInkBlack item = new PrinterInkBlack();
-	}
-	
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int n, boolean b) {
 		if (stack.getItemDamage() >= stack.getMaxDamage())
