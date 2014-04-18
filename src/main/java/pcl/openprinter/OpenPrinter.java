@@ -78,8 +78,8 @@ public class OpenPrinter {
 			try {
 				Class.forName("pcl.openprinter.mud.ModUpdateDetector").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null,
 						FMLCommonHandler.instance().findContainerFor(this),
-						new URL("http://PC-Logix.com/OpenPrinter/get_latest_build.php"),
-						new URL("http://PC-Logix.com/OpenPrinter/changelog.txt")
+						new URL("http://PC-Logix.com/OpenPrinter/get_latest_build_1.7.php"),
+						new URL("http://PC-Logix.com/OpenPrinter/changelog_1.7.txt")
 						);
 			} catch (Throwable e) {
 				e.printStackTrace();
@@ -123,8 +123,6 @@ public class OpenPrinter {
 
 		printedPage = new PrintedPage();
 		GameRegistry.registerItem(printedPage, "openprinter.printedPage");
-		printedPage.setUnlocalizedName("printedPage");
-		printedPage.setTextureName("minecraft:paper");
 	}
 
 	@EventHandler
