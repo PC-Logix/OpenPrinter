@@ -120,7 +120,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 				if(getStackInSlot(2) != null) { //No paper
 					for (int x = 3; x <= 12; x++) { //Loop the 9 output slots checking for a empty one
 						if (getStackInSlot(x) == null) { //The slot is empty lets make us a new page
-							printerItemStacks[x] = new ItemStack(OpenPrinter.cfg.printedPageID + 256, 1, 0);
+							printerItemStacks[x] = new ItemStack(OpenPrinter.printedPage);
 							printerItemStacks[x].setTagCompound(new NBTTagCompound());
 							if(pageTitle != "") {
 								printerItemStacks[x].stackTagCompound.setString("pageTitle", pageTitle);
@@ -136,10 +136,10 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 								} else {
 									markBlack = true;
 								}
-								if(lines.get(iter).matches(".*ง[0-9a-f].*")) {
+								if(lines.get(iter).matches(".*ยง[0-9a-f].*")) {
 									markColor = true;
 									markBlack = false;
-							        Pattern regex = Pattern.compile("ง[0-9a-f]*");
+							        Pattern regex = Pattern.compile("ยง[0-9a-f]*");
 							        Matcher matcher = regex.matcher(lines.get(iter));
 							        while (matcher.find())
 							            colorUses++;
