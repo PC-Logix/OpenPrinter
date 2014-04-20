@@ -49,6 +49,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	private String pageTitle = "";
 	
 	Integer colorUses = 0;
+	Integer blackUses = 0;
 	
 	
 	private static final int[] slots_top = new int[] {2};
@@ -111,8 +112,6 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	//Real Printer methods follow:
 	@Callback
 	public Object[] print(Context context, Arguments args) throws Exception {
-		
-		
 		boolean markColor = false;
 		boolean markBlack = false;
 		if(getStackInSlot(0) != null) { //No black ink
@@ -122,7 +121,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 						if (getStackInSlot(x) == null) { //The slot is empty lets make us a new page
 							printerItemStacks[x] = new ItemStack(OpenPrinter.printedPage);
 							printerItemStacks[x].setTagCompound(new NBTTagCompound());
-							if(pageTitle != "") {
+							if(pageTitle != null) {
 								printerItemStacks[x].stackTagCompound.setString("pageTitle", pageTitle);
 								printerItemStacks[x].setItemName(pageTitle);
 							}
@@ -135,11 +134,12 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 									markColor = true;
 								} else {
 									markBlack = true;
+									blackUses++;
 								}
-								if(lines.get(iter).matches(".*ยง[0-9a-f].*")) {
+								if(lines.get(iter).matches(".*ง[0-9a-f].*")) {
 									markColor = true;
 									markBlack = false;
-							        Pattern regex = Pattern.compile("ยง[0-9a-f]*");
+							        Pattern regex = Pattern.compile("ง[0-9a-f]*");
 							        Matcher matcher = regex.matcher(lines.get(iter));
 							        while (matcher.find())
 							            colorUses++;
@@ -149,6 +149,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 							lines.clear();
 							colors.clear();
 							align.clear();
+							pageTitle = null;
 							if (getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
 								getStackInSlot(2).setItemDamage(getStackInSlot(2).getItemDamage() + 1);
 								if(getStackInSlot(2).getItemDamage() == getStackInSlot(2).getMaxDamage()) {
@@ -158,13 +159,13 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 								decrStackSize(2, 1);
 							}
 							if (markColor) {
-								getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + colorUses++);
+								getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + colorUses);
 								if(getStackInSlot(1).getItemDamage() == getStackInSlot(1).getMaxDamage()) {
 									setInventorySlotContents(1, null);
 								}
 							}
 							if (markBlack) {
-								getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + 1);
+								getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + blackUses);
 								if(getStackInSlot(0).getItemDamage() == getStackInSlot(0).getMaxDamage()) {
 									setInventorySlotContents(0, null);
 								}
@@ -263,6 +264,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 		lines.clear();
 		colors.clear();
 		align.clear();
+		pageTitle = null;
 		return new Object[] { true };
 	}
 	
