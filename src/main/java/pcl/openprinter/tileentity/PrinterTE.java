@@ -48,7 +48,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	private String pageTitle = "";
 
 	Integer colorUses = 0;
-	Integer blackUses = 0
+	Integer blackUses = 0;
 
 
 	private static final int[] slots_top = new int[] {2};
