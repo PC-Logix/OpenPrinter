@@ -1,9 +1,9 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
+  "modid": "openprinter",
+  "name": "OpenPrinter",
   "description": "Example placeholder mod.",
-  "version": "${version}",
+  "version": "@VERSION@.@BUILD@",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",

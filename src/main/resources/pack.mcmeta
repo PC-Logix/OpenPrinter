@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "pack_format": 1,
+    "description": "OpenPrinter"
+  },
+    "language": {
+     "en_US": {
+        "name": "English",
+        "region": "United States"
+     }
+  }
+}
+}
