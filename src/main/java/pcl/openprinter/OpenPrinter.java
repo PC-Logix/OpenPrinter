@@ -73,7 +73,7 @@ public class OpenPrinter {
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
 		render3D = cfg.render3D;
 
-		if((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient() && cfg.enableMUD){
+		if((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient()){
 			try {
 				Class.forName("pcl.openprinter.mud.ModUpdateDetector").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null,
 						FMLCommonHandler.instance().findContainerFor(this),

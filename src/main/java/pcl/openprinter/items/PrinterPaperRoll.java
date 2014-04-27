@@ -22,7 +22,7 @@ public class PrinterPaperRoll extends Item {
 		this.setMaxDamage(256);
 		setNoRepair();
 		setUnlocalizedName("printerPaperRoll");
-		setTextureName("openprinter:printerpaperroll");
+		setTextureName("openprinter:PrinterPaperRoll");
 		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
 	}
 

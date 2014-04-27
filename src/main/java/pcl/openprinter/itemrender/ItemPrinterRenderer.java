@@ -28,7 +28,7 @@ public class ItemPrinterRenderer implements IItemRenderer {
 	private final ResourceLocation theTexture = new ResourceLocation("openprinter", "textures/obj/OpenPrinter.png");
 
     public ItemPrinterRenderer(TileEntitySpecialRenderer render, TileEntity TE) {
-	    model = (WavefrontObject)AdvancedModelLoader.loadModel(new ResourceLocation("openprinter", "/models/printer.obj"));
+	    model = (WavefrontObject)AdvancedModelLoader.loadModel(new ResourceLocation("openprinter", "models/printer.obj"));
 	}
 
     @Override

@@ -4,14 +4,12 @@ import cpw.mods.fml.client.GuiModList;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import pcl.openprinter.mud.gui.GuiModUpdateButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiIngameMenu;
 import net.minecraft.client.gui.GuiScreen;
 
-import java.util.EnumSet;
 import java.util.List;
-
-import pcl.openprinter.mud.gui.GuiModUpdateButton;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,6 +26,21 @@ public class ModUpdateDetectorTickHandeler {
 
     public ModUpdateDetectorTickHandeler(int timer) {
         this.timer_interval = timer;
+    }
+
+    @SubscribeEvent
+    public void onPlayerTick(TickEvent.PlayerTickEvent event){
+        if(event.phase == TickEvent.Phase.START){
+            if(timer == 0){
+                ModUpdateDetector.runUpdateChecker();
+            }
+
+            if(timer_interval > 0){
+                timer = (timer+1) % timer_interval;
+            }else{
+                timer = -1;
+            }
+        }
     }
 
     @SubscribeEvent
@@ -62,6 +75,10 @@ public class ModUpdateDetectorTickHandeler {
     }
 
     private List getButtonList(GuiScreen currentScreen) {
-        return ObfuscationReflectionHelper.getPrivateValue(GuiScreen.class, currentScreen, "buttonList", "field_73887_h");
+        try{
+            return ObfuscationReflectionHelper.getPrivateValue(GuiScreen.class, currentScreen, "buttonList", "field_146292_n");
+        }catch (Exception e){
+            return null;
+        }
     }
 }
