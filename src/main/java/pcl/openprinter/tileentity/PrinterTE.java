@@ -48,6 +48,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	private String pageTitle = "";
 
 	Integer colorUses = 0;
+	Integer blackUses = 0;
 
 
 	private static final int[] slots_top = new int[] {2};
@@ -147,6 +148,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 									markColor = true;
 								} else {
 									markBlack = true;
+									blackUses++;
 								}
 								if(lines.get(iter).matches(".*§[0-9a-f].*")) {
 									markColor = true;
@@ -176,7 +178,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 								}
 							}
 							if (markBlack) {
-								getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + 1);
+								getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + blackUses);
 								if(getStackInSlot(0).getItemDamage() == getStackInSlot(0).getMaxDamage()) {
 									setInventorySlotContents(0, null);
 								}
