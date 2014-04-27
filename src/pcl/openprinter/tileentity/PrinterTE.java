@@ -260,6 +260,11 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	}
 	
 	@Callback
+	public Object[] charCount(Context context, Arguments args) {
+		return new Object[] { args.checkString(0).replaceAll("(?:§[0-9a-fk-or])+", "").length() };
+	}
+	
+	@Callback
 	public Object[] clear(Context context, Arguments args) {
 		lines.clear();
 		colors.clear();
@@ -277,7 +282,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	public ItemStack getStackInSlot(int i) {
 		return this.printerItemStacks[i];
 	}
-
+	
     @Override
     public ItemStack decrStackSize(int slot, int amt) {
             ItemStack stack = getStackInSlot(slot);
