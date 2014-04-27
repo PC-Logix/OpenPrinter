@@ -17,7 +17,7 @@ public class PrinterRenderer extends TileEntitySpecialRenderer {
 	WavefrontObject model = null;
 	private final ResourceLocation theTexture = new ResourceLocation("openprinter", "textures/obj/OpenPrinter.png");
 	public PrinterRenderer() {
-		model = (WavefrontObject)AdvancedModelLoader.loadModel(new ResourceLocation("openprinter","models/printer.obj"));
+		model = (WavefrontObject)AdvancedModelLoader.loadModel(new ResourceLocation("openprinter:models/printer.obj"));
 	}
 
 	@Override
