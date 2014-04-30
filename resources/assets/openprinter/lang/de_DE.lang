@@ -1,0 +1,34 @@
+tile.printer.name=Open Printer
+item.printerPaper.name=Druckerpapier
+item.printerPaperRoll.name=Papierrolle
+item.printedPage.name=Bedrucktes Papier
+item.printerInkBlack.name=Schwarze Tinte
+item.printerInkColor.name=Farbige Tinte
+gui.string.printer=Open Printer
+gui.string.blackInk=Schwarze Tinte
+gui.string.colorInk=Farbige Tinte
+gui.string.paperInput=Papierschacht
+gui.string.paperOutput=Papierausgabe
+
+openprinter.outdated=OpenPrinter ist veraltet.
+openprinter.uptodate=OpenPrinter ist aktuell.
+
+mud.name=OpenPrinter Updater
+mud.version.latest=Aktuelle Version
+mud.version.out=Veraltete Version
+
+message.checking=Überprüfe Mod auf Update.
+message.check.done=Überprüfung abgeschlossen.
+message.type.to.view=Nutze /opupdate um Update Informationen ein zu sehen.
+
+button.download.latest=Download Neuste
+gui.downloading=Downloade
+button.ok=Ok
+button.url=Mod-Homepage anzeigen
+gui.download.complete=Download erfolgreich.
+gui.download.failed=Download fehlgeschlagen
+gui.restart=Bitte start Minecraft neu.
+gui.md5.fail=Ungültiger Download
+log.message.none=Kein Changelog vorhanden.
+log.message.loading=Lade Changelog
+log.message.fail=Changelog Download fehlgeschladen
