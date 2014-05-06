@@ -29,9 +29,13 @@ public class PrintedPage extends Item{
 	}
 	
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player)
-    {
-       player.openGui(OpenPrinter.instance, 1, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
-       PaperGUI.stack = par1ItemStack;
-       return par1ItemStack;
-    }
+	{
+		if (par2World.isRemote) {
+			return par1ItemStack;
+		} else {
+			player.openGui(OpenPrinter.instance, 1, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+			PaperGUI.stack = par1ItemStack;
+			return par1ItemStack;
+		}
+	}
 }
