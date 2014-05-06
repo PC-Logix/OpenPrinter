@@ -28,15 +28,15 @@ public class PrintedPage extends Item{
 	public static void init(int itemID) {
 		PrintedPage item = new PrintedPage(itemID);
 	}
-	
+
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player)
-    	{
-    	  if (par3World.isRemote) {
-                        return true;
-                } else {
-       			player.openGui(OpenPrinter.instance, 1, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
-       			PaperGUI.stack = par1ItemStack;
-       			return par1ItemStack;
-                }
-    }
+	{
+		if (!par2World.isRemote) {
+			return par1ItemStack;
+		} else {
+			player.openGui(OpenPrinter.instance, 1, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+			PaperGUI.stack = par1ItemStack;
+			return par1ItemStack;
+		}
+	}
 }

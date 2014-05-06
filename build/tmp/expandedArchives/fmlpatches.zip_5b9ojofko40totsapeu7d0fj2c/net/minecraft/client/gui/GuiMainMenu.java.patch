@@ -1,0 +1,91 @@
+--- ../src-base/minecraft/net/minecraft/client/gui/GuiMainMenu.java
++++ ../src-work/minecraft/net/minecraft/client/gui/GuiMainMenu.java
+@@ -1,5 +1,7 @@
+ package net.minecraft.client.gui;
+ 
++import cpw.mods.fml.client.GuiModList;
++import cpw.mods.fml.common.FMLCommonHandler;
+ import cpw.mods.fml.relauncher.Side;
+ import cpw.mods.fml.relauncher.SideOnly;
+ import java.io.BufferedReader;
+@@ -9,6 +11,7 @@
+ import java.util.ArrayList;
+ import java.util.Calendar;
+ import java.util.Date;
++import java.util.List;
+ import java.util.Random;
+ import net.minecraft.client.Minecraft;
+ import net.minecraft.client.mco.ExceptionMcoService;
+@@ -26,6 +29,9 @@
+ import org.apache.commons.io.Charsets;
+ import org.lwjgl.opengl.GL11;
+ import org.lwjgl.util.glu.Project;
++
++import com.google.common.base.Strings;
++import com.google.common.collect.Lists;
+ 
+ @SideOnly(Side.CLIENT)
+ public class GuiMainMenu extends GuiScreen
+@@ -55,6 +61,8 @@
+     private ResourceLocation field_110351_G;
+     private GuiButton field_130023_H;
+ 
++    private GuiButton fmlModButton = null;
++
+     public GuiMainMenu()
+     {
+         BufferedReader bufferedreader = null;
+@@ -206,13 +214,22 @@
+     private void func_130022_h()
+     {
+         this.field_130023_H.field_73748_h = true;
++        fmlModButton.field_73747_a = 98;
++        fmlModButton.field_73746_c = this.field_73880_f / 2 + 2;
+     }
+ 
+     private void func_73969_a(int p_73969_1_, int p_73969_2_)
+     {
+         this.field_73887_h.add(new GuiButton(1, this.field_73880_f / 2 - 100, p_73969_1_, I18n.func_135053_a("menu.singleplayer")));
+         this.field_73887_h.add(new GuiButton(2, this.field_73880_f / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.func_135053_a("menu.multiplayer")));
+-        this.field_73887_h.add(this.field_130023_H = new GuiButton(14, this.field_73880_f / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.func_135053_a("menu.online")));
++        //If Minecraft Realms is enabled, halve the size of both buttons and set them next to eachother.
++        fmlModButton = new GuiButton(6, this.field_73880_f / 2 - 100, p_73969_1_ + p_73969_2_ * 2, "Mods");
++        this.field_73887_h.add(fmlModButton);
++
++        field_130023_H = new GuiButton(14, this.field_73880_f / 2 - 100, p_73969_1_ + p_73969_2_ * 2, I18n.func_135053_a("menu.online"));
++        field_130023_H.field_73747_a = 98;
++        field_130023_H.field_73746_c = this.field_73880_f / 2 - 100;
++        this.field_73887_h.add(field_130023_H);
+         this.field_130023_H.field_73748_h = false;
+     }
+ 
+@@ -259,6 +276,11 @@
+         if (p_73875_1_.field_73741_f == 4)
+         {
+             this.field_73882_e.func_71400_g();
++        }
++
++        if (p_73875_1_.field_73741_f == 6)
++        {
++            this.field_73882_e.func_71373_a(new GuiModList(this));
+         }
+ 
+         if (p_73875_1_.field_73741_f == 11)
+@@ -520,7 +542,16 @@
+             s = s + " Demo";
+         }
+ 
+-        this.func_73731_b(this.field_73886_k, s, 2, this.field_73881_g - 10, 16777215);
++        List<String> brandings = Lists.reverse(FMLCommonHandler.instance().getBrandings());
++        for (int i = 0; i < brandings.size(); i++)
++        {
++            String brd = brandings.get(i);
++            if (!Strings.isNullOrEmpty(brd))
++            {
++                this.func_73731_b(this.field_73886_k, brd, 2, this.field_73881_g - ( 10 + i * (this.field_73886_k.field_78288_b + 1)), 16777215);
++            }
++        }
++
+         String s1 = "Copyright Mojang AB. Do not distribute!";
+         this.func_73731_b(this.field_73886_k, s1, this.field_73880_f - this.field_73886_k.func_78256_a(s1) - 2, this.field_73881_g - 10, 16777215);
+ 

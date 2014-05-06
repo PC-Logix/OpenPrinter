@@ -1,0 +1,57 @@
+--- ../src-base/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
++++ ../src-work/minecraft/net/minecraft/world/chunk/storage/AnvilChunkLoader.java
+@@ -9,6 +9,10 @@
+ import java.util.Iterator;
+ import java.util.List;
+ import java.util.Set;
++import java.util.logging.Level;
++
++import cpw.mods.fml.common.FMLLog;
++
+ import net.minecraft.entity.Entity;
+ import net.minecraft.entity.EntityList;
+ import net.minecraft.nbt.CompressedStreamTools;
+@@ -253,10 +257,19 @@
+                 Entity entity = (Entity)iterator.next();
+                 nbttagcompound1 = new NBTTagCompound();
+ 
+-                if (entity.func_70039_c(nbttagcompound1))
+-                {
+-                    p_75820_1_.field_76644_m = true;
+-                    nbttaglist1.func_74742_a(nbttagcompound1);
++                try
++                {
++                    if (entity.func_70039_c(nbttagcompound1))
++                    {
++                        p_75820_1_.field_76644_m = true;
++                        nbttaglist1.func_74742_a(nbttagcompound1);
++                    }
++                }
++                catch (Exception e)
++                {
++                    FMLLog.log(Level.SEVERE, e,
++                            "An Entity type %s has thrown an exception trying to write state. It will not persist. Report this to the mod author",
++                            entity.getClass().getName());
+                 }
+             }
+         }
+@@ -269,8 +282,17 @@
+         {
+             TileEntity tileentity = (TileEntity)iterator.next();
+             nbttagcompound1 = new NBTTagCompound();
+-            tileentity.func_70310_b(nbttagcompound1);
+-            nbttaglist2.func_74742_a(nbttagcompound1);
++            try
++            {
++                tileentity.func_70310_b(nbttagcompound1);
++                nbttaglist2.func_74742_a(nbttagcompound1);
++            }
++            catch (Exception e)
++            {
++                FMLLog.log(Level.SEVERE, e,
++                        "A TileEntity type %s has throw an exception trying to write state. It will not persist. Report this to the mod author",
++                        tileentity.getClass().getName());
++            }
+         }
+ 
+         p_75820_3_.func_74782_a("TileEntities", nbttaglist2);

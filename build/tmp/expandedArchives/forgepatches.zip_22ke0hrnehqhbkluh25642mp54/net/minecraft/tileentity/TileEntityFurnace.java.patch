@@ -1,0 +1,72 @@
+--- ../src-base/minecraft/net/minecraft/tileentity/TileEntityFurnace.java
++++ ../src-work/minecraft/net/minecraft/tileentity/TileEntityFurnace.java
+@@ -9,6 +9,7 @@
+ import net.minecraft.entity.player.EntityPlayer;
+ import net.minecraft.inventory.ISidedInventory;
+ import net.minecraft.item.Item;
++import net.minecraft.item.ItemBlock;
+ import net.minecraft.item.ItemHoe;
+ import net.minecraft.item.ItemStack;
+ import net.minecraft.item.ItemSword;
+@@ -16,6 +17,8 @@
+ import net.minecraft.item.crafting.FurnaceRecipes;
+ import net.minecraft.nbt.NBTTagCompound;
+ import net.minecraft.nbt.NBTTagList;
++import net.minecraftforge.common.ForgeDirection;
++import net.minecraftforge.common.ForgeDummyContainer;
+ 
+ public class TileEntityFurnace extends TileEntity implements ISidedInventory
+ {
+@@ -279,8 +282,7 @@
+ 
+                         if (this.furnaceItemStacks[1].stackSize == 0)
+                         {
+-                            Item item = this.furnaceItemStacks[1].getItem().getContainerItem();
+-                            this.furnaceItemStacks[1] = item != null ? new ItemStack(item) : null;
++                            this.furnaceItemStacks[1] = this.furnaceItemStacks[1].getItem().getContainerItemStack(furnaceItemStacks[1]);
+                         }
+                     }
+                 }
+@@ -326,8 +328,12 @@
+         }
+         else
+         {
+-            ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(this.furnaceItemStacks[0].getItem().itemID);
+-            return itemstack == null ? false : (this.furnaceItemStacks[2] == null ? true : (!this.furnaceItemStacks[2].isItemEqual(itemstack) ? false : (this.furnaceItemStacks[2].stackSize < this.getInventoryStackLimit() && this.furnaceItemStacks[2].stackSize < this.furnaceItemStacks[2].getMaxStackSize() ? true : this.furnaceItemStacks[2].stackSize < itemstack.getMaxStackSize())));
++            ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(this.furnaceItemStacks[0]);
++            if (itemstack == null) return false;
++            if (this.furnaceItemStacks[2] == null) return true;
++            if (!this.furnaceItemStacks[2].isItemEqual(itemstack)) return false;
++            int result = furnaceItemStacks[2].stackSize + itemstack.stackSize;
++            return (result <= getInventoryStackLimit() && result <= itemstack.getMaxStackSize());
+         }
+     }
+ 
+@@ -338,15 +344,15 @@
+     {
+         if (this.canSmelt())
+         {
+-            ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(this.furnaceItemStacks[0].getItem().itemID);
++            ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(this.furnaceItemStacks[0]);
+ 
+             if (this.furnaceItemStacks[2] == null)
+             {
+                 this.furnaceItemStacks[2] = itemstack.copy();
+             }
+-            else if (this.furnaceItemStacks[2].itemID == itemstack.itemID)
++            else if (this.furnaceItemStacks[2].isItemEqual(itemstack))
+             {
+-                ++this.furnaceItemStacks[2].stackSize;
++                furnaceItemStacks[2].stackSize += itemstack.stackSize;
+             }
+ 
+             --this.furnaceItemStacks[0].stackSize;
+@@ -373,7 +379,7 @@
+             int i = par0ItemStack.getItem().itemID;
+             Item item = par0ItemStack.getItem();
+ 
+-            if (i < 256 && Block.blocksList[i] != null)
++            if (par0ItemStack.getItem() instanceof ItemBlock && Block.blocksList[i] != null)
+             {
+                 Block block = Block.blocksList[i];
+ 
