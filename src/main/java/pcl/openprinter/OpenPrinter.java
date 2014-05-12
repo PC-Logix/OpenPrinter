@@ -19,6 +19,7 @@ import pcl.openprinter.BuildInfo;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -128,21 +129,21 @@ public class OpenPrinter {
 		ItemStack stackPaper	= new ItemStack(Items.paper,64);
 
 
-		GameRegistry.addRecipe( new ItemStack(printerBlock, 1), 
+		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerBlock, 1), 
 				"IRI",
 				"MPM",
 				"IRI",
-				'I', nuggetIron, 'R', redstone, 'M', microchip, 'P', pcb);
+				'I', nuggetIron, 'R', redstone, 'M', microchip, 'P', pcb));
 
-		GameRegistry.addRecipe( new ItemStack(printerInkBlack, 1), 
+		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerInkBlack, 1), 
 				"BBB",
 				" I ",
-				'B', blackInk, 'I', nuggetIron);
+				'B', blackInk, 'I', nuggetIron));
 
-		GameRegistry.addRecipe( new ItemStack(printerInkColor, 1), 
+		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerInkColor, 1), 
 				"RGB",
 				" I ",
-				'R', redInk, 'G', greenInk, 'B', blueInk, 'I', nuggetIron);
+				'R', redInk, 'G', greenInk, 'B', blueInk, 'I', nuggetIron));
 
 
 		GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
