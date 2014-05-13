@@ -1,5 +1,7 @@
 tile.printer.name=Open Printer
 item.printerPaper.name=Printer Paper
+item.printerPaperPile.name=Paper Pile
+item.printerPaperReam.name=Paper Roll
 item.printerPaperRoll.name=Printer Paper Roll
 item.printedPage.name=Printed Page
 item.printerInkBlack.name=Black Ink

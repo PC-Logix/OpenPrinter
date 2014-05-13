@@ -12,6 +12,8 @@ import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.gui.PrinterGUIHandler;
 import pcl.openprinter.items.ItemPrinterBlock;
 import pcl.openprinter.items.PrintedPage;
+import pcl.openprinter.items.PaperPile;
+import pcl.openprinter.items.PaperReam;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
@@ -54,6 +56,8 @@ public class OpenPrinter {
 	public static Block printerBlock;
 	public static Item  printedPage;
 	public static Item  printerPaper;
+	public static Item  paperPile;
+	public static Item  paperReam;
 	public static Item  printerPaperRoll;
 	public static Item  printerInkColor;
 	public static Item  printerInkBlack;
@@ -100,6 +104,14 @@ public class OpenPrinter {
 		GameRegistry.registerItem(printerPaperRoll, "openprinter.printerPaperRoll");
 
 
+		paperPile = new PaperPile();
+		GameRegistry.registerItem(paperPile, "openprinter.paperPile");
+
+
+		paperReam = new PaperReam();
+		GameRegistry.registerItem(paperReam, "openprinter.paperReam");
+
+
 		printerInkColor = new PrinterInkColor();
 		GameRegistry.registerItem(printerInkColor, "openprinter.printerInkColor");
 
@@ -116,45 +128,61 @@ public class OpenPrinter {
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		ItemStack nuggetIron   = IronNugget;
-		ItemStack redstone     = new ItemStack(Items.redstone);
-		ItemStack microchip    = MicrochipTier1;
-		ItemStack pcb		   = PrintedCircuitBoard;
-		ItemStack blackInk	   = new ItemStack(Items.dye, 1, 0);
-		ItemStack redInk	   = new ItemStack(Items.dye, 1, 1);
-		ItemStack greenInk	   = new ItemStack(Items.dye, 1, 2);
-		ItemStack blueInk	   = new ItemStack(Items.dye, 1, 4);
-		ItemStack paper        = new ItemStack(Items.paper);
+		ItemStack ingotIron     = new ItemStack(Items.iron_ingot);
+		ItemStack redstone      = new ItemStack(Items.redstone);
+		ItemStack microchip     = MicrochipTier1;
+		ItemStack pcb		    = PrintedCircuitBoard;
+		ItemStack blackInk	    = new ItemStack(Items.dye, 1, 0);
+		ItemStack redInk	    = new ItemStack(Items.dye, 1, 1);
+		ItemStack greenInk	    = new ItemStack(Items.dye, 1, 2);
+		ItemStack blueInk	    = new ItemStack(Items.dye, 1, 4);
+		ItemStack paper         = new ItemStack(Items.paper);
 		ItemStack lprinterPaper	= new ItemStack(printerPaper,64);
 		ItemStack stackPaper	= new ItemStack(Items.paper,64);
+		ItemStack stick         = new ItemStack(Items.stick);
 
 
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerBlock, 1), 
 				"IRI",
 				"MPM",
 				"IRI",
-				'I', nuggetIron, 'R', redstone, 'M', microchip, 'P', pcb));
+				'I', ingotIron, 'R', redstone, 'M', microchip, 'P', pcb));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerInkBlack, 1), 
 				"BBB",
 				" I ",
-				'B', blackInk, 'I', nuggetIron));
+				'B', blackInk, 'I', ingotIron));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerInkColor, 1), 
 				"RGB",
 				" I ",
-				'R', redInk, 'G', greenInk, 'B', blueInk, 'I', nuggetIron));
+				'R', redInk, 'G', greenInk, 'B', blueInk, 'I', ingotIron));
 
 
-		GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
-				"PP",
-				"PP",
+		GameRegistry.addRecipe( new ItemStack(paperPile, 1), 
+				"PPP",
+				"P P",
+				"PPP",
 				'P', lprinterPaper);
 
-		GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
-				"PP",
-				"PP",
+		GameRegistry.addRecipe( new ItemStack(paperPile, 1), 
+				"PPP",
+				"P P",
+				"PPP",
 				'P', stackPaper);
+
+
+		GameRegistry.addRecipe( new ItemStack(paperReam, 1), 
+				"PPP",
+				"P P",
+				"PPP",
+				'P', new ItemStack(paperPile, 1));
+
+		GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
+				" P ",
+				"PSP",
+				" P ",
+				'P', new ItemStack(paperReam, 1), 'S', stick);
 
 		GameRegistry.addRecipe( new ItemStack(printerInkColor, 1),
 				"RGB",
