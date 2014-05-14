@@ -116,15 +116,15 @@ public class OpenPrinter {
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		ItemStack redstone		= new ItemStack(Items.redstone);
-		ItemStack microchip		= MicrochipTier1;
-		ItemStack pcb			= PrintedCircuitBoard;
-		ItemStack blackInk		= new ItemStack(Items.dye, 1, 0);
-		ItemStack redInk		= new ItemStack(Items.dye, 1, 1);
-		ItemStack greenInk		= new ItemStack(Items.dye, 1, 2);
-		ItemStack blueInk		= new ItemStack(Items.dye, 1, 4);
-		ItemStack paper			= new ItemStack(Items.paper);
-		ItemStack stackPaper	= new ItemStack(Items.paper, 64, Integer.MAX_VALUE);
+		ItemStack redstone     = new ItemStack(Items.redstone);
+		ItemStack microchip    = MicrochipTier1;
+		ItemStack pcb		   = PrintedCircuitBoard;
+		ItemStack blackInk	   = new ItemStack(Items.dye, 1, 0);
+		ItemStack redInk	   = new ItemStack(Items.dye, 1, 1);
+		ItemStack greenInk	   = new ItemStack(Items.dye, 1, 2);
+		ItemStack blueInk	   = new ItemStack(Items.dye, 1, 4);
+		ItemStack paper        = new ItemStack(Items.paper);
+		ItemStack stackPaper	= new ItemStack(Items.paper,64);
 
 
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerBlock, 1), 
