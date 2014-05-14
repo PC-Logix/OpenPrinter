@@ -116,7 +116,6 @@ public class OpenPrinter {
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		ItemStack nuggetIron   = IronNugget;
 		ItemStack redstone     = new ItemStack(Items.redstone);
 		ItemStack microchip    = MicrochipTier1;
 		ItemStack pcb		   = PrintedCircuitBoard;
@@ -125,7 +124,6 @@ public class OpenPrinter {
 		ItemStack greenInk	   = new ItemStack(Items.dye, 1, 2);
 		ItemStack blueInk	   = new ItemStack(Items.dye, 1, 4);
 		ItemStack paper        = new ItemStack(Items.paper);
-		ItemStack lprinterPaper	= new ItemStack(printerPaper,64);
 		ItemStack stackPaper	= new ItemStack(Items.paper,64);
 
 
@@ -133,27 +131,22 @@ public class OpenPrinter {
 				"IRI",
 				"MPM",
 				"IRI",
-				'I', nuggetIron, 'R', redstone, 'M', microchip, 'P', pcb));
+				'I', "nuggetIron", 'R', redstone, 'M', microchip, 'P', pcb));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerInkBlack, 1), 
 				"BBB",
 				" I ",
-				'B', blackInk, 'I', nuggetIron));
+				'B', blackInk, 'I', "nuggetIron"));
 
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerInkColor, 1), 
 				"RGB",
 				" I ",
-				'R', redInk, 'G', greenInk, 'B', blueInk, 'I', nuggetIron));
-
-
-		GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
-				"PP",
-				"PP",
-				'P', lprinterPaper);
+				'R', redInk, 'G', greenInk, 'B', blueInk, 'I', "nuggetIron"));
 
 		GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
-				"PP",
-				"PP",
+				" P ",
+				"P P",
+				" P ",
 				'P', stackPaper);
 
 		GameRegistry.addRecipe( new ItemStack(printerInkColor, 1),
