@@ -126,7 +126,6 @@ public class OpenPrinter {
 		ItemStack paper        = new ItemStack(Items.paper);
 		ItemStack stackPaper	= new ItemStack(Items.paper,64);
 
-
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerBlock, 1), 
 				"IRI",
 				"MPM",
@@ -162,5 +161,7 @@ public class OpenPrinter {
 
 
 		proxy.registerRenderers();
+
+        NetworkRegistry.INSTANCE.registerGuiHandler(OpenPrinter.instance, new PrinterGUIHandler());
 	}
 }
