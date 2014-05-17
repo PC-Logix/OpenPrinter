@@ -10,6 +10,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import pcl.openprinter.blocks.Printer;
 import pcl.openprinter.tileentity.PrinterTE;
+import pcl.openprinter.gui.PrinterGUIHandler;
 import pcl.openprinter.items.ItemPrinterBlock;
 import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
@@ -18,9 +19,12 @@ import pcl.openprinter.items.PrinterPaperRoll;
 import pcl.openprinter.items.PrinterPaperRollRecipe;
 import pcl.openprinter.BuildInfo;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -32,8 +36,13 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import li.cil.oc.api.Blocks;
+import li.cil.oc.api.CreativeTab;
 import static li.cil.oc.api.Items.*;
 
 
@@ -109,15 +118,16 @@ public class OpenPrinter {
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		ItemStack redstone     = new ItemStack(Items.redstone);
-		ItemStack microchip    = MicrochipTier1;
-		ItemStack pcb		   = PrintedCircuitBoard;
-		ItemStack blackInk	   = new ItemStack(Items.dye, 1, 0);
-		ItemStack redInk	   = new ItemStack(Items.dye, 1, 1);
-		ItemStack greenInk	   = new ItemStack(Items.dye, 1, 2);
-		ItemStack blueInk	   = new ItemStack(Items.dye, 1, 4);
-		ItemStack paper        = new ItemStack(Items.paper);
+		ItemStack redstone      = new ItemStack(Items.redstone);
+		ItemStack microchip     = MicrochipTier1;
+		ItemStack pcb		    = PrintedCircuitBoard;
+		ItemStack blackInk	    = new ItemStack(Items.dye, 1, 0);
+		ItemStack redInk	    = new ItemStack(Items.dye, 1, 1);
+		ItemStack greenInk	    = new ItemStack(Items.dye, 1, 2);
+		ItemStack blueInk	    = new ItemStack(Items.dye, 1, 4);
+		ItemStack paper         = new ItemStack(Items.paper);
 		ItemStack stackPaper	= new ItemStack(Items.paper,64);
+		ItemStack stick         = new ItemStack(Items.stick);
 
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerBlock, 1), 
 				"IRI",
@@ -133,20 +143,10 @@ public class OpenPrinter {
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerInkColor, 1), 
 				"RGB",
 				" I ",
-<<<<<<< HEAD
-				'R', redInk, 'G', greenInk, 'B', blueInk, 'I', nuggetIron));
-
-        GameRegistry.addRecipe(new PrinterPaperRollRecipe());
-=======
 				'R', redInk, 'G', greenInk, 'B', blueInk, 'I', "nuggetIron"));
 
-		GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
-				" P ",
-				"P P",
-				" P ",
-				'P', stackPaper);
->>>>>>> 9a67e95ce7321b568034bbcd93ffe1d8f553aeab
-
+		GameRegistry.addRecipe(new PrinterPaperRollRecipe());
+		
 		GameRegistry.addRecipe( new ItemStack(printerInkColor, 1),
 				"RGB",
 				" Z ",
@@ -157,13 +157,13 @@ public class OpenPrinter {
 				" Z ",
 				'B', blackInk, 'Z', new ItemStack(printerInkBlack, 1, OreDictionary.WILDCARD_VALUE));
 
-        FMLCommonHandler.instance().bus().register(this);
+
+		FMLCommonHandler.instance().bus().register(this);
 		proxy.registerRenderers();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(OpenPrinter.instance, new PrinterGUIHandler());
 	}
-
-    @SubscribeEvent
+	    @SubscribeEvent
     public void handleCrafting (PlayerEvent.ItemCraftedEvent event) {
         if (event.crafting.getItem() instanceof PrinterPaperRoll) {
             for (int i = 0; i < event.craftMatrix.getSizeInventory(); i++) {
