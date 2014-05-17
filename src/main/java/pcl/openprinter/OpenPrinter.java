@@ -5,8 +5,9 @@ package pcl.openprinter;
  *
  */
 import java.net.URL;
-import java.util.logging.Logger;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import pcl.openprinter.blocks.Printer;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.gui.PrinterGUIHandler;
@@ -15,6 +16,7 @@ import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
+import pcl.openprinter.items.PrinterPaperRollRecipe;
 import pcl.openprinter.BuildInfo;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -143,12 +145,8 @@ public class OpenPrinter {
 				" I ",
 				'R', redInk, 'G', greenInk, 'B', blueInk, 'I', "nuggetIron"));
 
-		GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
-				" P ",
-				"P P",
-				" P ",
-				'P', stackPaper);
-
+		GameRegistry.addRecipe(new PrinterPaperRollRecipe());
+		
 		GameRegistry.addRecipe( new ItemStack(printerInkColor, 1),
 				"RGB",
 				" Z ",
@@ -160,9 +158,19 @@ public class OpenPrinter {
 				'B', blackInk, 'Z', new ItemStack(printerInkBlack, 1, OreDictionary.WILDCARD_VALUE));
 
 
-
+		FMLCommonHandler.instance().bus().register(this);
 		proxy.registerRenderers();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(OpenPrinter.instance, new PrinterGUIHandler());
 	}
+	    @SubscribeEvent
+    public void handleCrafting (PlayerEvent.ItemCraftedEvent event) {
+        if (event.crafting.getItem() instanceof PrinterPaperRoll) {
+            for (int i = 0; i < event.craftMatrix.getSizeInventory(); i++) {
+                ItemStack item = event.craftMatrix.getStackInSlot(i);
+                if (item != null)
+                    event.craftMatrix.setInventorySlotContents(i, new ItemStack(item.getItem(), 1, item.getItemDamage()));
+            }
+        }
+    }
 }
