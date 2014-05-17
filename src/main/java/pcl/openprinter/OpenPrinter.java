@@ -24,6 +24,7 @@ import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaper;
 import pcl.openprinter.items.PrinterPaperRoll;
+import pcl.openprinter.items.PrinterPaperRollRecipe;
 import pcl.openprinter.tileentity.PrinterTE;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -85,6 +86,7 @@ public class OpenPrinter {
         	
         	NetworkRegistry.instance().registerGuiHandler(this, new PrinterGUIHandler());
         	GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
+        	GameRegistry.registerCraftingHandler(new CraftingHandler());
         	
         	//Register Blocks
         	printerBlock = new Printer(cfg.printerBlockID, Material.iron);
@@ -151,11 +153,7 @@ public class OpenPrinter {
         			" I ",
         			'R', redInk, 'G', greenInk, 'B', blueInk, 'I', "nuggetIron"));
         	
-        	GameRegistry.addRecipe( new ItemStack(printerPaperRoll, 1), 
-        			" P ",
-        			"P P",
-        			" P ",
-        			'P', stackPaper);
+        	GameRegistry.addRecipe(new PrinterPaperRollRecipe());
         	
         	GameRegistry.addRecipe( new ItemStack(printerInkColor, 1),
         			"RGB",

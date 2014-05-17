@@ -28,44 +28,43 @@ import java.util.Random;
 public class Printer extends BlockContainer {
 	private Random random;
 
+	@Override
 	public void breakBlock(World world, int x, int y, int z, int i, int j) {
 		PrinterTE tileEntity = (PrinterTE) world.getBlockTileEntity(x, y, z);
-		dropContent(0, tileEntity, world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+		dropContent(tileEntity, world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 		world.removeBlockTileEntity(x, y, z);
 	}
 
 	
-    public void dropContent(int newSize, IInventory chest, World world, int xCoord, int yCoord, int zCoord)
-    {
-        for (int l = newSize; l < chest.getSizeInventory(); l++)
-        {
-            ItemStack itemstack = chest.getStackInSlot(l);
-            if (itemstack == null)
-            {
-                continue;
-            }
-            float f = random.nextFloat() * 0.8F + 0.1F;
-            float f1 = random.nextFloat() * 0.8F + 0.1F;
-            float f2 = random.nextFloat() * 0.8F + 0.1F;
-            while (itemstack.stackSize > 0)
-            {
-                int i1 = random.nextInt(21) + 10;
-                if (i1 > itemstack.stackSize)
-                {
-                    i1 = itemstack.stackSize;
+    public void dropContent(IInventory chest, World world, int xCoord, int yCoord, int zCoord) {
+        if (chest == null)
+            return;
+
+        for (int i1 = 0; i1 < chest.getSizeInventory(); ++i1) {
+            ItemStack itemstack = chest.getStackInSlot(i1);
+
+            if (itemstack != null) {
+                float offsetX = random.nextFloat() * 0.8F + 0.1F;
+                float offsetY = random.nextFloat() * 0.8F + 0.1F;
+                float offsetZ = random.nextFloat() * 0.8F + 0.1F;
+                EntityItem entityitem;
+
+                for (; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem)) {
+                    int stackSize = random.nextInt(21) + 10;
+                    if (stackSize > itemstack.stackSize)
+                        stackSize = itemstack.stackSize;
+
+                    itemstack.stackSize -= stackSize;
+                    entityitem = new EntityItem(world, (double)((float)xCoord + offsetX), (double)((float)yCoord + offsetY), (double)((float)zCoord + offsetZ), new ItemStack(itemstack.getItem(), stackSize, itemstack.getItemDamage()));
+
+                    float velocity = 0.05F;
+                    entityitem.motionX = (double)((float)random.nextGaussian() * velocity);
+                    entityitem.motionY = (double)((float)random.nextGaussian() * velocity + 0.2F);
+                    entityitem.motionZ = (double)((float)random.nextGaussian() * velocity);
+
+                    if (itemstack.hasTagCompound())
+                        entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
                 }
-                itemstack.stackSize -= i1;
-                EntityItem entityitem = new EntityItem(world, (float) xCoord + f, (float) yCoord + (newSize > 0 ? 1 : 0) + f1, (float) zCoord + f2,
-                        new ItemStack(itemstack.getItem(), i1, itemstack.getItemDamage()));
-                float f3 = 0.05F;
-                entityitem.motionX = (float) random.nextGaussian() * f3;
-                entityitem.motionY = (float) random.nextGaussian() * f3 + 0.2F;
-                entityitem.motionZ = (float) random.nextGaussian() * f3;
-                if (itemstack.hasTagCompound())
-                {
-                    entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
-                }
-                world.spawnEntityInWorld(entityitem);
             }
         }
     }
