@@ -9,13 +9,22 @@ import java.net.URL;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import pcl.openprinter.blocks.Printer;
-import pcl.openprinter.items.*;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.gui.PrinterGUIHandler;
+import pcl.openprinter.items.ItemPrinterBlock;
+import pcl.openprinter.items.PrintedPage;
+import pcl.openprinter.items.PrinterInkBlack;
+import pcl.openprinter.items.PrinterInkColor;
+import pcl.openprinter.items.PrinterPaperRoll;
+import pcl.openprinter.items.PrinterPaperRollRecipe;
+import pcl.openprinter.BuildInfo;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -27,10 +36,13 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-
+import cpw.mods.fml.common.registry.LanguageRegistry;
+import li.cil.oc.api.Blocks;
+import li.cil.oc.api.CreativeTab;
 import static li.cil.oc.api.Items.*;
 
 
