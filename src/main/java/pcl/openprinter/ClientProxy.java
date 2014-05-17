@@ -28,7 +28,6 @@ public class ClientProxy extends CommonProxy {
 		if (OpenPrinter.render3D) {
 			TileEntitySpecialRenderer render = new PrinterRenderer();
 			ClientRegistry.bindTileEntitySpecialRenderer(pcl.openprinter.tileentity.PrinterTE.class, render);
-			NetworkRegistry.INSTANCE.registerGuiHandler(OpenPrinter.instance, new PrinterGUIHandler());
 			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(OpenPrinter.printerBlock), new ItemPrinterRenderer(render, new PrinterTE()));
 		}
 	}
