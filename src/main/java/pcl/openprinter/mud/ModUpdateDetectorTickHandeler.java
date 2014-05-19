@@ -35,16 +35,10 @@ public class ModUpdateDetectorTickHandeler implements ITickHandler {
         if(type.contains(TickType.PLAYER)){
             if(timer == 0){
                 ModUpdateDetector.runUpdateChecker();
-            }
-
-            if(timer_interval > 0){
-                timer = (timer+1) % timer_interval;
-            }else{
-                timer = -1;
+                timer = 1;
             }
         }else if(type.contains(TickType.RENDER)){
             if(Minecraft.getMinecraft().currentScreen != null &&
-                    //Minecraft.getMinecraft().currentScreen != lastScreen &&
                     Minecraft.getMinecraft().currentScreen instanceof GuiIngameMenu ||
                     Minecraft.getMinecraft().currentScreen instanceof GuiModList){
                 lastScreen = Minecraft.getMinecraft().currentScreen;
@@ -63,8 +57,8 @@ public class ModUpdateDetectorTickHandeler implements ITickHandler {
                         if(lastScreen instanceof GuiModList){
                             x = lastScreen.width - 110;
                             y = 10;
+                            buttonList.add(new GuiModUpdateButton(99, x, y, lastScreen));
                         }
-                        buttonList.add(new GuiModUpdateButton(99, x, y, lastScreen));
                     }
                 }
             }
