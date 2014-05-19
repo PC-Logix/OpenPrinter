@@ -18,8 +18,8 @@ if (System.getenv().BUILD_NUMBER != null)
 else
 	ext.buildNumber = 0
 
-version = "RC1"
-group = "pcl.OpenPrinter"
+version = "0.1.0"
+group = "pcl.openprinter"
 archivesBaseName = "OpenPrinter"
 
 minecraft {
@@ -27,7 +27,7 @@ minecraft {
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
 }
-
+version = "${version}.${project.ext.buildNumber}"
 sourceSets.main.java.srcDir("./src/externs/java")
 
 jar.doFirst {
@@ -35,7 +35,7 @@ jar.doFirst {
 		delete new File(sourceSets.main.output.classesDir, s);
 }
 
-jar.classifier = "${ext.buildNumber}"
+//jar.classifier = "${ext.buildNumber}"
 
 processResources {
     // replace stuff in mcmod.info, nothing else
