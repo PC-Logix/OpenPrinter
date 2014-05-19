@@ -80,7 +80,7 @@ public class ModUpdateDetector {
             ));
         	 */
             Thread t = new Thread(new UpdateChecker(updateMap.values()));
-            t.run();
+            t.start();
         }
 
     }
@@ -94,22 +94,7 @@ public class ModUpdateDetector {
          * The time between update checks in minutes.
          * A value <=0 will only run the updater when a player joins the world.
          */
-        int Timer = 60*60*20;
-        try{
-	        Configuration config = new Configuration(new File(Loader.instance().getConfigDir(), "openprinter_updater.cfg"));
-	        config.load();
-	
-	        Timer = config.get(Configuration.CATEGORY_GENERAL, "Update Time", 60, "The time in minutes between update checks").getInt() * 60 * 20;
-            check = config.get(Configuration.CATEGORY_GENERAL, "Update Check Enabled", true, "Should MUD automatically check for updates");
-            enabled = check.getBoolean(true);
-
-            if(config.hasChanged()){
-	            config.save();
-	        }
-        }catch(Exception handled){
-        	handled.printStackTrace();
-        }
-
+        int Timer = 0;
         FMLCommonHandler.instance().bus().register(new ModUpdateDetectorTickHandeler(Timer));
         ClientCommandHandler.instance.registerCommand(new MudCommands());
     }
