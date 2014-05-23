@@ -2,13 +2,13 @@
 {
   "modid": "openprinter",
   "name": "OpenPrinter",
-  "description": "Example placeholder mod.",
-  "version": "@VERSION@.@BUILD@",
+  "description": "OpenPrinter for OpenComputers.",
+  "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authors": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "authors": ["Michiyo"],
+  "credits": "Michiyo",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
