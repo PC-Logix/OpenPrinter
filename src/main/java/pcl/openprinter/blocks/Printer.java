@@ -73,7 +73,7 @@ public class Printer extends BlockContainer {
 	public Printer(Integer blockID, Material material) {
 		super(blockID, material);
 		this.setUnlocalizedName("printer");
-		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 		if (OpenPrinter.render3D) {
 			renderID = RenderingRegistry.getNextAvailableRenderId();
 		}

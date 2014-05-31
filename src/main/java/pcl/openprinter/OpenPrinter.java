@@ -91,31 +91,31 @@ public class OpenPrinter {
         	//Register Blocks
         	printerBlock = new Printer(cfg.printerBlockID, Material.iron);
         	GameRegistry.registerBlock(printerBlock, ItemPrinterBlock.class, "openprinter.printer");
-    		printerBlock.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+    		printerBlock.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
         	
         	printerPaper = new PrinterPaper(cfg.printerPaperID);
     		GameRegistry.registerItem(printerPaper, "openprinter.printerPaper");
     		printerPaper.setUnlocalizedName("printerPaper");
     		printerPaper.setTextureName("minecraft:paper");
-    		printerPaper.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+    		printerPaper.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
     		
         	printerPaperRoll = new PrinterPaperRoll(cfg.printerPaperRollID);
     		GameRegistry.registerItem(printerPaperRoll, "openprinter.printerPaperRoll");
     		printerPaperRoll.setUnlocalizedName("printerPaperRoll");
     		printerPaperRoll.setTextureName("openprinter:printerpaperroll");
-    		printerPaperRoll.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+    		printerPaperRoll.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
         	
         	printerInkColor = new PrinterInkColor(cfg.printerInkColorID);
     		GameRegistry.registerItem(printerInkColor, "openprinter.printerInkColor");
     		printerInkColor.setUnlocalizedName("printerInkColor");
     		printerInkColor.setTextureName("openprinter:PrinterInkColor");
-    		printerInkColor.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+    		printerInkColor.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
     		
         	printerInkBlack = new PrinterInkBlack(cfg.printerInkBlackID);
     		GameRegistry.registerItem(printerInkBlack, "openprinter.printerInkBlack");
     		printerInkBlack.setUnlocalizedName("printerInkBlack");
     		printerInkBlack.setTextureName("openprinter:PrinterInkBlack");
-    		printerInkBlack.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+    		printerInkBlack.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
         	
     		printedPage = new PrintedPage(cfg.printedPageID);
     		GameRegistry.registerItem(printedPage, "openprinter.printedPage");
@@ -127,8 +127,8 @@ public class OpenPrinter {
     	public void load(FMLInitializationEvent event)
     	{
         	ItemStack redstone     = new ItemStack(Item.redstone);
-        	ItemStack microchip    = Items.MicrochipTier1;
-        	ItemStack pcb		   = Items.PrintedCircuitBoard;
+        	ItemStack microchip    = Items.get("chip1").createItemStack(1);
+        	ItemStack pcb		   = Items.get("printedCircuitBoard").createItemStack(1);
         	ItemStack blackInk	   = new ItemStack(Item.dyePowder, 1, 0);
         	ItemStack redInk	   = new ItemStack(Item.dyePowder, 1, 1);
         	ItemStack greenInk	   = new ItemStack(Item.dyePowder, 1, 2);

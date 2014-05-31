@@ -26,7 +26,7 @@ public class PrinterInkColor extends Item {
 	public static void init(int itemID) {
 		PrinterInkColor item = new PrinterInkColor(itemID);
 		item.setTextureName("openprinter:PrinterInkColor");
-		item.setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+		item.setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 	}
 	
 	@Override
