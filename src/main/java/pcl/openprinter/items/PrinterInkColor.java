@@ -23,7 +23,7 @@ public class PrinterInkColor extends Item {
 		setNoRepair();
 		setUnlocalizedName("printerInkColor");
 		setTextureName("openprinter:PrinterInkColor");
-		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 	}
 	
 	@Override

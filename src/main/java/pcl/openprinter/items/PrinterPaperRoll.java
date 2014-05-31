@@ -23,7 +23,7 @@ public class PrinterPaperRoll extends Item {
 		setNoRepair();
 		setUnlocalizedName("printerPaperRoll");
 		setTextureName("openprinter:PrinterPaperRoll");
-		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 	}
 
 	@Override

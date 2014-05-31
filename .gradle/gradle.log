@@ -5,31 +5,11 @@
  R4wk, ZeuX, IngisKahn      
  MCP Data version : unknown
 ****************************
-:compileApiJava UP-TO-DATE
-:processApiResources UP-TO-DATE
-:apiClasses UP-TO-DATE
-:sourceMainJava UP-TO-DATE
-:compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.6
-Note: C:\Users\Caitlyn\Downloads\forge-1.7.2-10.12.1.1060-src\build\sources\java\pcl\openprinter\mud\gui\GuiChangelogDownload.java uses or overrides a deprecated API.
-Note: Recompile with -Xlint:deprecation for details.
-Note: Some input files use unchecked or unsafe operations.
-Note: Recompile with -Xlint:unchecked for details.
-1 warning
-
-:processResources UP-TO-DATE
-:classes
-:jar
-:extractUserDev SKIPPED
-:genSrgs SKIPPED
-:reobf
-:assemble
-:compileTestJava UP-TO-DATE
-:processTestResources UP-TO-DATE
-:testClasses UP-TO-DATE
-:test UP-TO-DATE
-:check UP-TO-DATE
-:build
+:eclipseClasspath
+:eclipseJdt
+:eclipseProject
+:eclipse
 
 BUILD SUCCESSFUL
 
-Total time: 15.932 secs
+Total time: 58.086 secs

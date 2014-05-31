@@ -30,7 +30,7 @@ public class Printer extends BlockContainer {
 
 	public Printer() {
 		super(Material.iron );
-		setCreativeTab(li.cil.oc.api.CreativeTab.Instance);
+		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
 		setBlockName("printer");
         setHardness(.5f);
 		if (OpenPrinter.render3D) {

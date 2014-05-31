@@ -41,7 +41,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import li.cil.oc.api.Blocks;
 import li.cil.oc.api.CreativeTab;
 import static li.cil.oc.api.Items.*;
 
@@ -119,8 +118,8 @@ public class OpenPrinter {
 	public void load(FMLInitializationEvent event)
 	{
 		ItemStack redstone      = new ItemStack(Items.redstone);
-		ItemStack microchip     = MicrochipTier1;
-		ItemStack pcb		    = PrintedCircuitBoard;
+    	ItemStack microchip    = li.cil.oc.api.Items.get("chip1").createItemStack(1);
+    	ItemStack pcb		   = li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1);
 		ItemStack blackInk	    = new ItemStack(Items.dye, 1, 0);
 		ItemStack redInk	    = new ItemStack(Items.dye, 1, 1);
 		ItemStack greenInk	    = new ItemStack(Items.dye, 1, 2);
