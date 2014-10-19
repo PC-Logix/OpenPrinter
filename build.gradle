@@ -27,7 +27,7 @@ group = "pcl.openprinter"
 archivesBaseName = "OpenPrinter"
 
 minecraft {
-	version = "1.7.2-10.12.1.1060"
+	version = "1.7.10-10.13.2.1230"
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
 }
