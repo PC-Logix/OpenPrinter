@@ -9,6 +9,7 @@ gui.string.blackInk=Black Ink
 gui.string.colorInk=Color Ink
 gui.string.paperInput=Paper Input
 gui.string.paperOutput=Paper Output
+gui.string.scannerInput=Scanner Input
 
 
 openprinter.outdated=OpenPrinter is outdated

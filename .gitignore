@@ -224,3 +224,7 @@ pip-log.txt
 *.lnk
 .gradle/gradle.log
 *.log
+*.prefs
+*.log
+*.bin
+*.lock

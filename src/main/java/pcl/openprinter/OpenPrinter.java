@@ -45,7 +45,7 @@ import li.cil.oc.api.CreativeTab;
 import static li.cil.oc.api.Items.*;
 
 
-@Mod(modid=OpenPrinter.MODID, name="OpenPrinter", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "after:OpenComputers")
+@Mod(modid=OpenPrinter.MODID, name="OpenPrinter", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "required-after:OpenComputers@[1.4.0,)")
 
 public class OpenPrinter {
 
@@ -118,8 +118,8 @@ public class OpenPrinter {
 	public void load(FMLInitializationEvent event)
 	{
 		ItemStack redstone      = new ItemStack(Items.redstone);
-    	ItemStack microchip    = li.cil.oc.api.Items.get("chip1").createItemStack(1);
-    	ItemStack pcb		   = li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1);
+    	ItemStack microchip    	= li.cil.oc.api.Items.get("chip1").createItemStack(1);
+    	ItemStack pcb		   	= li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1);
 		ItemStack blackInk	    = new ItemStack(Items.dye, 1, 0);
 		ItemStack redInk	    = new ItemStack(Items.dye, 1, 1);
 		ItemStack greenInk	    = new ItemStack(Items.dye, 1, 2);
