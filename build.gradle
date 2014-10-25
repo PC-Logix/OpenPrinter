@@ -41,6 +41,14 @@ jar.doFirst {
 
 //jar.classifier = "${ext.buildNumber}"
 
+apply plugin: 'curseforge'
+curse {
+	apiKey = project.curseforge_key
+	projectId = "225127"
+	releaseType = "release"
+	changelog = file("changelog.txt").text
+}
+
 processResources {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
