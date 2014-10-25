@@ -46,7 +46,7 @@ curse {
 	apiKey = project.openprinter_curseforge_key
 	projectId = "225127"
 	releaseType = "release"
-	changelog = file("changelog.txt").text
+	changelog =  { file("changelog.txt").text }
 }
 
 processResources {
