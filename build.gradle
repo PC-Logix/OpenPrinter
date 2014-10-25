@@ -43,7 +43,7 @@ jar.doFirst {
 
 apply plugin: 'curseforge'
 curse {
-	apiKey = project.curseforge_key
+	apiKey = project.openprinter_curseforge_key
 	projectId = "225127"
 	releaseType = "release"
 	changelog = file("changelog.txt").text
