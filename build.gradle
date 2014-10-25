@@ -41,6 +41,8 @@ jar.doFirst {
 
 //jar.classifier = "${ext.buildNumber}"
 
+project.hasProperty('openprinter_curseforge_key') ? project.openprinter_curseforge_key : "" 
+
 apply plugin: 'curseforge'
 curse {
 	apiKey = project.openprinter_curseforge_key
