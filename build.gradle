@@ -20,7 +20,7 @@ else
 
 version = "0.1.0"
 group = "pcl.openprinter"
-archivesBaseName = "OpenPrinter"
+archivesBaseName = "OpenPrinter-MC1.6.4-OC1.3"
 
 minecraft {
 	version = "1.6.4-9.11.1.964"
