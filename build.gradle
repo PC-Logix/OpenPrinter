@@ -12,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'curseforge'
 
 if (System.getenv().BUILD_NUMBER != null)
 	ext.buildNumber = System.getenv().BUILD_NUMBER?.toInteger()
@@ -36,6 +37,16 @@ jar.doFirst {
 }
 
 //jar.classifier = "${ext.buildNumber}"
+project.hasProperty('openprinter_curseforge_key') ? project.openprinter_curseforge_key : ""
+apply plugin: 'curseforge'
+curse {
+	printf "publishing to curse"
+	apiKey = project.openprinter_curseforge_key
+	projectId = "225127"
+	releaseType = "release"
+	changelog =  file("changelog.txt").text
+	addGameVersion "1.6.4"
+}
 
 processResources {
     // replace stuff in mcmod.info, nothing else
