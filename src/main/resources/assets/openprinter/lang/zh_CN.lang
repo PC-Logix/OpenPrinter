@@ -9,6 +9,8 @@ gui.string.blackInk=黑色墨盒
 gui.string.colorInk=彩色墨盒
 gui.string.paperInput=打印纸输入
 gui.string.paperOutput=打印纸输出
+gui.string.scannerInput=扫描仪输入
+
 
 openprinter.outdated=你的OpenPrinter版本过旧
 openprinter.uptodate=你的OpenPrinter是目前最新的版本
