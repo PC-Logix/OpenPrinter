@@ -1,5 +1,6 @@
 package pcl.openprinter.tileentity;
 
+import pcl.openprinter.gui.PrintedPaperSlot;
 import pcl.openprinter.gui.PrinterInkBlackSlot;
 import pcl.openprinter.gui.PrinterInkColorSlot;
 import pcl.openprinter.gui.PrinterPaperSlot;
@@ -22,6 +23,7 @@ public class PrinterContainer extends Container{
     private Slot colorInkSlot;
     private Slot blackInkSlot;
     private Slot paperSlot;
+    private Slot scanSlot;
     private List<Slot> specialSlots;
     private List<Slot> outputSlots;
     private List<Slot> playerSlots;
@@ -30,11 +32,11 @@ public class PrinterContainer extends Container{
     public PrinterContainer (InventoryPlayer inventoryPlayer, PrinterTE te){
             tileEntity = te;
             //Black Ink
-            blackInkSlot = addSlotToContainer(new PrinterInkBlackSlot(tileEntity, 0, 30, 17));
+            blackInkSlot = addSlotToContainer(new PrinterInkBlackSlot(tileEntity, 0, 30, 32));
             //Color Ink
-            colorInkSlot = addSlotToContainer(new PrinterInkColorSlot(tileEntity, 1, 60, 17));
+            colorInkSlot = addSlotToContainer(new PrinterInkColorSlot(tileEntity, 1, 60, 32));
             //Blank Paper
-            paperSlot = addSlotToContainer(new PrinterPaperSlot(tileEntity, 2, 129, 17));
+            paperSlot = addSlotToContainer(new PrinterPaperSlot(tileEntity, 2, 129, 32));
 
             specialSlots = new ArrayList<Slot>();
             specialSlots.add(blackInkSlot);
@@ -44,8 +46,10 @@ public class PrinterContainer extends Container{
             //Output slots
             outputSlots = new ArrayList<Slot>();
             for (int i = 3; i < 12; i++) {
-            	outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 8 + i * 18 - 54, 57)));
+            	outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 8 + i * 18 - 54, 72)));
             }
+            
+            scanSlot = addSlotToContainer(new PrintedPaperSlot(tileEntity, 13, 94, 2));
             
             //commonly used vanilla code that adds the player's inventory
             bindPlayerInventory(inventoryPlayer);
@@ -61,13 +65,13 @@ public class PrinterContainer extends Container{
             playerSlots = new ArrayList<Slot>();
             for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 9; j++) {
-                            playerSlots.add(addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18)));
+                            playerSlots.add(addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + 15)));
                     }
             }
 
             hotbarSlots = new ArrayList<Slot>();
             for (int i = 0; i < 9; i++) {
-                    hotbarSlots.add(addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142)));
+                    hotbarSlots.add(addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142 + 15)));
             }
     }
 

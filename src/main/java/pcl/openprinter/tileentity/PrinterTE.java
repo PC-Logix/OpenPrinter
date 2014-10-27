@@ -12,29 +12,20 @@ import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
-import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.ManagedEnvironment;
-import li.cil.oc.api.network.Message;
-import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.SimpleComponent;
-import li.cil.oc.api.network.Visibility;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 /**
  * @author Caitlyn
@@ -115,17 +106,26 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	public Object[] greet(Context context, Arguments args) {
 		return new Object[] { "Lasciate ogne speranza, voi ch'intrate" };
 	}
-
-	@Callback
-	public Object[] scan(Context context, Arguments args) {
-		return new Object[] { "I'm sorry, Dave, I'm afraid I can't do that." };
-	}
-
+	
 	//Real Printer methods follow:
 	@Callback
+	public Object[] scan(Context context, Arguments args) {
+		ItemStack scannedPage = getStackInSlot(13);
+		
+		if (scannedPage.getItem() instanceof PrintedPage) {
+			for (int x = 0; x <= scannedPage.stackTagCompound.func_150296_c().size(); x++) {
+				String output = scannedPage.stackTagCompound.getString("line"+x);
+				Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
+				Integer color = scannedPage.stackTagCompound.getInteger("color"+x);
+				String alignment = scannedPage.stackTagCompound.getString("alignment"+x);
+			}
+		}
+	
+		return new Object[] { scannedPage.getTagCompound().getString("line0") };
+	}
+
+	@Callback
 	public Object[] print(Context context, Arguments args) throws Exception {
-
-
 		boolean markColor = false;
 		boolean markBlack = false;
 		if(getStackInSlot(0) != null) { //No black ink

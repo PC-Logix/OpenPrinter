@@ -1,8 +1,5 @@
 package pcl.openprinter.gui;
 
-import pcl.openprinter.Config;
-import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

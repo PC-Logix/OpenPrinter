@@ -1,13 +1,10 @@
 package pcl.openprinter.gui;
 
-import pcl.openprinter.Config;
-import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.items.PrinterPaperRoll;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class PrinterPaperSlot extends Slot {

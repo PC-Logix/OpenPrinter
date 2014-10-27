@@ -5,14 +5,9 @@ package pcl.openprinter.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
@@ -59,9 +54,9 @@ public class PaperGUI extends GuiScreen {
 			Integer color = stack.stackTagCompound.getInteger("color"+x);
 			String alignment = stack.stackTagCompound.getString("alignment"+x);
 			if (alignment.equalsIgnoreCase("center")) {
-				ScaledResolution var5 = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
-				int var6 = var5.getScaledWidth();
-				int var7 = var5.getScaledHeight();
+				//ScaledResolution var5 = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
+				//int var6 = var5.getScaledWidth();
+				//int var7 = var5.getScaledHeight();
 				mc.fontRenderer.drawString(output, width/2 - mc.fontRenderer.getStringWidth(output)/2, height / 2 - offset, color);	
 			} else {
 				mc.fontRenderer.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
