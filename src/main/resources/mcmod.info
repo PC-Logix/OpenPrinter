@@ -10,7 +10,7 @@
 	"credits": "Michiyo",
 	"logoFile": "",
 	"requiredMods": [ "Forge" ],
-	"dependencies": [ "ComputerCraft", "OpenComputers" ],
+	"dependencies": [ "OpenComputers" ],
 	"dependants": [ ],
 	"useDependencyInformation": "true"
 }]
