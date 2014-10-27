@@ -233,3 +233,7 @@ changelog.txt
 *.bin
 *.log
 *.prefs
+*.lock
+*.bin
+*.log
+*.prefs
