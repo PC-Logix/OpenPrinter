@@ -26,6 +26,18 @@ version = "0.1.0"
 group = "pcl.openprinter"
 archivesBaseName = "OpenPrinter-MC1.7.10-OC1.4"
 
+
+repositories {
+    maven {
+        name = "OC repo"
+        url = "http://maven.cil.li/"
+    }
+}
+
+dependencies {
+    compile "li.cil.oc:OpenComputers:MC1.7.10-1.4.0.173-dev:dev"
+}
+
 minecraft {
 	version = "1.7.10-10.13.2.1230"
 	replace "@VERSION@", project.version
