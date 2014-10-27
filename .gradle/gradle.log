@@ -1,15 +1,38 @@
-****************************
- Powered By MCP:            
- http://mcp.ocean-labs.de/  
- Searge, ProfMobius, Fesh0r,
- R4wk, ZeuX, IngisKahn      
+publishing to cursepublishing to curse****************************
+ Powered By MCP:             
+ http://mcp.ocean-labs.de/   
+ Searge, ProfMobius, Fesh0r, 
+ R4wk, ZeuX, IngisKahn, bspkrs
  MCP Data version : unknown
 ****************************
+:extractMcpData
+:getVersionJson
+:extractUserDev
+:genSrgs SKIPPED
+:extractNatives
+:getAssetsIndex
+:getAssets
+:makeStart SKIPPED
+:downloadMcpTools UP-TO-DATE
+:downloadClient SKIPPED
+:downloadServer SKIPPED
+:mergeJars SKIPPED
+:deobfuscateJar SKIPPED
+:decompile SKIPPED
+:processSources SKIPPED
+:remapJar SKIPPED
+:extractMinecraftSrc SKIPPED
+:recompMinecraft SKIPPED
+:repackMinecraft SKIPPED
+:setupDecompWorkspace UP-TO-DATE
 :eclipseClasspath
+Download http://maven.cil.li/li/cil/oc/OpenComputers/MC1.7.10-1.4.0.173-dev/OpenComputers-MC1.7.10-1.4.0.173-dev.pom
+Download http://maven.cil.li/li/cil/oc/OpenComputers/MC1.7.10-1.4.0.173-dev/OpenComputers-MC1.7.10-1.4.0.173-dev-javadoc.jar
+Download http://maven.cil.li/li/cil/oc/OpenComputers/MC1.7.10-1.4.0.173-dev/OpenComputers-MC1.7.10-1.4.0.173-dev-dev.jar
 :eclipseJdt
 :eclipseProject
 :eclipse
 
 BUILD SUCCESSFUL
 
-Total time: 58.086 secs
+Total time: 1 mins 34.907 secs
