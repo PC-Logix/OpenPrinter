@@ -1,16 +1,16 @@
-[
-{
-  "modid": "openprinter",
-  "name": "OpenPrinter",
-  "description": "OpenPrinter for OpenComputers.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authors": ["Michiyo"],
-  "credits": "Michiyo",
-  "logoFile": "",
-  "screenshots": [],
-  "dependencies": []
-}
-]
+[{
+	"modid": "openprinter",
+	"name": "OpenPrinter",
+	"description": "OpenPrinter for OpenComputers.",
+ 	"version": "${version}",
+ 	"mcversion": "${mcversion}",
+	"url": "",
+	"updateUrl": "",
+	"authors": ["Michiyo"],
+	"credits": "Michiyo",
+	"logoFile": "",
+	"requiredMods": [ "Forge" ],
+	"dependencies": [ "ComputerCraft", "OpenComputers" ],
+	"dependants": [ ],
+	"useDependencyInformation": "true"
+}]
