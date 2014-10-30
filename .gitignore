@@ -240,3 +240,4 @@ changelog.txt
 
 *.log
 *.lock
+*.bin

@@ -62,7 +62,6 @@ if (project.hasProperty('openprinter_curseforge_key')) {
 
 apply plugin: 'curseforge'
 curse {
-	printf "publishing to curse"
 	apiKey = curseforge_key
 	projectId = "225127"
 	releaseType = "release"
@@ -73,7 +72,7 @@ curse {
 	if (changelogFile.exists()) {
 		changelog = changelogFile.text
   	}
-	addGameVersion "1.7.10"
+	addGameVersion project.minecraft.version
 }
 
 processResources {
