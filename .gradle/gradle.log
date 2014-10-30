@@ -1,38 +1,44 @@
-publishing to cursepublishing to curse****************************
+1.7.10publishing to curse1.7.10publishing to curse****************************
  Powered By MCP:             
  http://mcp.ocean-labs.de/   
  Searge, ProfMobius, Fesh0r, 
  R4wk, ZeuX, IngisKahn, bspkrs
  MCP Data version : unknown
 ****************************
-:extractMcpData
-:getVersionJson
-:extractUserDev
-:genSrgs SKIPPED
-:extractNatives
-:getAssetsIndex
-:getAssets
-:makeStart SKIPPED
-:downloadMcpTools UP-TO-DATE
+:clean
 :downloadClient SKIPPED
 :downloadServer SKIPPED
+:getVersionJson
+:extractUserDev UP-TO-DATE
 :mergeJars SKIPPED
-:deobfuscateJar SKIPPED
-:decompile SKIPPED
-:processSources SKIPPED
-:remapJar SKIPPED
-:extractMinecraftSrc SKIPPED
-:recompMinecraft SKIPPED
-:repackMinecraft SKIPPED
-:setupDecompWorkspace UP-TO-DATE
-:eclipseClasspath
-Download http://maven.cil.li/li/cil/oc/OpenComputers/MC1.7.10-1.4.0.173-dev/OpenComputers-MC1.7.10-1.4.0.173-dev.pom
-Download http://maven.cil.li/li/cil/oc/OpenComputers/MC1.7.10-1.4.0.173-dev/OpenComputers-MC1.7.10-1.4.0.173-dev-javadoc.jar
-Download http://maven.cil.li/li/cil/oc/OpenComputers/MC1.7.10-1.4.0.173-dev/OpenComputers-MC1.7.10-1.4.0.173-dev-dev.jar
-:eclipseJdt
-:eclipseProject
-:eclipse
+:applyBinPatches SKIPPED
+:downloadMcpTools UP-TO-DATE
+:extractMcpData UP-TO-DATE
+:genSrgs SKIPPED
+:deobfBinJar SKIPPED
+:compileApiJava UP-TO-DATE
+:processApiResources UP-TO-DATE
+:apiClasses UP-TO-DATE
+:sourceMainJava
+:compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.6
+Note: C:\Users\Caitlyn\Documents\GitHub\OpenPrinter\build\sources\java\pcl\openprinter\mud\gui\GuiChangelogDownload.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+1 warning
+
+:processResources
+:classes
+:jar
+:compileTestJava UP-TO-DATE
+:processTestResources UP-TO-DATE
+:testClasses UP-TO-DATE
+:test UP-TO-DATE
+:reobf
+:assemble
+:check UP-TO-DATE
+:build
 
 BUILD SUCCESSFUL
 
-Total time: 1 mins 34.907 secs
+Total time: 36.662 secs
