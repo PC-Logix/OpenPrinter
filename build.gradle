@@ -61,7 +61,13 @@ curse {
 	apiKey = project.openprinter_curseforge_key
 	projectId = "225127"
 	releaseType = "release"
-	changelog =  file("changelog.txt").text
+	changelog = 'default'
+  
+	def changelogFile = file('changelog.txt')
+  
+	if (changelogFile.exists) {
+		changelog = changelogFile.text
+  	}
 	addGameVersion "1.7.10"
 }
 
