@@ -24,7 +24,7 @@ else
 
 version = "0.1.0"
 group = "pcl.openprinter"
-archivesBaseName = "OpenPrinter-MC1.7.10-OC1.4"
+archivesBaseName = "OpenPrinter"
 
 
 repositories {
@@ -43,7 +43,7 @@ minecraft {
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
 }
-version = "${version}.${project.ext.buildNumber}"
+version = "MC${minecraft.version}-OC1.4-${version}.${project.ext.buildNumber}"
 sourceSets.main.java.srcDir("./src/externs/java")
 
 jar.doFirst {
