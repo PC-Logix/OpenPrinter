@@ -115,13 +115,43 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 		if (scannedPage.getItem() instanceof PrintedPage) {
 			for (int x = 0; x <= scannedPage.stackTagCompound.func_150296_c().size(); x++) {
 				String output = scannedPage.stackTagCompound.getString("line"+x);
-				Integer outleng = output.replaceAll("(?:�[0-9a-fk-or])+", "").length();
+				Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
 				Integer color = scannedPage.stackTagCompound.getInteger("color"+x);
 				String alignment = scannedPage.stackTagCompound.getString("alignment"+x);
 			}
 		}
 	
 		return new Object[] { scannedPage.getTagCompound().getString("line" + args.checkInteger(1)) };
+	}
+
+	@Callback
+	public Object[] printTag(Context context, Arguments args) throws Exception {
+		if (OpenPrinter.cfg.enableNameTag) {
+			if (getStackInSlot(0) != null) {
+				if (getStackInSlot(2) != null) { //No paper
+					for (int x = 3; x <= 12; x++) { //Loop the 9 output slots checking for a empty one
+						if (getStackInSlot(x) == null) { //The slot is empty lets make us a NameTag
+
+							printerItemStacks[x] = new ItemStack(Items.name_tag);
+							printerItemStacks[x].setTagCompound(new NBTTagCompound());
+
+							NBTTagCompound nameTag = new NBTTagCompound();
+							NBTTagCompound tag = new NBTTagCompound();
+
+							nameTag.setString("Name", args.checkString(0));
+
+							printerItemStacks[x].stackTagCompound.setTag("display", nameTag);
+
+							getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + 1);
+							decrStackSize(2, 1);
+							return new Object[]{true};
+						}
+					} return new Object[]{false};
+				} return new Object[]{false};
+			} return new Object[]{false};
+		} else {
+			return new Object[]{false};
+		}
 	}
 
 	@Callback
@@ -150,10 +180,10 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 									markBlack = true;
 									blackUses++;
 								}
-								if(lines.get(iter).matches(".*�[0-9a-f].*")) {
+								if(lines.get(iter).matches(".*ï¿½[0-9a-f].*")) {
 									markColor = true;
 									markBlack = false;
-									Pattern regex = Pattern.compile("�[0-9a-f]*");
+									Pattern regex = Pattern.compile("ï¿½[0-9a-f]*");
 									Matcher matcher = regex.matcher(lines.get(iter));
 									while (matcher.find())
 										colorUses++;
@@ -274,7 +304,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 
 	@Callback(direct = true)
 	public Object[] charCount(Context context, Arguments args) {
-		return new Object[] { args.checkString(0).replaceAll("(?:�[0-9a-fk-or])+", "").length() };
+		return new Object[] { args.checkString(0).replaceAll("(?:ï¿½[0-9a-fk-or])+", "").length() };
 	}
 	
 	@Callback
