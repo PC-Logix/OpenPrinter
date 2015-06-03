@@ -24,6 +24,9 @@ public class PrinterPaperSlot extends Slot {
             else if (itemstack.getItem().equals(Items.paper)) {
             	return true;
             }
+            else if (itemstack.getItem().equals(Items.name_tag)) {
+                return true;
+            }
             return false;
     }
     /**

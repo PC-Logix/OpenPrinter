@@ -115,7 +115,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 		if (scannedPage.getItem() instanceof PrintedPage) {
 			for (int x = 0; x <= scannedPage.stackTagCompound.func_150296_c().size(); x++) {
 				String output = scannedPage.stackTagCompound.getString("line"+x);
-				Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
+				Integer outleng = output.replaceAll("(?:�[0-9a-fk-or])+", "").length();
 				Integer color = scannedPage.stackTagCompound.getInteger("color"+x);
 				String alignment = scannedPage.stackTagCompound.getString("alignment"+x);
 			}
@@ -180,10 +180,10 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 									markBlack = true;
 									blackUses++;
 								}
-								if(lines.get(iter).matches(".*ï¿½[0-9a-f].*")) {
+								if(lines.get(iter).matches(".*�[0-9a-f].*")) {
 									markColor = true;
 									markBlack = false;
-									Pattern regex = Pattern.compile("ï¿½[0-9a-f]*");
+									Pattern regex = Pattern.compile("�[0-9a-f]*");
 									Matcher matcher = regex.matcher(lines.get(iter));
 									while (matcher.find())
 										colorUses++;
@@ -304,7 +304,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 
 	@Callback(direct = true)
 	public Object[] charCount(Context context, Arguments args) {
-		return new Object[] { args.checkString(0).replaceAll("(?:ï¿½[0-9a-fk-or])+", "").length() };
+		return new Object[] { args.checkString(0).replaceAll("(?:�[0-9a-fk-or])+", "").length() };
 	}
 	
 	@Callback
