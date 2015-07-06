@@ -43,7 +43,7 @@ minecraft {
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
 }
-version = "MC${minecraft.version}-OC1.4-${version}.${project.ext.buildNumber}"
+version = "MC${minecraft.version}-${version}.${project.ext.buildNumber}"
 sourceSets.main.java.srcDir("./src/externs/java")
 
 jar.doFirst {
@@ -66,12 +66,7 @@ curse {
 	projectId = "225127"
 	releaseType = "release"
 	changelog = 'default'
-  
-	def changelogFile = file('changelog.txt')
-  
-	if (changelogFile.exists()) {
-		changelog = changelogFile.text
-  	}
+	changelog = project.changelog
 	addGameVersion project.minecraft.version
 }
 
