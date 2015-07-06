@@ -6,6 +6,9 @@ package pcl.openprinter;
  */
 import java.net.URL;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import pcl.openprinter.blocks.Printer;
@@ -66,7 +69,7 @@ public class OpenPrinter {
 	public static boolean render3D = true;
 
 	private static boolean debug = true;
-	public static org.apache.logging.log4j.Logger logger;
+	public static final Logger  logger  = LogManager.getFormatterLogger(MODID);
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -75,19 +78,16 @@ public class OpenPrinter {
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
 		render3D = cfg.render3D;
 
-		if((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient() && cfg.enableMUD){
+		if ((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient() && cfg.enableMUD) {
+			logger.info("Registering mod with OpenUpdater");
 			try {
-				Class.forName("pcl.openprinter.mud.ModUpdateDetector").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null,
-						FMLCommonHandler.instance().findContainerFor(this),
-						new URL("http://PC-Logix.com/OpenPrinter/get_latest_build_1.7.php"),
-						new URL("http://PC-Logix.com/OpenPrinter/changelog1.7.txt")
-						);
+				Class.forName("pcl.mud.OpenUpdater").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null, FMLCommonHandler.instance().findContainerFor(this),
+								new URL("http://PC-Logix.com/OpenPrinter/get_latest_build.php?mcver=1.7.10"),
+								new URL("http://PC-Logix.com/OpenPrinter/changelog.php?mcver=1.7.10"));
 			} catch (Throwable e) {
-				e.printStackTrace();
+				logger.info("OpenUpdater is not installed, not registering.");
 			}
 		}
-		logger = event.getModLog();
-
 
 
 		GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
