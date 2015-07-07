@@ -21,6 +21,7 @@ import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
 import pcl.openprinter.items.PrinterPaperRollRecipe;
 import pcl.openprinter.BuildInfo;
+import pcl.openprinter.client.CreativeTab;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.oredict.OreDictionary;
@@ -44,7 +45,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import li.cil.oc.api.CreativeTab;
 import static li.cil.oc.api.Items.*;
 
 
@@ -70,6 +70,8 @@ public class OpenPrinter {
 
 	private static boolean debug = true;
 	public static final Logger  logger  = LogManager.getFormatterLogger(MODID);
+	
+	public static CreativeTabs CreativeTab = new CreativeTab("OpenPrinter");
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

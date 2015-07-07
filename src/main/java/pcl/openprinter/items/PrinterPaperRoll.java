@@ -3,6 +3,7 @@
  */
 package pcl.openprinter.items;
 
+import pcl.openprinter.OpenPrinter;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.creativetab.CreativeTabs;
@@ -23,7 +24,7 @@ public class PrinterPaperRoll extends Item {
 		setNoRepair();
 		setUnlocalizedName("printerPaperRoll");
 		setTextureName("openprinter:PrinterPaperRoll");
-		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
+		setCreativeTab(OpenPrinter.CreativeTab);
 	}
 
 	@Override

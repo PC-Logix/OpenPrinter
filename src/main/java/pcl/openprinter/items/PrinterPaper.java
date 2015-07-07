@@ -3,6 +3,7 @@
  */
 package pcl.openprinter.items;
 
+import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.blocks.Printer;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -18,6 +19,7 @@ public class PrinterPaper extends Item{
 	public PrinterPaper() {
 		super();
 		maxStackSize = 64;
+		setCreativeTab(OpenPrinter.CreativeTab);
 	}
 
 	public static void init() {

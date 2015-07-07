@@ -23,7 +23,7 @@ public class PrinterInkBlack extends Item {
 		setNoRepair();
 		setUnlocalizedName("printerInkBlack");
 		setTextureName("openprinter:PrinterInkBlack");
-		setCreativeTab(li.cil.oc.api.CreativeTab.instance);
+		setCreativeTab(OpenPrinter.CreativeTab);
 	}
 
 	@Override

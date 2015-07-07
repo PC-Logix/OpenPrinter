@@ -244,3 +244,4 @@ changelog.txt
 *.lock
 *.bin
 .settings/org.eclipse.jdt.core.prefs
+run_client/
