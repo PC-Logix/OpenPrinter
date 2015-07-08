@@ -44,25 +44,30 @@ public class PaperGUI extends GuiScreen {
 		int posY = (this.height - ySizeOfTexture) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSizeOfTexture, ySizeOfTexture);
 		int offset = 100;
-		drawCenteredString(mc.fontRenderer, stack.stackTagCompound.getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
-		for (int x = 0; x <= stack.stackTagCompound.func_150296_c().size(); x++) {
-			String output = stack.stackTagCompound.getString("line"+x);
-			Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
-			if (outleng > 30) {
-				output = limit(output,30);
+		if (stack.hasTagCompound()) {
+			drawCenteredString(mc.fontRenderer, stack.stackTagCompound.getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
+			for (int x = 0; x <= stack.stackTagCompound.func_150296_c().size(); x++) {
+				String output = stack.stackTagCompound.getString("line"+x);
+				Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
+				if (outleng > 30) {
+					output = limit(output,30);
+				}
+				Integer color = stack.stackTagCompound.getInteger("color"+x);
+				String alignment = stack.stackTagCompound.getString("alignment"+x);
+				if (alignment.equalsIgnoreCase("center")) {
+					//ScaledResolution var5 = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
+					//int var6 = var5.getScaledWidth();
+					//int var7 = var5.getScaledHeight();
+					mc.fontRenderer.drawString(output, width/2 - mc.fontRenderer.getStringWidth(output)/2, height / 2 - offset, color);	
+				} else {
+					mc.fontRenderer.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
+				}
+				offset = offset - 10;
 			}
-			Integer color = stack.stackTagCompound.getInteger("color"+x);
-			String alignment = stack.stackTagCompound.getString("alignment"+x);
-			if (alignment.equalsIgnoreCase("center")) {
-				//ScaledResolution var5 = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
-				//int var6 = var5.getScaledWidth();
-				//int var7 = var5.getScaledHeight();
-				mc.fontRenderer.drawString(output, width/2 - mc.fontRenderer.getStringWidth(output)/2, height / 2 - offset, color);	
-			} else {
-				mc.fontRenderer.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
-			}
-			offset = offset - 10;
+		} else {
+			mc.fontRenderer.drawString("This page intentionally left blank.", width/2 - mc.fontRenderer.getStringWidth("This page intentionally left blank.")/2, height / 2 - offset, 0x000000);	
 		}
+
 		super.drawScreen(i, j, f);
 	}
 }

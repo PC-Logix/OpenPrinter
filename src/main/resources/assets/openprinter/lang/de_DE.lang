@@ -1,37 +1,6 @@
 tile.printer.name=Open Printer
 item.printerPaper.name=Printer Paper
 item.printerPaperRoll.name=Printer Paper Roll
-item.printedPage.name=Bedrucktes Papier
-item.printerInkBlack.name=Schwarze Farbe
-item.printerInkColor.name=Farbe
-gui.string.printer=Open Printer
-gui.string.blackInk=Schwarze Farbe
-gui.string.colorInk=Tinte
-gui.string.paperInput=Papierlade
-gui.string.paperOutput=Papierauswurf
-gui.string.scannerInput=Scanner
-
-openprinter.outdated=OpenPrinter ist veraltet.
-openprinter.uptodate=OpenPrinter ist aktuell.
-
-mud.name=OpenPrinter updater
-mud.version.latest=Aktuelle Version
-mud.version.out=Veraltete Version
-
-message.checking=Prüfe Mods auf Updates.
-message.check.done=Check abgeschlossen
-message.type.to.view=Nutze /opupdate für Updateinfos
-
-button.download.latest=Download Aktuelles
-gui.downloading=Downloade
-button.ok=Ok
-button.url=Mod Webseite
-gui.download.complete=Download erfolgreich
-gui.download.failed=Download fehlgeschlagen
-gui.restart=Bitte Minecraft neustarten
-gui.md5.fail=tile.printer.name=Open Printer
-item.printerPaper.name=Printer Paper
-item.printerPaperRoll.name=Printer Paper Roll
 item.printedPage.name=Printed Page
 item.printerInkBlack.name=Black Ink
 item.printerInkColor.name=Color Ink
@@ -41,27 +10,7 @@ gui.string.colorInk=Color Ink
 gui.string.paperInput=Paper Input
 gui.string.paperOutput=Paper Output
 gui.string.scannerInput=Scanner Input
-
+itemGroup.OpenPrinter=OpenPrinter
 
 openprinter.outdated=OpenPrinter is outdated
 openprinter.uptodate=OpenPrinter is up to date.
-
-mud.name=OpenPrinter updater
-mud.version.latest=Latest Version
-mud.version.out=Outdated Version
-
-message.checking=Checking for updated versions of mods.
-message.check.done=Checking done
-message.type.to.view=Use the command /opupdate to view Update Information
-
-button.download.latest=Download Latest
-gui.downloading=Downloading
-button.ok=Ok
-button.url=Open mod webpage
-gui.download.complete=Download Successful
-gui.download.failed=Download Failed
-gui.restart=Please Restart Minecraft
-gui.md5.fail=Beschädigter oder ungültiger Download
-log.message.none=Kein Changelog vorhanden.
-log.message.loading=Lade Changelog
-log.message.fail=Download Changelog fehlgeschlagen

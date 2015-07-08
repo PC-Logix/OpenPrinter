@@ -10,27 +10,7 @@ gui.string.colorInk=Color Ink
 gui.string.paperInput=Paper Input
 gui.string.paperOutput=Paper Output
 gui.string.scannerInput=Scanner Input
-
+itemGroup.OpenPrinter=OpenPrinter
 
 openprinter.outdated=OpenPrinter is outdated
 openprinter.uptodate=OpenPrinter is up to date.
-
-mud.name=OpenPrinter updater
-mud.version.latest=Latest Version
-mud.version.out=Outdated Version
-
-message.checking=Checking for updated versions of mods.
-message.check.done=Checking done
-message.type.to.view=Use the command /opupdate to view Update Information
-
-button.download.latest=Download Latest
-gui.downloading=Downloading
-button.ok=Ok
-button.url=Open mod webpage
-gui.download.complete=Download Successful
-gui.download.failed=Download Failed
-gui.restart=Please Restart Minecraft
-gui.md5.fail=Corrupt or invalid download
-log.message.none=No Changelog Provided
-log.message.loading=Loading changelog from server
-log.message.fail=Failed to download changelog
