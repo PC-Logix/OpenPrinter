@@ -32,11 +32,11 @@ public class PrinterContainer extends Container{
     public PrinterContainer (InventoryPlayer inventoryPlayer, PrinterTE te){
             tileEntity = te;
             //Black Ink
-            blackInkSlot = addSlotToContainer(new PrinterInkBlackSlot(tileEntity, 0, 30, 32));
+            blackInkSlot = addSlotToContainer(new PrinterInkBlackSlot(tileEntity, 0, 30, 47));
             //Color Ink
-            colorInkSlot = addSlotToContainer(new PrinterInkColorSlot(tileEntity, 1, 60, 32));
+            colorInkSlot = addSlotToContainer(new PrinterInkColorSlot(tileEntity, 1, 60, 47));
             //Blank Paper
-            paperSlot = addSlotToContainer(new PrinterPaperSlot(tileEntity, 2, 129, 32));
+            paperSlot = addSlotToContainer(new PrinterPaperSlot(tileEntity, 2, 129, 47));
 
             specialSlots = new ArrayList<Slot>();
             specialSlots.add(blackInkSlot);
@@ -46,10 +46,10 @@ public class PrinterContainer extends Container{
             //Output slots
             outputSlots = new ArrayList<Slot>();
             for (int i = 3; i < 12; i++) {
-            	outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 8 + i * 18 - 54, 72)));
+            	outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 8 + i * 18 - 54, 87)));
             }
             
-            scanSlot = addSlotToContainer(new PrintedPaperSlot(tileEntity, 13, 94, 2));
+            scanSlot = addSlotToContainer(new PrintedPaperSlot(tileEntity, 13, 94, 17));
             
             //commonly used vanilla code that adds the player's inventory
             bindPlayerInventory(inventoryPlayer);
@@ -65,13 +65,13 @@ public class PrinterContainer extends Container{
             playerSlots = new ArrayList<Slot>();
             for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 9; j++) {
-                            playerSlots.add(addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + 15)));
+                            playerSlots.add(addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + 15 + 15)));
                     }
             }
 
             hotbarSlots = new ArrayList<Slot>();
             for (int i = 0; i < 9; i++) {
-                    hotbarSlots.add(addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142 + 15)));
+                    hotbarSlots.add(addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142 + 15 + 15)));
             }
     }
 
