@@ -122,10 +122,10 @@ public class OpenPrinter {
 		ItemStack redstone      = new ItemStack(Items.redstone);
     	ItemStack microchip    	= li.cil.oc.api.Items.get("chip1").createItemStack(1);
     	ItemStack pcb		   	= li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1);
-		ItemStack blackInk	    = new ItemStack(Items.dye, 1, 0);
-		ItemStack redInk	    = new ItemStack(Items.dye, 1, 1);
-		ItemStack greenInk	    = new ItemStack(Items.dye, 1, 2);
-		ItemStack blueInk	    = new ItemStack(Items.dye, 1, 4);
+		String blackInk	    = "dyeBlack";
+		String redInk	    = "dyeRed";
+		String greenInk	    = "dyeGreen";
+		String blueInk	    = "dyeBlue";
 		ItemStack paper         = new ItemStack(Items.paper);
 		ItemStack stackPaper	= new ItemStack(Items.paper,64);
 		ItemStack stick         = new ItemStack(Items.stick);
