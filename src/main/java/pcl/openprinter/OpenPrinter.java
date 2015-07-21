@@ -148,15 +148,15 @@ public class OpenPrinter {
 
 		GameRegistry.addRecipe(new PrinterPaperRollRecipe());
 		
-		GameRegistry.addRecipe( new ItemStack(printerInkColor, 1),
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(printerInkColor, 1),
 				"RGB",
 				" Z ",
-				'R', redInk, 'G', greenInk, 'B', blueInk, 'Z', new ItemStack(printerInkColor, 1, OreDictionary.WILDCARD_VALUE));
+				'R', redInk, 'G', greenInk, 'B', blueInk, 'Z', new ItemStack(printerInkColor, 1, OreDictionary.WILDCARD_VALUE)));
 
-		GameRegistry.addRecipe( new ItemStack(printerInkBlack, 1), 
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(printerInkBlack, 1), 
 				"BBB",
 				" Z ",
-				'B', blackInk, 'Z', new ItemStack(printerInkBlack, 1, OreDictionary.WILDCARD_VALUE));
+				'B', blackInk, 'Z', new ItemStack(printerInkBlack, 1, OreDictionary.WILDCARD_VALUE)));
 
 
 		FMLCommonHandler.instance().bus().register(this);
