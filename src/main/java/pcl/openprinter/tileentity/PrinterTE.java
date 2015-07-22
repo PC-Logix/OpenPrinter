@@ -121,7 +121,7 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 			}
 		}
 	
-		return new Object[] { scannedPage.getTagCompound().getString("line" + args.checkInteger(1)) };
+		return new Object[] { scannedPage.getTagCompound().getString("line" + args.checkInteger(0)) };
 	}
 
 	@Callback
