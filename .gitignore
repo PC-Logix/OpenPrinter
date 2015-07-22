@@ -249,3 +249,4 @@ run_client/
 .gradle/1.11/taskArtifacts/fileHashes.bin
 *.log
 .settings/org.eclipse.jdt.core.prefs
+*.prefs
