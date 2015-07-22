@@ -4,7 +4,9 @@
 package pcl.openprinter.tileentity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.*;
 
 import pcl.openprinter.OpenPrinter;
@@ -109,19 +111,35 @@ public class PrinterTE extends TileEntity implements SimpleComponent, IInventory
 	
 	//Real Printer methods follow:
 	@Callback
-	public Object[] scan(Context context, Arguments args) {
+	public Object[] scanLine(Context context, Arguments args) {
 		ItemStack scannedPage = getStackInSlot(13);
 		
-		if (scannedPage.getItem() instanceof PrintedPage) {
-			for (int x = 0; x <= scannedPage.stackTagCompound.func_150296_c().size(); x++) {
-				String output = scannedPage.stackTagCompound.getString("line"+x);
-				Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
-				Integer color = scannedPage.stackTagCompound.getInteger("color"+x);
-				String alignment = scannedPage.stackTagCompound.getString("alignment"+x);
-			}
+		if (scannedPage.getItem() instanceof PrintedPage && scannedPage.hasTagCompound()) {
+			return new Object[] { scannedPage.getTagCompound().getString("line" + args.checkInteger(0)) };
+		} else {
+			return new Object[] { false };
 		}
 	
-		return new Object[] { scannedPage.getTagCompound().getString("line" + args.checkInteger(0)) };
+
+	}
+	
+	@Callback
+	public Object[] scan(Context context, Arguments args) {
+		ItemStack scannedPage = getStackInSlot(13);
+		Map<Integer, String> output = new HashMap<Integer, String>();
+		if (scannedPage.getItem() instanceof PrintedPage) {
+			for (int x = 0; x <= 20; x++) {
+				if(scannedPage.hasTagCompound() && scannedPage.stackTagCompound.hasKey("line"+x)) {
+					output.put(x, scannedPage.stackTagCompound.getString("line"+x));					
+				}
+
+				//Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
+				//Integer color = scannedPage.stackTagCompound.getInteger("color"+x);
+				//String alignment = scannedPage.stackTagCompound.getString("alignment"+x);
+			}
+			return new Object[] { output };
+		}
+		return new Object[] { false };
 	}
 
 	@Callback
