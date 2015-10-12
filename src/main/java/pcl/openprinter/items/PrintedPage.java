@@ -4,7 +4,7 @@
 package pcl.openprinter.items;
 
 import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.blocks.Printer;
+import pcl.openprinter.blocks.BlockPrinter;
 import pcl.openprinter.gui.PaperGUI;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -22,7 +22,7 @@ public class PrintedPage extends Item{
 
 	public PrintedPage() {
 		super();
-		maxStackSize = 1;
+		maxStackSize = 16;
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("printedPage");
 		setTextureName("minecraft:paper");

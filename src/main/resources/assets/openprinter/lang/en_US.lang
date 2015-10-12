@@ -1,15 +1,18 @@
 tile.printer.name=Open Printer
+tile.shredder.name=Open Shredder
 item.printerPaper.name=Printer Paper
 item.printerPaperRoll.name=Printer Paper Roll
 item.printedPage.name=Printed Page
 item.printerInkBlack.name=Black Ink
 item.printerInkColor.name=Color Ink
+item.shreddedPaper.name=Paper Shreds
 gui.string.printer=Open Printer
 gui.string.blackInk=Black Ink
 gui.string.colorInk=Color Ink
 gui.string.paperInput=Paper Input
 gui.string.paperOutput=Paper Output
 gui.string.scannerInput=Scanner Input
+gui.string.shredder=Shredder
 itemGroup.OpenPrinter=OpenPrinter
 
 openprinter.outdated=OpenPrinter is outdated

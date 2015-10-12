@@ -1,15 +1,13 @@
 package pcl.openprinter.blocks;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.tileentity.PrinterTE;
+import pcl.openprinter.tileentity.ShredderTE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,67 +15,32 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
-public class Printer extends BlockContainer {
+public class BlockShredder extends BlockContainer {
 	private Random random;
 
-	public Printer() {
+	@SideOnly(Side.CLIENT)
+	public static IIcon sideIcon;
+	@SideOnly(Side.CLIENT)
+	public static IIcon frontIcon;
+
+	public BlockShredder() {
 		super(Material.iron );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setBlockName("printer");
+		setBlockName("shredder");
 		setHardness(.5f);
-		if (OpenPrinter.render3D) {
-			renderID = RenderingRegistry.getNextAvailableRenderId();
-		}
+
 		random = new Random();
 	}
 
-	private IIcon icon;
-	private int renderID;
-
-	
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int x, int y, int z) {
-		int meta = par1IBlockAccess.getBlockMetadata(x, y, z);
-		switch(meta) {
-		case 0:
-			this.setBlockBounds(0.0F,0.0F,0.4F,1.0F,1.0F,1.0F);
-			break;
-		case 1:
-			this.setBlockBounds(0.0F,0.0F,0.0F,0.6F,1.0F,1.0F);
-			break;
-		case 2:
-			this.setBlockBounds(0.0F,0.0F,0.0F,1.0F,1.0F,0.6F);
-			break;
-		case 3:
-			this.setBlockBounds(0.4F,0.0F,0.0F,1.0F,1.0F,1.0F);
-			break;
-		default:
-			this.setBlockBounds(0.0F,0.0F,0.0F,1.0F,1.0F,1.0F);
-			break;
-		}
-	}
-	
-	
-    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB p_149743_5_, List p_149743_6_, Entity p_149743_7_)
-    {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
-        super.addCollisionBoxesToList(world, x, y, z, p_149743_5_, p_149743_6_, p_149743_7_);
-    }
-
 	@Override
 	public void breakBlock (World world, int x, int y, int z, Block block, int meta) {
-		PrinterTE tileEntity = (PrinterTE) world.getTileEntity(x, y, z);
+		ShredderTE tileEntity = (ShredderTE) world.getTileEntity(x, y, z);
 		dropContent(tileEntity, world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 		super.breakBlock(world, x, y, z, block, meta);
 	}
@@ -141,38 +104,66 @@ public class Printer extends BlockContainer {
 			return false;
 		}
 		// code to open gui explained later		
-		player.openGui(OpenPrinter.instance, 0, world, x, y, z);
+		player.openGui(OpenPrinter.instance, 2, world, x, y, z);
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public IIcon getIcon(int par1, int par2) {
-		return icon;
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-		super.onBlockPlacedBy(world, x, y, z, player, stack);
-		int dir = MathHelper.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-		world.setBlockMetadataWithNotify(x, y, z, dir, 3);
+	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLiving, ItemStack par6ItemStack)
+	{
+		int l = MathHelper.floor_double(par5EntityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
+		par1World.setBlockMetadataWithNotify(par2, par3, par4, l + 1, 2);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister registry) {
-		icon = registry.registerIcon(OpenPrinter.MODID + ":openprinter");
+		registry.registerIcon(OpenPrinter.MODID + ":shredder");
 	}
 
 	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderType() {
-		return renderID;
+	public void registerBlockIcons(IIconRegister ir)
+	{
+		sideIcon = ir.registerIcon(OpenPrinter.MODID + ":block_side");
+		frontIcon = ir.registerIcon(OpenPrinter.MODID + ":shredder_front");
 	}
 
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int i, int j)
+	{
+		switch (i)
+		{
+		case 2: 
+			if (j == 1)
+			{
+				return frontIcon;
+			}
+			return sideIcon;
+		case 3: 
+			if (j == 0)
+				return frontIcon;
+			if (j == 3) {
+				return frontIcon;
+			}
+			return sideIcon;
+		case 4: 
+			if (j == 4)
+			{
+				return frontIcon;
+			}
+			return sideIcon;
+		case 5: 
+			if (j == 2)
+			{
+				return frontIcon;
+			}
+			return sideIcon;
+		}
+		return sideIcon;
+	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
-		return new PrinterTE();
+		return new ShredderTE();
 	}
 
 }
