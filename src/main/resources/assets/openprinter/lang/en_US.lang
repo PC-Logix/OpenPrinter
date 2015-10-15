@@ -6,6 +6,7 @@ item.printedPage.name=Printed Page
 item.printerInkBlack.name=Black Ink
 item.printerInkColor.name=Color Ink
 item.shreddedPaper.name=Paper Shreds
+item.filefolder.name=Folder
 gui.string.printer=Open Printer
 gui.string.blackInk=Black Ink
 gui.string.colorInk=Color Ink
