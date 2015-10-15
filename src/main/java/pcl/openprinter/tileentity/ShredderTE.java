@@ -3,6 +3,7 @@
  */
 package pcl.openprinter.tileentity;
 
+import pcl.openprinter.ContentRegistry;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.items.PrintedPage;
 import net.minecraft.entity.player.EntityPlayer;
@@ -195,7 +196,7 @@ public class ShredderTE extends TileEntity implements IInventory, ISidedInventor
 								if (x < 18) {
 									for (int x2 = 1; x2 <= x - 9; x2++) {
 										if(getStackInSlot(x2 + 1) == null) {
-											this.shredderItemStacks[x + 1] = new ItemStack(OpenPrinter.shreddedPaper);
+											this.shredderItemStacks[x + 1] = new ItemStack(ContentRegistry.shreddedPaper);
 											if (64 - getStackInSlot(x).stackSize == 1) {
 												incStackSize(x2 + 1, 64 - getStackInSlot(x).stackSize);					
 											}
@@ -212,7 +213,7 @@ public class ShredderTE extends TileEntity implements IInventory, ISidedInventor
 						decrStackSize(0, 1);
 						break;
 					} else if (getStackInSlot(x) == null) {
-						this.shredderItemStacks[x] = new ItemStack(OpenPrinter.shreddedPaper);
+						this.shredderItemStacks[x] = new ItemStack(ContentRegistry.shreddedPaper);
 						if (getStackInSlot(0).getItem().equals(Items.book) || getStackInSlot(0).getItem().equals(Items.writable_book) || getStackInSlot(0).getItem().equals(Items.written_book)) {
 							incStackSize(x, 2);
 						}

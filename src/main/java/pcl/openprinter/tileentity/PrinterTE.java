@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.*;
 
+import pcl.openprinter.ContentRegistry;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
@@ -263,7 +264,7 @@ public class PrinterTE extends TileEntity implements Environment, IInventory, IS
 					if(getStackInSlot(2) != null) { //No paper
 						for (int x = 3; x <= 12; x++) { //Loop the 9 output slots checking for a empty one
 							if (getStackInSlot(x) == null) { //The slot is empty lets make us a new page
-								printerItemStacks[x] = new ItemStack(OpenPrinter.printedPage);
+								printerItemStacks[x] = new ItemStack(ContentRegistry.printedPage);
 								printerItemStacks[x].setTagCompound(new NBTTagCompound());
 								if(pageTitle != "") {
 									printerItemStacks[x].stackTagCompound.setString("pageTitle", pageTitle);
