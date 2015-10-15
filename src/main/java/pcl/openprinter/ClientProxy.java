@@ -2,24 +2,17 @@ package pcl.openprinter;
 
 
 import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import pcl.openprinter.CommonProxy;
 import pcl.openprinter.tileentity.PrinterContainer;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.tileentityrender.PrinterRenderer;
-import pcl.openprinter.gui.GUIHandler;
 import pcl.openprinter.itemrender.ItemPrinterRenderer;
-import pcl.openprinter.blocks.BlockPrinter;
 
 public class ClientProxy extends CommonProxy {
 	
@@ -28,7 +21,7 @@ public class ClientProxy extends CommonProxy {
 		if (OpenPrinter.render3D) {
 			TileEntitySpecialRenderer printerRenderer = new PrinterRenderer();
 			ClientRegistry.bindTileEntitySpecialRenderer(pcl.openprinter.tileentity.PrinterTE.class, printerRenderer);
-			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(OpenPrinter.printerBlock), new ItemPrinterRenderer(printerRenderer, new PrinterTE()));
+			MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ContentRegistry.printerBlock), new ItemPrinterRenderer(printerRenderer, new PrinterTE()));
 		}
 	}
 	
