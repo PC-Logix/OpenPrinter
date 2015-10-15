@@ -21,9 +21,8 @@ import net.minecraftforge.common.util.Constants;
 public class PaperGUI extends GuiScreen {
 
 	private static boolean isBook;
-	private static boolean isFolder;
-	private int pageCount;
-	private int currPage;
+	private int pageCount = 0;
+	private int currPage = 0;
 
 	@Override
 	public boolean doesGuiPauseGame()
@@ -51,9 +50,11 @@ public class PaperGUI extends GuiScreen {
 	}
 	public void initGui(){}
 	public void drawScreen(int i, int j, float f){
-		PaperGUI.isBook = stack.getTagCompound().hasKey("book");
-		PaperGUI.isFolder = stack.getTagCompound().hasKey("folder");
-		this.pageCount = stack.getTagCompound().getTagList("pages", Constants.NBT.TAG_STRING).tagCount();
+		if (stack.hasTagCompound()) {
+			PaperGUI.isBook = stack.getTagCompound().hasKey("book");
+			this.pageCount = stack.getTagCompound().getTagList("pages", Constants.NBT.TAG_STRING).tagCount();
+		}
+
 		this.currPage = 0;
 		//OpenPrinter.logger.info(stack.getTagCompound().getTagList("pages", Constants.NBT.TAG_COMPOUND).getStringTagAt(0));
 
