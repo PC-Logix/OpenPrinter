@@ -133,6 +133,6 @@ public class ContentRegistry {
 		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(folder, 1), 
 				"P P",
 				" P ",
-				'p', paper));
+				'P', paper));
 		}
 }
