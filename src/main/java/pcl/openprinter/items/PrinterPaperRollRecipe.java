@@ -9,6 +9,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
+import pcl.openprinter.ContentRegistry;
 import pcl.openprinter.OpenPrinter;
 
 public class PrinterPaperRollRecipe implements IRecipe
@@ -44,7 +45,7 @@ public class PrinterPaperRollRecipe implements IRecipe
 
     @Override
     public ItemStack getCraftingResult (InventoryCrafting inventory) {
-        return new ItemStack(OpenPrinter.printerPaperRoll, 1);
+        return new ItemStack(ContentRegistry.printerPaperRoll, 1);
     }
 
     @Override
@@ -54,6 +55,6 @@ public class PrinterPaperRollRecipe implements IRecipe
 
     @Override
     public ItemStack getRecipeOutput () {
-        return new ItemStack(OpenPrinter.printerPaperRoll, 1);
+        return new ItemStack(ContentRegistry.printerPaperRoll, 1);
     }
 }
