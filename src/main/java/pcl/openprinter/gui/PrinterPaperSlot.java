@@ -14,6 +14,7 @@ public class PrinterPaperSlot extends Slot {
 		// TODO Auto-generated constructor stub
 	}
 	
+	@Override
     public boolean isItemValid(ItemStack itemstack)
     {
 
@@ -32,10 +33,10 @@ public class PrinterPaperSlot extends Slot {
     /**
      * Called when the player picks up an item from an inventory slot
      */
+    @Override
     public void onPickupFromSlot(EntityPlayer par1EntityPlayer, ItemStack par2ItemStack)
     {
             this.onCrafting(par2ItemStack);
             super.onPickupFromSlot(par1EntityPlayer, par2ItemStack);
     }
-
 }
