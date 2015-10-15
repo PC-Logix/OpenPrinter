@@ -129,5 +129,10 @@ public class ContentRegistry {
 				"BBB",
 				" Z ",
 				'B', blackInk, 'Z', new ItemStack(printerInkBlack, 1, OreDictionary.WILDCARD_VALUE)));
+		
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(folder, 1), 
+				"P P",
+				" P ",
+				'p', paper));
 		}
 }
