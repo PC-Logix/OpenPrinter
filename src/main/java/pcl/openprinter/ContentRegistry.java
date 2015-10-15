@@ -85,6 +85,7 @@ public class ContentRegistry {
 	
 	private static void registerRecipes() {
 		ItemStack redstone		= new ItemStack(Items.redstone);
+		ItemStack shears		= new ItemStack(Items.shears);
 		ItemStack microchip		= li.cil.oc.api.Items.get("chip1").createItemStack(1);
 		ItemStack pcb			= li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1);
 		String blackInk			= "dyeBlack";
@@ -101,6 +102,12 @@ public class ContentRegistry {
 				"IRI",
 				'I', "nuggetIron", 'R', redstone, 'M', microchip, 'P', pcb));
 
+		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(shredderBlock, 1), 
+				"IRI",
+				"ISI",
+				"IRI",
+				'I', "nuggetIron", 'R', redstone, 'S', shears));
+		
 		GameRegistry.addRecipe(new ShapedOreRecipe( new ItemStack(printerInkBlack, 1), 
 				"BBB",
 				" I ",
