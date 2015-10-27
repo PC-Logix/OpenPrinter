@@ -243,6 +243,9 @@ public class PrinterTE extends TileEntity implements Environment, IInventory, IS
 							printerItemStacks[x].stackTagCompound.setTag("display", nameTag);
 
 							getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + 1);
+							if(getStackInSlot(0).getItemDamage() >= getStackInSlot(0).getMaxDamage()) {
+								setInventorySlotContents(0, null);
+							}
 							decrStackSize(2, 1);
 							return new Object[]{true};
 						}
@@ -298,7 +301,7 @@ public class PrinterTE extends TileEntity implements Environment, IInventory, IS
 								align.clear();
 								if (getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
 									getStackInSlot(2).setItemDamage(getStackInSlot(2).getItemDamage() + 1);
-									if(getStackInSlot(2).getItemDamage() == getStackInSlot(2).getMaxDamage()) {
+									if(getStackInSlot(2).getItemDamage() >= getStackInSlot(2).getMaxDamage()) {
 										setInventorySlotContents(2, null);
 									}
 								} else {
@@ -306,13 +309,13 @@ public class PrinterTE extends TileEntity implements Environment, IInventory, IS
 								}
 								if (markColor) {
 									getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + colorUses++);
-									if(getStackInSlot(1).getItemDamage() == getStackInSlot(1).getMaxDamage()) {
+									if(getStackInSlot(1).getItemDamage() >= getStackInSlot(1).getMaxDamage()) {
 										setInventorySlotContents(1, null);
 									}
 								}
 								if (markBlack) {
 									getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + blackUses);
-									if(getStackInSlot(0).getItemDamage() == getStackInSlot(0).getMaxDamage()) {
+									if(getStackInSlot(0).getItemDamage() >= getStackInSlot(0).getMaxDamage()) {
 										setInventorySlotContents(0, null);
 									}
 								}
