@@ -103,7 +103,7 @@ public class PaperGUI extends GuiScreen {
 			int offset = 100;
 			if (stack.hasTagCompound()) {
 				if (stack.stackTagCompound.getDouble("version") == 2.0) {
-					drawCenteredString(mc.fontRenderer, stack.stackTagCompound.getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
+					//drawCenteredString(mc.fontRenderer, stack.stackTagCompound.getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
 					for (int x = 0; x <= stack.stackTagCompound.func_150296_c().size(); x++) {
 						String output = stack.stackTagCompound.getString("line"+x);
 						String[] parts = output.split("∞");
@@ -123,7 +123,7 @@ public class PaperGUI extends GuiScreen {
 						}
 					}
 				} else {
-					drawCenteredString(mc.fontRenderer, stack.stackTagCompound.getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
+					//drawCenteredString(mc.fontRenderer, stack.stackTagCompound.getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
 					for (int x = 0; x <= stack.stackTagCompound.func_150296_c().size(); x++) {
 						String output = stack.stackTagCompound.getString("line"+x);
 						Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
