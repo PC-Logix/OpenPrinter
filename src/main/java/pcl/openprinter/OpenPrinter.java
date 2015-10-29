@@ -13,6 +13,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import pcl.openprinter.gui.GUIHandler;
 import pcl.openprinter.items.PrinterPaperRoll;
+import pcl.openprinter.network.PacketHandler;
 import pcl.openprinter.BuildInfo;
 import pcl.openprinter.client.CreativeTab;
 import net.minecraftforge.common.config.Configuration;
@@ -51,7 +52,7 @@ public class OpenPrinter {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 
-
+		PacketHandler.init();
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
 		render3D = cfg.render3D;
 

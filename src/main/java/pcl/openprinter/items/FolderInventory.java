@@ -3,6 +3,7 @@
  */
 package pcl.openprinter.items;
 
+import pcl.openprinter.OpenPrinter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -17,7 +18,7 @@ import net.minecraftforge.common.util.Constants;
 public class FolderInventory implements IInventory {
 
 	private String name = "File Folder";
-	
+
 	/** Provides NBT Tag Compound to reference */
 	private final ItemStack invItem;
 
@@ -26,6 +27,8 @@ public class FolderInventory implements IInventory {
 
 	/** Inventory's size must be same as number of slots you add to the Container class */
 	private ItemStack[] inventory = new ItemStack[INV_SIZE];
+
+	private ItemStack stack;
 	
 	/**
 	 * @param itemstack - the ItemStack to which this inventory belongs
@@ -33,6 +36,7 @@ public class FolderInventory implements IInventory {
 	public FolderInventory(ItemStack stack)
 	{
 		invItem = stack;
+		this.stack = stack;
 
 		// Create a new NBT Tag Compound if one doesn't already exist, or you will crash
 		if (!stack.hasTagCompound()) {
@@ -48,7 +52,7 @@ public class FolderInventory implements IInventory {
 		}
 		readFromNBT(stack.getTagCompound());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see net.minecraft.inventory.IInventory#getSizeInventory()
 	 */
@@ -154,7 +158,8 @@ public class FolderInventory implements IInventory {
 				inventory[i] = null;
 			}
 		}
-		
+
+		invItem.setStackDisplayName(this.name);
 		// This line here does the work:		
 		writeToNBT(invItem.getTagCompound());
 	}
@@ -243,5 +248,12 @@ public class FolderInventory implements IInventory {
 		}
 		// Add the TagList to the ItemStack's Tag Compound with the name "ItemInventory"
 		tagcompound.setTag("ItemInventory", items);
+	}
+
+	public void setInventoryName(String string) {
+		OpenPrinter.logger.info(string);
+		this.name = string;
+		markDirty();
+		//this.stack.setStackDisplayName(this.name);
 	}
 }

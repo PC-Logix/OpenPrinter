@@ -64,19 +64,18 @@ public class FolderContainer extends Container {
 	/**
 	 * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
 	 */
+	@Override
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int index)
 	{
 		ItemStack itemstack = null;
 		Slot slot = (Slot) this.inventorySlots.get(index);
 
-		if (slot != null && slot.getHasStack())
-		{
+		if (slot != null && slot.getHasStack()) {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
 			// If item is in our custom Inventory or armor slot
-			if (index < INV_START)
-			{
+			if (index < INV_START) {
 				// try to place in player inventory / action bar
 				if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END+1, true))
 				{
@@ -84,42 +83,22 @@ public class FolderContainer extends Container {
 				}
 
 				slot.onSlotChange(itemstack1, itemstack);
-			}
-
-			else
-			{
-				if (itemstack1.getItem() instanceof PrintedPage)
-				{
-					if (!this.mergeItemStack(itemstack1, 0, FolderInventory.INV_SIZE, false))
-					{
+			} else {
+				if (itemstack1.getItem() instanceof PrintedPage) {
+					if (!this.mergeItemStack(itemstack1, 0, FolderInventory.INV_SIZE, false)) {
 						return null;
 					}
 				}
 
-				/**
-				 * Implementation number 1: Shift-click into your custom inventory
-				 */
-				if (index >= INV_START)
-				{
-					// place in custom inventory
-					if (!this.mergeItemStack(itemstack1, 0, INV_START, false))
-					{
-						return null;
-					}
-				}
 			}
 
-			if (itemstack1.stackSize == 0)
-			{
+			if (itemstack1.stackSize == 0) {
 				slot.putStack((ItemStack) null);
-			}
-			else
-			{
+			} else {
 				slot.onSlotChanged();
 			}
 
-			if (itemstack1.stackSize == itemstack.stackSize)
-			{
+			if (itemstack1.stackSize == itemstack.stackSize) {
 				return null;
 			}
 

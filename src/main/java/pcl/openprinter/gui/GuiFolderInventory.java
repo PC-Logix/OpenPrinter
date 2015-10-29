@@ -1,10 +1,18 @@
 package pcl.openprinter.gui;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.items.FolderContainer;
 import pcl.openprinter.items.FolderInventory;
+import pcl.openprinter.network.MessageGUIFolder;
+import pcl.openprinter.network.PacketHandler;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
@@ -18,11 +26,32 @@ public class GuiFolderInventory extends GuiContainer {
 	 * These are used for drawing the player model. */
 	private float xSize_lo;
 	private float ySize_lo;
+	private GuiTextField text;
+	private String name;
 
 	private static final ResourceLocation iconLocation = new ResourceLocation("openprinter", "textures/gui/inventoryitem.png");
 
 	/** The inventory to render on screen */
 	private final FolderInventory inventory;
+
+	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
+	
+	@Override
+	public void initGui()
+	{
+		super.initGui();
+		Keyboard.enableRepeatEvents(true);
+		this.text = new GuiTextField(this.fontRendererObj, this.width / 2 - 68, this.height/2-78, 137, 10);
+		text.setMaxStringLength(203);
+		text.setText("Name");
+		String s = this.inventory.hasCustomInventoryName() ? this.inventory.getInventoryName() : StatCollector.translateToLocal(this.inventory.getInventoryName());
+		//this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+		this.text.setText(s);
+		this.text.setFocused(true);
+	}
 
 	public GuiFolderInventory(FolderContainer containerItem)
 	{
@@ -30,14 +59,53 @@ public class GuiFolderInventory extends GuiContainer {
 		this.inventory = containerItem.inventory;
 	}
 
+	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+		this.text.updateCursorCounter();
+	}
+
+	@Override
+	protected void keyTyped(char key, int par2)
+	{       
+		//super.keyTyped(key, par2);
+		
+		   if (text.isFocused()) {
+			   text.textboxKeyTyped(key, par2);
+		        //nameString = name.getText();
+		   }
+			
+			if (par2 == 1) {
+				this.mc.thePlayer.closeScreen();
+			}
+		
+		if (key == '\r') {
+			this.name = this.text.getText();
+			actionPerformed();
+		}
+	}
+
+	@Override
+	protected void mouseClicked(int x, int y, int btn) {
+		super.mouseClicked(x, y, btn);
+		this.text.mouseClicked(x, y, btn);
+	}
+
+	public void onGuiClosed()
+	{
+		Keyboard.enableRepeatEvents(false);
+		this.inventory.setInventoryName(this.text.getText());
+	}
+
 	/**
 	 * Draws the screen and all the components in it.
 	 */
-	public void drawScreen(int par1, int par2, float par3)
-	{
+	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
 		this.xSize_lo = (float)par1;
 		this.ySize_lo = (float)par2;
+		
 	}
 
 	/**
@@ -45,8 +113,9 @@ public class GuiFolderInventory extends GuiContainer {
 	 */
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		String s = this.inventory.hasCustomInventoryName() ? this.inventory.getInventoryName() : StatCollector.translateToLocal(this.inventory.getInventoryName());
-		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+		//String s = this.inventory.hasCustomInventoryName() ? this.inventory.getInventoryName() : StatCollector.translateToLocal(this.inventory.getInventoryName());
+		//this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+		//this.text.setText(s);
 	}
 
 	/**
@@ -60,9 +129,17 @@ public class GuiFolderInventory extends GuiContainer {
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 		int i1;
+		this.text.drawTextBox();
 		//drawPlayerModel(k + 51, l + 75, 30, (float)(k + 51) - this.xSize_lo, (float)(l + 75 - 50) - this.ySize_lo, this.mc.thePlayer);
 	}
+	
+	@SideOnly(Side.CLIENT)
+	protected void actionPerformed() {
+		this.name = this.text.getText();
+		PacketHandler.INSTANCE.sendToServer(new MessageGUIFolder(this, this.name, 1));
 
+	}
+	
 	/**
 	 * This renders the player model in standard inventory position (in later versions of Minecraft / Forge, you can
 	 * simply call GuiInventory.drawEntityOnScreen directly instead of copying this code)
@@ -101,5 +178,9 @@ public class GuiFolderInventory extends GuiContainer {
 		OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
+	}
+
+	public void setName(String name2) {
+		this.name = name2;
 	}
 }
