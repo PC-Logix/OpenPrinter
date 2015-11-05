@@ -222,6 +222,7 @@ pip-log.txt
 /eclipse/
 /runtime/
 /server_runtime/
+/run_server/
 *~
 *.lnk
 .gradle/gradle.log

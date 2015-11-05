@@ -136,7 +136,7 @@ public class GuiFolderInventory extends GuiContainer {
 	@SideOnly(Side.CLIENT)
 	protected void actionPerformed() {
 		this.name = this.text.getText();
-		PacketHandler.INSTANCE.sendToServer(new MessageGUIFolder(this, this.name, 1));
+		PacketHandler.INSTANCE.sendToServer(new MessageGUIFolder(this.name, 1));
 
 	}
 	

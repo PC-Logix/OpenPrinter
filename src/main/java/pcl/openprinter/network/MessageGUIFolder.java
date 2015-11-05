@@ -13,9 +13,9 @@ public class MessageGUIFolder implements IMessage {
 	
 	public MessageGUIFolder() {}
 	
-	public MessageGUIFolder(GuiFolderInventory guiFolderInventory, String name, int i) {
+	public MessageGUIFolder(String name, int i) {
 		// TODO Auto-generated constructor stub
-		guiFolderInventory.setName(name);
+		//guiFolderInventory.setName(name);
 		folderName = name;
 		folderNameLength = folderName.length();
 	}
