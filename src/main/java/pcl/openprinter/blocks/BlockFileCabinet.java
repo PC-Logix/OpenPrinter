@@ -117,14 +117,14 @@ public class BlockFileCabinet extends BlockContainer {
 
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister registry) {
-		registry.registerIcon(OpenPrinter.MODID + ":shredder");
+		registry.registerIcon(OpenPrinter.MODID + ":filingcabinet");
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ir)
 	{
-		sideIcon = ir.registerIcon(OpenPrinter.MODID + ":block_side");
-		frontIcon = ir.registerIcon(OpenPrinter.MODID + ":shredder_front");
+		sideIcon = ir.registerIcon(OpenPrinter.MODID + ":filingcabinet_bottom");
+		frontIcon = ir.registerIcon(OpenPrinter.MODID + ":filingcabinet_front");
 	}
 
 	@SideOnly(Side.CLIENT)

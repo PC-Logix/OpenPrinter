@@ -22,7 +22,7 @@ import net.minecraft.tileentity.TileEntity;
  *
  */
 public class FileCabinetTE extends TileEntity implements IInventory, ISidedInventory {
-	private ItemStack[] fileCabinetItemStacks = new ItemStack[20];
+	private ItemStack[] fileCabinetItemStacks = new ItemStack[30];
 
 	private int processingTime = 0;
 

@@ -1,5 +1,6 @@
 package pcl.openprinter.tileentity;
 
+import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.gui.FileCabinetSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -26,7 +27,7 @@ public class FileCabinetContainer extends Container{
 	public FileCabinetContainer (InventoryPlayer inventoryPlayer, FileCabinetTE tileEntity2){
 		tileEntity = tileEntity2;
 		//Blank Paper
-		paperSlot = addSlotToContainer(new FileCabinetSlot(tileEntity, 0, 79, 34));
+		//paperSlot = addSlotToContainer(new FileCabinetSlot(tileEntity, 0, 79, 34));
 
 		specialSlots = new ArrayList<Slot>();
 		specialSlots.add(paperSlot);
@@ -34,8 +35,9 @@ public class FileCabinetContainer extends Container{
 		//Output slots
 		outputSlots = new ArrayList<Slot>();
 		for (int i = 1; i < 10; i++) {
-			//outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 44 + i * 18 - 54, 69)));
-			outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 44 + i * 18 - 54, 87)));
+			outputSlots.add(addSlotToContainer(new FileCabinetSlot(tileEntity, i, 44 + i * 18 - 54, 15)));
+			outputSlots.add(addSlotToContainer(new FileCabinetSlot(tileEntity, i + 9, 44 + i * 18 - 54, 33)));
+			outputSlots.add(addSlotToContainer(new FileCabinetSlot(tileEntity, i + 18, 44 + i * 18 - 54, 51)));
 		}
 
 		//commonly used vanilla code that adds the player's inventory
@@ -52,13 +54,13 @@ public class FileCabinetContainer extends Container{
 		playerSlots = new ArrayList<Slot>();
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				playerSlots.add(addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + 15 + 15)));
+				playerSlots.add(addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 78 + i * 18)));
 			}
 		}
 
 		hotbarSlots = new ArrayList<Slot>();
 		for (int i = 0; i < 9; i++) {
-			hotbarSlots.add(addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142 + 15 + 15)));
+			hotbarSlots.add(addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 136)));
 		}
 	}
 
