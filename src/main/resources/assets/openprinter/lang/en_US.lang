@@ -1,5 +1,6 @@
 tile.printer.name=Open Printer
 tile.shredder.name=Open Shredder
+tile.filecabinet.name=Open File Cabinet
 item.printerPaper.name=Printer Paper
 item.printerPaperRoll.name=Printer Paper Roll
 item.printedPage.name=Printed Page
@@ -14,6 +15,7 @@ gui.string.paperInput=Paper Input
 gui.string.paperOutput=Paper Output
 gui.string.scannerInput=Scanner Input
 gui.string.shredder=Shredder
+gui.string.filecabinet=File Cabinet
 itemGroup.OpenPrinter=OpenPrinter
 
 openprinter.outdated=OpenPrinter is outdated

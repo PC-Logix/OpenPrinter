@@ -1,5 +1,6 @@
 package pcl.openprinter;
 
+import pcl.openprinter.blocks.BlockFileCabinet;
 import pcl.openprinter.blocks.BlockPrinter;
 import pcl.openprinter.blocks.BlockShredder;
 import pcl.openprinter.items.ItemFolder;
@@ -10,6 +11,7 @@ import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
 import pcl.openprinter.items.PrinterPaperRollRecipe;
+import pcl.openprinter.tileentity.FileCabinetTE;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.tileentity.ShredderTE;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -27,6 +29,7 @@ public class ContentRegistry {
 	public static CreativeTabs creativeTab;
 	public static Block printerBlock;
 	public static Block shredderBlock;
+	public static Block fileCabinetBlock;
 	public static Item  printedPage;
 	public static Item  printerPaper;
 	public static Item  printerPaperRoll;
@@ -79,8 +82,12 @@ public class ContentRegistry {
 		shredderBlock = new BlockShredder();
 		GameRegistry.registerBlock(shredderBlock, "openprinter.shredder");
 		
+		fileCabinetBlock = new BlockFileCabinet();
+		GameRegistry.registerBlock(fileCabinetBlock, "openprinter.filecabinet");
+		
 		GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
 		GameRegistry.registerTileEntity(ShredderTE.class, "ShredderTE");
+		GameRegistry.registerTileEntity(FileCabinetTE.class, "FileCabinetTE");
 	}
 	
 	private static void registerRecipes() {

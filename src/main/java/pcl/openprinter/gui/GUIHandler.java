@@ -9,6 +9,8 @@ package pcl.openprinter.gui;
  */
 import pcl.openprinter.items.FolderContainer;
 import pcl.openprinter.items.FolderInventory;
+import pcl.openprinter.tileentity.FileCabinetContainer;
+import pcl.openprinter.tileentity.FileCabinetTE;
 import pcl.openprinter.tileentity.PrinterContainer;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.tileentity.ShredderContainer;
@@ -38,6 +40,11 @@ public class GUIHandler implements IGuiHandler {
 			return new FolderContainer(player, player.inventory, new FolderInventory(player.getHeldItem()));
 		} else if (id == 4) {
 			//Client only Folder View
+		} else if (id == 5) {
+			TileEntity tileEntity = world.getTileEntity(x, y, z);
+			if(tileEntity instanceof FileCabinetTE){
+				return new FileCabinetContainer(player.inventory, (FileCabinetTE) tileEntity);
+			}
 		}
 
 		return null;
@@ -61,6 +68,9 @@ public class GUIHandler implements IGuiHandler {
 			return new GuiFolderInventory((FolderContainer) new FolderContainer(player, player.inventory, new FolderInventory(player.getHeldItem())));
 		} else if (id == 4) { //Folder view GUI (Client only)
 			return new GuiFolderView(world, player);
+		} else if (id == 5) {
+			TileEntity tileEntity = world.getTileEntity(x, y, z);
+			return new FileCabinetGUI(player.inventory, (FileCabinetTE) tileEntity);
 		}
 
 		return null;
