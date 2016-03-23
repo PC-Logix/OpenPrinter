@@ -3,6 +3,7 @@ package pcl.openprinter;
 import pcl.openprinter.blocks.BlockFileCabinet;
 import pcl.openprinter.blocks.BlockPrinter;
 import pcl.openprinter.blocks.BlockShredder;
+import pcl.openprinter.items.ItemBlockFileCabinet;
 import pcl.openprinter.items.ItemFolder;
 import pcl.openprinter.items.ItemPaperShreds;
 import pcl.openprinter.items.ItemPrinterBlock;
@@ -83,7 +84,7 @@ public class ContentRegistry {
 		GameRegistry.registerBlock(shredderBlock, "openprinter.shredder");
 		
 		fileCabinetBlock = new BlockFileCabinet();
-		GameRegistry.registerBlock(fileCabinetBlock, "openprinter.filecabinet");
+		GameRegistry.registerBlock(fileCabinetBlock, ItemBlockFileCabinet.class, "openprinter.filecabinet");
 		
 		GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
 		GameRegistry.registerTileEntity(ShredderTE.class, "ShredderTE");

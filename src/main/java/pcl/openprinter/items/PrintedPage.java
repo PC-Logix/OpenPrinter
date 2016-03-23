@@ -22,7 +22,7 @@ public class PrintedPage extends Item{
 
 	public PrintedPage() {
 		super();
-		maxStackSize = 16;
+		maxStackSize = 1;
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("printedPage");
 		setTextureName("minecraft:paper");

@@ -38,4 +38,10 @@ public class FileCabinetSlot extends Slot {
             this.onCrafting(par2ItemStack);
             super.onPickupFromSlot(par1EntityPlayer, par2ItemStack);
     }
+    
+    @Override
+    public int getSlotStackLimit()
+    {
+        return 1;
+    }
 }

@@ -24,6 +24,8 @@ import net.minecraft.tileentity.TileEntity;
 public class FileCabinetTE extends TileEntity implements IInventory, ISidedInventory {
 	private ItemStack[] fileCabinetItemStacks = new ItemStack[30];
 
+	public String name = "";
+	
 	private int processingTime = 0;
 
 	private static final int[] slots_top = new int[] {0};
@@ -45,6 +47,8 @@ public class FileCabinetTE extends TileEntity implements IInventory, ISidedInven
 				this.fileCabinetItemStacks[var5] = ItemStack.loadItemStackFromNBT(var4);
 			}
 		}
+		this.name = par1NBTTagCompound.getString("name");
+		System.out.println(name);
 	}
 
 	@Override
@@ -63,6 +67,8 @@ public class FileCabinetTE extends TileEntity implements IInventory, ISidedInven
 			}
 		}
 		par1NBTTagCompound.setTag("Items", var2);
+		
+		par1NBTTagCompound.setString("name", this.name);
 	}
 
 	@Override
@@ -237,5 +243,13 @@ public class FileCabinetTE extends TileEntity implements IInventory, ISidedInven
 
 	@Override
 	public void closeInventory() {
+	}
+
+	public boolean hasDisplayName() {
+		return name.length() > 0;
+	}
+	
+	public String getDisplayName() {
+		return name;
 	}
 }
