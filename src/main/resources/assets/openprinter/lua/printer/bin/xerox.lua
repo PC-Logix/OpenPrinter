@@ -17,7 +17,7 @@ printer.clear()
  
 local args, options = shell.parse(...)
  
-local amt = tonumber(args[1])
+local amt = (tonumber(args[1]) or 1)
  
  
 if amt > 9 then
@@ -28,7 +28,7 @@ end
  
 local pageTitle, lines = printer.scan()
 printer.setTitle(pageTitle)
-for cnt = 1,(amt or 1) do
+for cnt = 1,amt do
 	for x = 0,#lines do
 		printer.writeln(lines[x])
 	end
