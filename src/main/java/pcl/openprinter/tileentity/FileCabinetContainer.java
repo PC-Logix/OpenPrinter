@@ -2,6 +2,8 @@ package pcl.openprinter.tileentity;
 
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.gui.FileCabinetSlot;
+import pcl.openprinter.items.FolderInventory;
+import pcl.openprinter.items.PrintedPage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -17,21 +19,14 @@ import java.util.List;
  */
 public class FileCabinetContainer extends Container{
 	protected FileCabinetTE tileEntity;
-
-	private Slot paperSlot;
-	private List<Slot> specialSlots;
 	private List<Slot> outputSlots;
 	private List<Slot> playerSlots;
 	private List<Slot> hotbarSlots;
 
-	public FileCabinetContainer (InventoryPlayer inventoryPlayer, FileCabinetTE tileEntity2){
-		tileEntity = tileEntity2;
-		//Blank Paper
-		//paperSlot = addSlotToContainer(new FileCabinetSlot(tileEntity, 0, 79, 34));
-
-		specialSlots = new ArrayList<Slot>();
-		specialSlots.add(paperSlot);
-
+	private static final int INV_START = 27, INV_END = INV_START+26,
+			HOTBAR_START = INV_END+1, HOTBAR_END = HOTBAR_START+8;
+	
+	public FileCabinetContainer (InventoryPlayer inventoryPlayer, FileCabinetTE tileEntity){
 		//Output slots
 		outputSlots = new ArrayList<Slot>();
 		for (int i = 1; i < 10; i++) {
@@ -46,7 +41,7 @@ public class FileCabinetContainer extends Container{
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return tileEntity.isUseableByPlayer(player);
+		return true;
 	}
 
 
@@ -65,66 +60,159 @@ public class FileCabinetContainer extends Container{
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-		ItemStack stack = null;
-		Slot slotObject = (Slot) inventorySlots.get(slot);
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int index)
+	{
+		ItemStack itemstack = null;
+		Slot slot = (Slot) this.inventorySlots.get(index);
 
-		int outputSlotStart = outputSlots.get(0).slotNumber;
-		int outputSlotEnd = outputSlots.get(outputSlots.size() - 1).slotNumber + 1;
+		if (slot != null && slot.getHasStack()) {
+			ItemStack itemstack1 = slot.getStack();
+			itemstack = itemstack1.copy();
 
-		// Assume inventory and hotbar slot IDs are contiguous
-		int inventoryStart = playerSlots.get(0).slotNumber;
-		int hotbarStart = hotbarSlots.get(0).slotNumber;
-		int hotbarEnd = hotbarSlots.get(hotbarSlots.size() - 1).slotNumber + 1;
-
-		//null checks and checks if the item can be stacked (maxStackSize > 1)
-		if (slotObject != null && slotObject.getHasStack()) {
-			ItemStack stackInSlot = slotObject.getStack();
-			stack = stackInSlot.copy();
-
-			// Try merge output into inventory and signal change
-			if (slot >= outputSlotStart && slot < outputSlotEnd) {
-				if (!mergeItemStack(stackInSlot, inventoryStart, hotbarEnd, true))
+			// If item is in our custom Inventory or armor slot
+			if (index < INV_START) {
+				// try to place in player inventory / action bar
+				if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END+1, true))
+				{
 					return null;
-				slotObject.onSlotChange(stackInSlot, stack);
-			}
-			// Try merge stacks within inventory and hotbar spaces
-			else if (slot >= inventoryStart && slot < hotbarEnd) {
-				// If the item is a 'special' item, try putting it into its special slot
-				boolean handledSpecialItem = false;
-				for (Slot ss : specialSlots) {
-					if (!tileEntity.isItemValidForSlot(ss.getSlotIndex(), stackInSlot))
-						continue;
-					handledSpecialItem = mergeItemStack(stackInSlot, ss.slotNumber, ss.slotNumber + 1, false);
-					if (handledSpecialItem)
-						break;
 				}
 
-				// Else treat it like any normal item
-				if (!handledSpecialItem) {
-					if (slot >= inventoryStart && slot < hotbarStart) {
-						if (!mergeItemStack(stackInSlot, hotbarStart, hotbarEnd, false))
-							return null;
-					} else if (slot >= hotbarStart && slot < hotbarEnd && !this.mergeItemStack(stackInSlot, inventoryStart, hotbarStart, false))
-						return null;
-				}
-			}
-			// Try merge stack into inventory
-			else if (!mergeItemStack(stackInSlot, inventoryStart, hotbarEnd, false))
-				return null;
-
-			if (stackInSlot.stackSize == 0) {
-				slotObject.putStack(null);
+				slot.onSlotChange(itemstack1, itemstack);
 			} else {
-				slotObject.onSlotChanged();
+				//if (itemstack1.getItem() instanceof PrintedPage) {
+					if (!this.mergeItemStack(itemstack1, 0, 27, false)) {
+						return null;
+					}
+				//}
 			}
 
-			if (stackInSlot.stackSize == stack.stackSize) {
+			if (itemstack1.stackSize == 0) {
+				slot.putStack((ItemStack) null);
+			} else {
+				slot.onSlotChanged();
+			}
+
+			if (itemstack1.stackSize == itemstack.stackSize) {
 				return null;
 			}
-			slotObject.onPickupFromSlot(player, stackInSlot);
+
+			slot.onPickupFromSlot(par1EntityPlayer, itemstack1);
 		}
-		return stack;
+
+		return itemstack;
 	}
 
+	@Override
+	protected boolean mergeItemStack(ItemStack is, int slotStart, int slotFinish, boolean par4)
+	{
+		boolean merged = false;
+		int slotIndex = slotStart;
+
+		if (par4)
+			slotIndex = slotFinish - 1;
+
+		Slot slot;
+		ItemStack slotstack;
+
+		if (is.isStackable())
+		{
+			while (is.stackSize > 0 && (!par4 && slotIndex < slotFinish || par4 && slotIndex >= slotStart))
+			{
+				slot = (Slot)this.inventorySlots.get(slotIndex);
+				slotstack = slot.getStack();
+
+				if (slotstack != null
+						&& slotstack.getItem() == is.getItem()
+						//&& !is.getHasSubtypes()
+						&& is.getItemDamage() == slotstack.getItemDamage()
+						&& ItemStack.areItemStackTagsEqual(is, slotstack)
+						&& slotstack.stackSize < slot.getSlotStackLimit())
+				{
+					int mergedStackSize = is.stackSize + getSmaller(slotstack.stackSize, slot.getSlotStackLimit());
+
+					//First we check if we can add the two stacks together and the resulting stack is smaller than the maximum size for the slot or the stack
+					if (mergedStackSize <= is.getMaxStackSize() && mergedStackSize <= slot.getSlotStackLimit())
+					{
+						is.stackSize = 0;
+						slotstack.stackSize = mergedStackSize;
+						slot.onSlotChanged();
+						merged = true;
+					}
+					else if (slotstack.stackSize < is.getMaxStackSize() && slotstack.stackSize < slot.getSlotStackLimit())
+					{
+						// Slot stack size is greater than or equal to the item's max stack size. Most containers are this case.
+						if (slot.getSlotStackLimit() >= is.getMaxStackSize())
+						{
+							is.stackSize -= is.getMaxStackSize() - slotstack.stackSize;
+							slotstack.stackSize = is.getMaxStackSize();
+							slot.onSlotChanged();
+							merged = true;
+						}
+						// Slot stack size is smaller than the item's normal max stack size. Example: Log Piles
+						else if (slot.getSlotStackLimit() < is.getMaxStackSize())
+						{
+							is.stackSize -= slot.getSlotStackLimit() - slotstack.stackSize;
+							slotstack.stackSize = slot.getSlotStackLimit();
+							slot.onSlotChanged();
+							merged = true;
+						}
+					}
+				}
+
+				if (par4)
+					--slotIndex;
+				else
+					++slotIndex;
+			}
+		}
+
+		if (is.stackSize > 0)
+		{
+			if (par4)
+				slotIndex = slotFinish - 1;
+			else
+				slotIndex = slotStart;
+
+			while (!par4 && slotIndex < slotFinish || par4 && slotIndex >= slotStart)
+			{
+				slot = (Slot)this.inventorySlots.get(slotIndex);
+				slotstack = slot.getStack();
+				if (slotstack == null && slot.isItemValid(is) && slot.getSlotStackLimit() < is.stackSize)
+				{
+					ItemStack copy = is.copy();
+					copy.stackSize = slot.getSlotStackLimit();
+					is.stackSize -= slot.getSlotStackLimit();
+					slot.putStack(copy);
+					slot.onSlotChanged();
+					merged = true;
+					//this.bagsSlotNum = slotIndex;
+					break;
+				}
+				else if (slotstack == null && slot.isItemValid(is))
+				{
+					slot.putStack(is.copy());
+					slot.onSlotChanged();
+					is.stackSize = 0;
+					merged = true;
+					break;
+				}
+
+				if (par4)
+					--slotIndex;
+				else
+					++slotIndex;
+			}
+		}
+
+		return merged;
+	}
+
+	protected int getSmaller(int i, int j)
+	{
+		if(i < j)
+			return i;
+		else
+			return j;
+	}
+	
 }

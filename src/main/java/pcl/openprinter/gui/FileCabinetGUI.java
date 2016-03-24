@@ -37,7 +37,7 @@ public class FileCabinetGUI extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		if (name.length() > 0) {
-			mc.fontRenderer.drawString(name, 65, 4, 4210752);
+			mc.fontRenderer.drawString(name, (this.xSize -  mc.fontRenderer.getStringWidth(name)) / 2 , 4, 4210752);
 		} else {
 			mc.fontRenderer.drawString(StatCollector.translateToLocal("gui.string.filecabinet"), 65, 4, 4210752);
 		}

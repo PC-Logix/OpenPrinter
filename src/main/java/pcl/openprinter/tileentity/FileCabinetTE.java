@@ -22,11 +22,9 @@ import net.minecraft.tileentity.TileEntity;
  *
  */
 public class FileCabinetTE extends TileEntity implements IInventory, ISidedInventory {
-	private ItemStack[] fileCabinetItemStacks = new ItemStack[30];
+	public ItemStack[] fileCabinetItemStacks = new ItemStack[30];
 
 	public String name = "";
-	
-	private int processingTime = 0;
 
 	private static final int[] slots_top = new int[] {0};
 	private static final int[] slots_bottom = new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
@@ -48,7 +46,6 @@ public class FileCabinetTE extends TileEntity implements IInventory, ISidedInven
 			}
 		}
 		this.name = par1NBTTagCompound.getString("name");
-		System.out.println(name);
 	}
 
 	@Override
