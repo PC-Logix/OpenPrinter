@@ -18,24 +18,25 @@ public class ItemFolder extends Item {
 		super();
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("filefolder");
+		setTextureName(OpenPrinter.MODID + ":folderEmpty");
 	}
 
 	@SideOnly(Side.CLIENT)
 	private static IIcon itemIcon2;
 	@SideOnly(Side.CLIENT)
 	private static IIcon itemIcon1;
-
-	@SideOnly(Side.CLIENT)
+	
+	@Override
+	public int getMaxItemUseDuration(ItemStack stack) {
+		return 1;
+	}
+	
+/*	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister iconRegister)
 	{
 		itemIcon1 = iconRegister.registerIcon("openprinter:folderEmpty");   
 		itemIcon2 = iconRegister.registerIcon("openprinter:folderFull");
-	}
-
-	@Override
-	public int getMaxItemUseDuration(ItemStack stack) {
-		return 1;
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class ItemFolder extends Item {
 		}
 		return itemIcon1;
 	}
-
+*/
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
 	{
