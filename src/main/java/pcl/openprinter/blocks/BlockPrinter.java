@@ -133,21 +133,13 @@ public class BlockPrinter extends BlockContainer {
 
 	@Override
 	public boolean isOpaqueCube() {
-		if (OpenPrinter.render3D) {
-			return false;
-		} else {
-			return true;
-		}
+		return !OpenPrinter.render3D;
 
 	}
 
 	@Override
 	public boolean renderAsNormalBlock() {
-		if (OpenPrinter.render3D) {
-			return false;
-		} else {
-			return true;
-		}
+		return !OpenPrinter.render3D;
 	}
 
 	@Override
