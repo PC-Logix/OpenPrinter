@@ -13,6 +13,9 @@ public class BuildInfo {
 	public static final String versionNumber = "@VERSION@";
 	public static final String buildNumber = "@BUILD@";
 
+	private BuildInfo() {
+	}
+
 	public static int getBuildNumber() {
 		if (buildNumber.equals("@" + "BUILD" + "@"))
 			return 0;

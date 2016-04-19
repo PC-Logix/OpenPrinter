@@ -39,8 +39,11 @@ public class ContentRegistry {
 	public static Item  shreddedPaper;
 	public static Item  folder;
 	public static ItemBlock  printeritemBlock;
-	
-    // Called on mod preInit()
+
+	private ContentRegistry() {
+	}
+
+	// Called on mod preInit()
 	public static void preInit() {
         registerBlocks();
         registerItems();
