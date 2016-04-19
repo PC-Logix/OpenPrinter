@@ -155,10 +155,8 @@ public class ShredderTE extends TileEntity implements IInventory, ISidedInventor
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		if (i == 0) {
-			if (itemstack.getItem() instanceof PrintedPage || itemstack.getItem().equals(Items.book)) {
-				return true;
-			}
+		if (i == 0 && itemstack.getItem() instanceof PrintedPage || itemstack.getItem().equals(Items.book)) {
+			return true;
 		}
 		return false;
 	}
@@ -192,17 +190,15 @@ public class ShredderTE extends TileEntity implements IInventory, ISidedInventor
 				for (int x = 1; x <= 9; x++) { //Loop the 18 output slots checking for a empty on
 					if(getStackInSlot(x) != null && getStackInSlot(x).getItem() instanceof pcl.openprinter.items.ItemPaperShreds && getStackInSlot(x).stackSize < 64) {
 						if (getStackInSlot(0).getItem().equals(Items.book) || getStackInSlot(0).getItem().equals(Items.writable_book) || getStackInSlot(0).getItem().equals(Items.written_book)) {
-							if (getStackInSlot(x).stackSize + 3 > 64) {
-								if (x < 18) {
-									for (int x2 = 1; x2 <= x - 9; x2++) {
-										if(getStackInSlot(x2 + 1) == null) {
-											this.shredderItemStacks[x + 1] = new ItemStack(ContentRegistry.shreddedPaper);
-											if (64 - getStackInSlot(x).stackSize == 1) {
-												incStackSize(x2 + 1, 64 - getStackInSlot(x).stackSize);					
-											}
-										} else {
-											incStackSize(x2 + 1, 64 - getStackInSlot(x).stackSize);
+							if (getStackInSlot(x).stackSize + 3 > 64 && x < 18) {
+								for (int x2 = 1; x2 <= x - 9; x2++) {
+									if(getStackInSlot(x2 + 1) == null) {
+										this.shredderItemStacks[x + 1] = new ItemStack(ContentRegistry.shreddedPaper);
+										if (64 - getStackInSlot(x).stackSize == 1) {
+											incStackSize(x2 + 1, 64 - getStackInSlot(x).stackSize);					
 										}
+									} else {
+										incStackSize(x2 + 1, 64 - getStackInSlot(x).stackSize);
 									}
 								}
 							}
