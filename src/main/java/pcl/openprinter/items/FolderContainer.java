@@ -84,10 +84,8 @@ public class FolderContainer extends Container {
 
 				slot.onSlotChange(itemstack1, itemstack);
 			} else {
-				if (itemstack1.getItem() instanceof PrintedPage) {
-					if (!this.mergeItemStack(itemstack1, 0, FolderInventory.INV_SIZE, false)) {
-						return null;
-					}
+				if (itemstack1.getItem() instanceof PrintedPage && !this.mergeItemStack(itemstack1, 0, FolderInventory.INV_SIZE, false)) {
+					return null;
 				}
 
 			}

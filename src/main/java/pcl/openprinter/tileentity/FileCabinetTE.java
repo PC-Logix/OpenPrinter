@@ -158,10 +158,8 @@ public class FileCabinetTE extends TileEntity implements IInventory, ISidedInven
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		if (i == 0) {
-			if (itemstack.getItem() instanceof PrintedPage || itemstack.getItem().equals(Items.book)) {
-				return true;
-			}
+		if (i == 0 && (itemstack.getItem() instanceof PrintedPage || itemstack.getItem().equals(Items.book))) {
+			return true;
 		}
 		return false;
 	}
