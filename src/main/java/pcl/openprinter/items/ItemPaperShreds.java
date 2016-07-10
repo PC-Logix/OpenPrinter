@@ -16,7 +16,7 @@ public class ItemPaperShreds extends Item {
 		maxStackSize = 64;
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("shreddedPaper");
-		setTextureName(OpenPrinter.MODID + ":shreddedPaper");
+		//setTextureName(OpenPrinter.MODID + ":shreddedPaper");
 	}
 
 }

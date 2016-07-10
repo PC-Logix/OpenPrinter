@@ -1,16 +1,19 @@
 package pcl.openprinter.gui;
 
+import java.io.IOException;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.items.FolderContainer;
 import pcl.openprinter.items.FolderInventory;
 import pcl.openprinter.network.MessageGUIFolder;
 import pcl.openprinter.network.PacketHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -38,16 +41,16 @@ public class GuiFolderInventory extends GuiContainer {
 	public boolean doesGuiPauseGame() {
 		return false;
 	}
-	
+
 	@Override
 	public void initGui()
 	{
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
-		this.text = new GuiTextField(this.fontRendererObj, this.width / 2 - 68, this.height/2-78, 137, 10);
+		this.text = new GuiTextField(1, this.fontRendererObj, this.width / 2 - 68, this.height/2-78, 137, 10);
 		text.setMaxStringLength(203);
 		text.setText("Name");
-		String s = this.inventory.hasCustomInventoryName() ? this.inventory.getInventoryName() : StatCollector.translateToLocal(this.inventory.getInventoryName());
+		String s = this.inventory.hasCustomName() ? this.inventory.getName() : StatCollector.translateToLocal(this.inventory.getName());
 		//this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
 		this.text.setText(s);
 		this.text.setFocused(true);
@@ -70,25 +73,29 @@ public class GuiFolderInventory extends GuiContainer {
 	protected void keyTyped(char key, int par2)
 	{       
 		//super.keyTyped(key, par2);
-		
-		   if (text.isFocused()) {
-			   text.textboxKeyTyped(key, par2);
-		        //nameString = name.getText();
-		   }
-			
-			if (par2 == 1) {
-				this.mc.thePlayer.closeScreen();
-			}
-		
+
+		if (text.isFocused()) {
+			text.textboxKeyTyped(key, par2);
+			//nameString = name.getText();
+		}
+
+		if (par2 == 1) {
+			this.mc.thePlayer.closeScreen();
+		}
+
 		if (key == '\r') {
 			this.name = this.text.getText();
 			actionPerformed();
 		}
 	}
-
 	@Override
-	protected void mouseClicked(int x, int y, int btn) {
-		super.mouseClicked(x, y, btn);
+	protected void mouseClicked(int x, int y, int btn) throws IOException {
+		try {
+			super.mouseClicked(x, y, btn);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.text.mouseClicked(x, y, btn);
 	}
 
@@ -105,7 +112,7 @@ public class GuiFolderInventory extends GuiContainer {
 		super.drawScreen(par1, par2, par3);
 		this.xSize_lo = (float)par1;
 		this.ySize_lo = (float)par2;
-		
+
 	}
 
 	/**
@@ -132,14 +139,14 @@ public class GuiFolderInventory extends GuiContainer {
 		this.text.drawTextBox();
 		//drawPlayerModel(k + 51, l + 75, 30, (float)(k + 51) - this.xSize_lo, (float)(l + 75 - 50) - this.ySize_lo, this.mc.thePlayer);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	protected void actionPerformed() {
 		this.name = this.text.getText();
 		PacketHandler.INSTANCE.sendToServer(new MessageGUIFolder(this.name, 1));
 
 	}
-	
+
 	/**
 	 * This renders the player model in standard inventory position (in later versions of Minecraft / Forge, you can
 	 * simply call GuiInventory.drawEntityOnScreen directly instead of copying this code)
@@ -164,9 +171,9 @@ public class GuiFolderInventory extends GuiContainer {
 		entity.rotationPitch = -((float) Math.atan(pitch / 40.0F)) * 20.0F;
 		entity.rotationYawHead = entity.rotationYaw;
 		entity.prevRotationYawHead = entity.rotationYaw;
-		GL11.glTranslatef(0.0F, entity.yOffset, 0.0F);
-		RenderManager.instance.playerViewY = 180.0F;
-		RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+		GL11.glTranslated(0.0F, entity.getYOffset(), 0.0F);
+		Minecraft.getMinecraft().getRenderManager().playerViewY = 180.0F;
+		Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 		entity.renderYawOffset = f2;
 		entity.rotationYaw = f3;
 		entity.rotationPitch = f4;

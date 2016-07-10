@@ -57,4 +57,10 @@ public class PrinterPaperRollRecipe implements IRecipe
     public ItemStack getRecipeOutput () {
         return new ItemStack(ContentRegistry.printerPaperRoll, 1);
     }
+
+	@Override
+	public ItemStack[] getRemainingItems(InventoryCrafting inv) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

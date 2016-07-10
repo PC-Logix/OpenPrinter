@@ -4,7 +4,7 @@
 package pcl.openprinter.items;
 
 import pcl.openprinter.OpenPrinter;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,7 +22,7 @@ public class PrinterInkColor extends Item {
 		this.setMaxDamage(OpenPrinter.cfg.printerInkUse);
 		setNoRepair();
 		setUnlocalizedName("printerInkColor");
-		setTextureName("openprinter:PrinterInkColor");
+		//setTextureName("openprinter:PrinterInkColor");
 		setCreativeTab(OpenPrinter.CreativeTab);
 	}
 	

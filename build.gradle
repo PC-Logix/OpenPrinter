@@ -1,21 +1,21 @@
+// For those who want the bleeding edge
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
 
-apply plugin: 'forge'
+plugins {
+  id "com.matthewprenger.cursegradle" version "1.0.7"
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
 
 if (System.getenv().BUILD_NUMBER != null)
 	ext.buildNumber = System.getenv().BUILD_NUMBER?.toInteger()
@@ -24,7 +24,7 @@ else
 
 version = "0.1.0"
 group = "pcl.openprinter"
-archivesBaseName = "OpenPrinter"
+archivesBaseName = "OpenPrinter-1.8.9"
 
 
 repositories {
@@ -35,13 +35,15 @@ repositories {
 }
 
 dependencies {
-    compile "li.cil.oc:OpenComputers:MC1.7.10-1.5.14.30:dev"
+    compile "li.cil.oc:OpenComputers:MC1.8.9-1.6.0.4-rc.1:api"
 }
 
 minecraft {
-	version = "1.7.10-10.13.4.1448-1.7.10"
+	version = "1.8.9-11.15.1.1722"
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
+	runDir = "run"
+	mappings = "stable_20"
 }
 version = "MC${minecraft.version}-${version}.${project.ext.buildNumber}"
 sourceSets.main.java.srcDir("./src/externs/java")
@@ -62,27 +64,35 @@ if (project.hasProperty('openprinter_curseforge_key')) {
 	curse_changlog = project.changelog
 }
 
-apply plugin: 'curseforge'
-curse {
+curseforge {
 	apiKey = curseforge_key
-	projectId = "225127"
-	releaseType = "release"
-	changelog = curse_changlog
-	addGameVersion project.minecraft.version
+	project {
+		id = "225127"
+		releaseType = "release"
+		changelog = curse_changlog
+	}
 }
+
 
 processResources {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod/info'
+        include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':project.version + "." + project.ext.buildNumber, 'mcversion':project.minecraft.version
     }
         
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+// this is needed for IntelliJ so we don't have to copy over the assets manually every time
+idea {
+    module {
+        outputDir = file('build/classes/main')
     }
 }
 

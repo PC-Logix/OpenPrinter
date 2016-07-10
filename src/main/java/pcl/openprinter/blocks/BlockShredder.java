@@ -1,48 +1,45 @@
 package pcl.openprinter.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.tileentity.ShredderTE;
-import net.minecraft.block.Block;
+import java.util.Random;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import java.util.Random;
+import pcl.openprinter.OpenPrinter;
+import pcl.openprinter.tileentity.ShredderTE;
 
 public class BlockShredder extends BlockContainer {
 	private Random random;
-
-	@SideOnly(Side.CLIENT)
-	public static IIcon sideIcon;
-	@SideOnly(Side.CLIENT)
-	public static IIcon frontIcon;
-
+	
 	public BlockShredder() {
 		super(Material.iron );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setBlockName("shredder");
+		setUnlocalizedName("shredder");
 		setHardness(.5f);
 
 		random = new Random();
 	}
 
 	@Override
-	public void breakBlock (World world, int x, int y, int z, Block block, int meta) {
-		ShredderTE tileEntity = (ShredderTE) world.getTileEntity(x, y, z);
-		dropContent(tileEntity, world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-		super.breakBlock(world, x, y, z, block, meta);
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		ShredderTE tileEntity = (ShredderTE) world.getTileEntity(pos);
+		dropContent(tileEntity, world, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
+		super.breakBlock(world, pos, state);
 	}
 
 	public void dropContent(IInventory chest, World world, int xCoord, int yCoord, int zCoord) {
@@ -79,78 +76,65 @@ public class BlockShredder extends BlockContainer {
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
-		return !OpenPrinter.render3D;
-
-	}
-
-	@Override
-	public boolean renderAsNormalBlock() {
-		return !OpenPrinter.render3D;
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float clickX, float clickY, float clickZ) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
+<<<<<<< HEAD
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 		if (tileEntity == null || player.isSneaking()) {
 			return false;
 		}
 		// code to open gui explained later		
-		player.openGui(OpenPrinter.instance, 2, world, x, y, z);
+		player.openGui(OpenPrinter.instance, 2, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
+=======
+	public boolean isOpaqueCube() {
+		return !OpenPrinter.render3D;
+
+>>>>>>> origin/1.8
+	}
+
+	public static final PropertyDirection PROPERTYFACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+
+	@Override
+<<<<<<< HEAD
+	public IBlockState getStateFromMeta(int meta)
+	{
+		EnumFacing facing = EnumFacing.getHorizontal(meta);
+		return this.getDefaultState().withProperty(PROPERTYFACING, facing);
+=======
+	public boolean renderAsNormalBlock() {
+		return !OpenPrinter.render3D;
+>>>>>>> origin/1.8
 	}
 
 	@Override
-	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLiving, ItemStack par6ItemStack)
+	public int getMetaFromState(IBlockState state)
 	{
-		int l = MathHelper.floor_double(par5EntityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
-		par1World.setBlockMetadataWithNotify(par2, par3, par4, l + 1, 2);
+		EnumFacing facing = (EnumFacing)state.getValue(PROPERTYFACING);
+		int facingbits = facing.getHorizontalIndex();
+		return facingbits;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister registry) {
-		registry.registerIcon(OpenPrinter.MODID + ":shredder");
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+	{
+		return state;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
+	@Override
+	protected BlockState createBlockState()
 	{
-		sideIcon = ir.registerIcon(OpenPrinter.MODID + ":block_side");
-		frontIcon = ir.registerIcon(OpenPrinter.MODID + ":shredder_front");
+		return new BlockState(this, new IProperty[] {PROPERTYFACING});
 	}
 
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int i, int j)
-	{
-		switch (i)
-		{
-		case 2: 
-			if (j == 1)
-			{
-				return frontIcon;
-			}
-			return sideIcon;
-		case 3: 
-			if (j == 0)
-				return frontIcon;
-			if (j == 3) {
-				return frontIcon;
-			}
-			return sideIcon;
-		case 4: 
-			if (j == 4)
-			{
-				return frontIcon;
-			}
-			return sideIcon;
-		case 5: 
-			if (j == 2)
-			{
-				return frontIcon;
-			}
-			return sideIcon;
-		}
-		return sideIcon;
+	@Override
+	public Item getItemDropped(IBlockState state, Random random, int fortune) {
+		return null;
+	}
+
+	@Override
+	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.fromAngle(placer.rotationYaw);
+		return this.getDefaultState().withProperty(PROPERTYFACING, enumfacing);
 	}
 
 	@Override

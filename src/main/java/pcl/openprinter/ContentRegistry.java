@@ -15,7 +15,7 @@ import pcl.openprinter.items.PrinterPaperRollRecipe;
 import pcl.openprinter.tileentity.FileCabinetTE;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.tileentity.ShredderTE;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;

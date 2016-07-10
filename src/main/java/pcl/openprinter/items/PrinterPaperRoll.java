@@ -4,8 +4,8 @@
 package pcl.openprinter.items;
 
 import pcl.openprinter.OpenPrinter;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
@@ -23,7 +23,7 @@ public class PrinterPaperRoll extends Item {
 		this.setMaxDamage(256);
 		setNoRepair();
 		setUnlocalizedName("printerPaperRoll");
-		setTextureName("openprinter:PrinterPaperRoll");
+		//setTextureName("openprinter:PrinterPaperRoll");
 		setCreativeTab(OpenPrinter.CreativeTab);
 	}
 

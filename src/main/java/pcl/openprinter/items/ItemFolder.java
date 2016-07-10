@@ -1,16 +1,11 @@
 package pcl.openprinter.items;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.gui.GuiFolderView;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import pcl.openprinter.OpenPrinter;
+import pcl.openprinter.gui.GuiFolderView;
 
 public class ItemFolder extends Item {
 
@@ -21,6 +16,13 @@ public class ItemFolder extends Item {
 		setTextureName(OpenPrinter.MODID + ":folderEmpty");
 	}
 
+<<<<<<< HEAD
+	@Override
+	public int getMaxItemUseDuration(ItemStack stack) {
+		return 1;
+	}
+
+=======
 	@SideOnly(Side.CLIENT)
 	private static IIcon itemIcon2;
 	@SideOnly(Side.CLIENT)
@@ -63,6 +65,7 @@ public class ItemFolder extends Item {
 		return itemIcon1;
 	}
 */
+>>>>>>> origin/1.8
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
 	{

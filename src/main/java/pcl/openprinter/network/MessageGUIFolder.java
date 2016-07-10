@@ -3,7 +3,7 @@ package pcl.openprinter.network;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.gui.GuiFolderInventory;
 import io.netty.buffer.ByteBuf;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageGUIFolder implements IMessage {
 

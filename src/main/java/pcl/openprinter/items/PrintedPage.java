@@ -6,8 +6,8 @@ package pcl.openprinter.items;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.blocks.BlockPrinter;
 import pcl.openprinter.gui.PaperGUI;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,7 +25,7 @@ public class PrintedPage extends Item{
 		maxStackSize = 1;
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("printedPage");
-		setTextureName("minecraft:paper");
+		//setTextureName("minecraft:paper");
 	}
 	
 	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player)

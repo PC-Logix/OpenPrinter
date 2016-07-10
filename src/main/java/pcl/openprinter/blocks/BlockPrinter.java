@@ -1,15 +1,13 @@
 package pcl.openprinter.blocks;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.tileentity.PrinterTE;
-import net.minecraft.block.Block;
+import java.util.Random;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.Entity;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,85 +15,30 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import java.util.List;
-import java.util.Random;
-
-import org.lwjgl.opengl.GL11;
+import pcl.openprinter.OpenPrinter;
+import pcl.openprinter.tileentity.PrinterTE;
 
 public class BlockPrinter extends BlockContainer {
 	private Random random;
 
-	@SideOnly(Side.CLIENT)
-	public static IIcon topIcon;
-	@SideOnly(Side.CLIENT)
-	public static IIcon bottomIcon;
-	@SideOnly(Side.CLIENT)
-	public static IIcon sideIcon;
-	@SideOnly(Side.CLIENT)
-	public static IIcon frontIcon;
-	@SideOnly(Side.CLIENT)
-	public static IIcon backIcon;
-	
 	public BlockPrinter() {
 		super(Material.iron );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setBlockName("printer");
+		//setBlockName("printer");
+		setUnlocalizedName("printer");
 		setHardness(.5f);
-		if (OpenPrinter.render3D) {
-			renderID = RenderingRegistry.getNextAvailableRenderId();
-		}
 		random = new Random();
 	}
 
-	private IIcon icon;
-	private int renderID;
-
-	
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int x, int y, int z) {
-		if(OpenPrinter.render3D) {
-			int meta = par1IBlockAccess.getBlockMetadata(x, y, z);
-			switch(meta) {
-			case 0:
-				this.setBlockBounds(0.0F,0.0F,0.4F,1.0F,1.0F,1.0F);
-				break;
-			case 1:
-				this.setBlockBounds(0.0F,0.0F,0.0F,0.6F,1.0F,1.0F);
-				break;
-			case 2:
-				this.setBlockBounds(0.0F,0.0F,0.0F,1.0F,1.0F,0.6F);
-				break;
-			case 3:
-				this.setBlockBounds(0.4F,0.0F,0.0F,1.0F,1.0F,1.0F);
-				break;
-			default:
-				this.setBlockBounds(0.0F,0.0F,0.0F,1.0F,1.0F,1.0F);
-				break;
-			}
-		} else {
-			this.setBlockBounds(0.0F,0.0F,0.0F,1.0F,1.0F,1.0F);
-		}
-
-	}
-	
-	
-    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB p_149743_5_, List p_149743_6_, Entity p_149743_7_)
-    {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
-        super.addCollisionBoxesToList(world, x, y, z, p_149743_5_, p_149743_6_, p_149743_7_);
-    }
-
-	@Override
-	public void breakBlock (World world, int x, int y, int z, Block block, int meta) {
-		PrinterTE tileEntity = (PrinterTE) world.getTileEntity(x, y, z);
-		dropContent(tileEntity, world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-		super.breakBlock(world, x, y, z, block, meta);
+	public void breakBlock (World world, BlockPos pos, IBlockState state) {
+		PrinterTE tileEntity = (PrinterTE) world.getTileEntity(pos);
+		dropContent(tileEntity, world, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
+		super.breakBlock(world, pos, state);
 	}
 
 	public void dropContent(IInventory chest, World world, int xCoord, int yCoord, int zCoord) {
@@ -132,6 +75,19 @@ public class BlockPrinter extends BlockContainer {
 	}
 
 	@Override
+<<<<<<< HEAD
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (tileEntity == null || player.isSneaking()) {
+			return false;
+		}
+		// code to open gui explained later		
+		player.openGui(OpenPrinter.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
+		return true;
+	}
+
+	public static final PropertyDirection PROPERTYFACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+=======
 	public boolean isOpaqueCube() {
 		return !OpenPrinter.render3D;
 
@@ -141,78 +97,40 @@ public class BlockPrinter extends BlockContainer {
 	public boolean renderAsNormalBlock() {
 		return !OpenPrinter.render3D;
 	}
+>>>>>>> origin/1.8
 
 	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float clickX, float clickY, float clickZ) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		if (tileEntity == null || player.isSneaking()) {
-			return false;
-		}
-		// code to open gui explained later		
-		player.openGui(OpenPrinter.instance, 0, world, x, y, z);
-		return true;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
+	public IBlockState getStateFromMeta(int meta)
 	{
-		sideIcon = ir.registerIcon(OpenPrinter.MODID + ":block_side");
-		frontIcon = ir.registerIcon(OpenPrinter.MODID + ":printer_front");
-	}
-
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int dir)
-	{
-		
-		if (dir == 0 && side == 4)
-		{
-			return frontIcon;
-		}
-		
-		switch (side)
-		{
-		case 2: 
-			if (dir == 0)
-			{
-				return frontIcon;
-			}
-			return sideIcon;
-		case 3: 
-			if (dir == 4)
-				return frontIcon;
-			if (dir == 2) {
-				return frontIcon;
-			}
-			return sideIcon;
-		case 4: 
-			if (dir == 3)
-			{
-				return frontIcon;
-			}
-			return sideIcon;
-		case 5: 
-			if (dir == 1)
-			{
-				return frontIcon;
-			}
-			return sideIcon;
-		}
-		return sideIcon;
+		EnumFacing facing = EnumFacing.getHorizontal(meta);
+		return this.getDefaultState().withProperty(PROPERTYFACING, facing);
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-		super.onBlockPlacedBy(world, x, y, z, player, stack);
-		int dir = MathHelper.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-		world.setBlockMetadataWithNotify(x, y, z, dir, 3);
+	public int getMetaFromState(IBlockState state)
+	{
+		EnumFacing facing = (EnumFacing)state.getValue(PROPERTYFACING);
+		int facingbits = facing.getHorizontalIndex();
+		return facingbits;
+	}
+
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
+	{
+		return state;
+	}
+
+	@Override
+	protected BlockState createBlockState()
+	{
+		return new BlockState(this, new IProperty[] {PROPERTYFACING});
 	}
 	
-	@SideOnly(Side.CLIENT)
 	@Override
-	public int getRenderType() {
-		return renderID;
+	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.fromAngle(placer.rotationYaw);
+		return this.getDefaultState().withProperty(PROPERTYFACING, enumfacing);
 	}
-
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {

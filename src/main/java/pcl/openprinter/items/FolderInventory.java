@@ -9,6 +9,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
 /**
@@ -98,7 +99,7 @@ public class FolderInventory implements IInventory {
 	 * @see net.minecraft.inventory.IInventory#getStackInSlotOnClosing(int)
 	 */
 	@Override
-	public ItemStack getStackInSlotOnClosing(int slot)
+	public ItemStack removeStackFromSlot(int slot)
 	{
 		ItemStack stack = getStackInSlot(slot);
 		setInventorySlotContents(slot, null);
@@ -126,7 +127,7 @@ public class FolderInventory implements IInventory {
 	 * @see net.minecraft.inventory.IInventory#getInventoryName()
 	 */
 	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return name;
 	}
 
@@ -134,7 +135,7 @@ public class FolderInventory implements IInventory {
 	 * @see net.minecraft.inventory.IInventory#hasCustomInventoryName()
 	 */
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return true;
 	}
 
@@ -170,22 +171,6 @@ public class FolderInventory implements IInventory {
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
 		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.minecraft.inventory.IInventory#openInventory()
-	 */
-	@Override
-	public void openInventory() {
-
-	}
-
-	/* (non-Javadoc)
-	 * @see net.minecraft.inventory.IInventory#closeInventory()
-	 */
-	@Override
-	public void closeInventory() {
-
 	}
 
 	/* (non-Javadoc)
@@ -255,5 +240,47 @@ public class FolderInventory implements IInventory {
 		this.name = string;
 		markDirty();
 		//this.stack.setStackDisplayName(this.name);
+	}
+
+	@Override
+	public IChatComponent getDisplayName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
 	}
 }
