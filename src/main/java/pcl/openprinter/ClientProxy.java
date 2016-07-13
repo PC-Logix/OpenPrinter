@@ -1,15 +1,42 @@
 package pcl.openprinter;
 
 
+import net.minecraft.block.Block;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
 import pcl.openprinter.CommonProxy;
 import pcl.openprinter.tileentity.PrinterContainer;
 import pcl.openprinter.tileentity.PrinterTE;
 
 public class ClientProxy extends CommonProxy {
+	
+	@Override
+	public void registerItemRenderers() {
+		registerBlockItem(ContentRegistry.printerBlock, 0, "printer");
+		registerBlockItem(ContentRegistry.shredderBlock, 0, "shredder");
+		registerBlockItem(ContentRegistry.fileCabinetBlock, 0, "fileCabinet");
+		registerItem(ContentRegistry.printedPage, "printedPage");
+		registerItem(ContentRegistry.printerInkBlack, "printerInkBlack");
+		registerItem(ContentRegistry.printerInkColor, "printerInkColor");
+		registerItem(ContentRegistry.printerPaperRoll, "printerPaperRoll");
+		registerItem(ContentRegistry.shreddedPaper, "shreddedPaper");
+		registerItem(ContentRegistry.folder, "folder");
+	}
+	
+	public static void registerBlockItem(final Block block, int meta, final String blockName) {
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(OpenPrinter.MODID + ":" + blockName, "inventory"));
+		OpenPrinter.logger.info("Registering " + blockName + " Item Renderer");
+    }
+	
+	public static void registerItem(final Item item, final String itemName) {
+		ModelLoader.setCustomModelResourceLocation(item,  0, new ModelResourceLocation(OpenPrinter.MODID + ":" + itemName, "inventory"));
+		OpenPrinter.logger.info("Registering " + itemName + " Item Renderer");
+    }
 	
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {

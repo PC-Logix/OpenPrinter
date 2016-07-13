@@ -36,6 +36,11 @@ public class BlockShredder extends BlockContainer {
 	}
 
 	@Override
+	public int getRenderType() {
+	  return 3;
+	}
+	
+	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		ShredderTE tileEntity = (ShredderTE) world.getTileEntity(pos);
 		dropContent(tileEntity, world, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());

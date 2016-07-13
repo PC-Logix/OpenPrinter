@@ -28,12 +28,16 @@ public class BlockPrinter extends BlockContainer {
 	public BlockPrinter() {
 		super(Material.iron );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		//setBlockName("printer");
 		setUnlocalizedName("printer");
 		setHardness(.5f);
 		random = new Random();
 	}
 
+	@Override
+	public int getRenderType() {
+	  return 3;
+	}
+	
 	@Override
 	public void breakBlock (World world, BlockPos pos, IBlockState state) {
 		PrinterTE tileEntity = (PrinterTE) world.getTileEntity(pos);

@@ -42,7 +42,6 @@ public class OpenPrinter {
 	@SidedProxy(clientSide="pcl.openprinter.ClientProxy", serverSide="pcl.openprinter.CommonProxy")
 	public static CommonProxy proxy;
 	public static Config cfg = null;
-	public static boolean render3D = true;
 
 	private static boolean debug = true;
 	public static final Logger  logger  = LogManager.getFormatterLogger(MODID);
@@ -66,6 +65,7 @@ public class OpenPrinter {
 			}
 		}
 		ContentRegistry.preInit();
+		proxy.registerItemRenderers();
 	}
 
 	@EventHandler

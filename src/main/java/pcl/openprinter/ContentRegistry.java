@@ -61,14 +61,11 @@ public class ContentRegistry {
 		printerPaperRoll = new PrinterPaperRoll();
 		GameRegistry.registerItem(printerPaperRoll, "printerPaperRoll");
 
-
 		printerInkColor = new PrinterInkColor();
 		GameRegistry.registerItem(printerInkColor, "printerInkColor");
 
-
 		printerInkBlack = new PrinterInkBlack();
 		GameRegistry.registerItem(printerInkBlack, "printerInkBlack");
-
 
 		printedPage = new PrintedPage();
 		GameRegistry.registerItem(printedPage, "printedPage");

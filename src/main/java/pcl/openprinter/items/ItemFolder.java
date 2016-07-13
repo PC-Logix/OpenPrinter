@@ -13,7 +13,6 @@ public class ItemFolder extends Item {
 		super();
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("filefolder");
-		//setTextureName(OpenPrinter.MODID + ":folderEmpty");
 	}
 	
 	@Override
