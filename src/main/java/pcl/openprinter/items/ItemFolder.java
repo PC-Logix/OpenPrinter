@@ -13,59 +13,14 @@ public class ItemFolder extends Item {
 		super();
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("filefolder");
-		setTextureName(OpenPrinter.MODID + ":folderEmpty");
+		//setTextureName(OpenPrinter.MODID + ":folderEmpty");
 	}
-
-<<<<<<< HEAD
+	
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
 		return 1;
 	}
 
-=======
-	@SideOnly(Side.CLIENT)
-	private static IIcon itemIcon2;
-	@SideOnly(Side.CLIENT)
-	private static IIcon itemIcon1;
-	
-	@Override
-	public int getMaxItemUseDuration(ItemStack stack) {
-		return 1;
-	}
-	
-/*	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister iconRegister)
-	{
-		itemIcon1 = iconRegister.registerIcon("openprinter:folderEmpty");   
-		itemIcon2 = iconRegister.registerIcon("openprinter:folderFull");
-	}
-
-	@Override
-    @SideOnly(Side.CLIENT)
-    public boolean requiresMultipleRenderPasses()
-    {
-        return true;
-    }
-	
-	@Override
-    @SideOnly(Side.CLIENT)
-    public int getRenderPasses(int metadata)
-    {
-        return requiresMultipleRenderPasses() ? 2 : 1;
-    }
-	
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IIcon getIcon(ItemStack stack, int renderPass){
-		if(stack.hasTagCompound()){
-			if (stack.getTagCompound().hasKey("ItemInventory", Constants.NBT.TAG_LIST) && stack.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_LIST).tagCount() > 0)
-			return itemIcon2;
-		}
-		return itemIcon1;
-	}
-*/
->>>>>>> origin/1.8
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player)
 	{

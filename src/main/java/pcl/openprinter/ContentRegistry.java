@@ -56,38 +56,38 @@ public class ContentRegistry {
 
 	private static void registerItems() {
 		shreddedPaper = new ItemPaperShreds();
-		GameRegistry.registerItem(shreddedPaper, "openprinter.paperShreds");
+		GameRegistry.registerItem(shreddedPaper, "paperShreds");
 
 		printerPaperRoll = new PrinterPaperRoll();
-		GameRegistry.registerItem(printerPaperRoll, "openprinter.printerPaperRoll");
+		GameRegistry.registerItem(printerPaperRoll, "printerPaperRoll");
 
 
 		printerInkColor = new PrinterInkColor();
-		GameRegistry.registerItem(printerInkColor, "openprinter.printerInkColor");
+		GameRegistry.registerItem(printerInkColor, "printerInkColor");
 
 
 		printerInkBlack = new PrinterInkBlack();
-		GameRegistry.registerItem(printerInkBlack, "openprinter.printerInkBlack");
+		GameRegistry.registerItem(printerInkBlack, "printerInkBlack");
 
 
 		printedPage = new PrintedPage();
-		GameRegistry.registerItem(printedPage, "openprinter.printedPage");
+		GameRegistry.registerItem(printedPage, "printedPage");
 		
 		folder = new ItemFolder();
-		GameRegistry.registerItem(folder, "openprinter.folder");
+		GameRegistry.registerItem(folder, "folder");
 		
 	}
 
 	private static void registerBlocks() {
 		//Register Blocks
 		printerBlock = new BlockPrinter();
-		GameRegistry.registerBlock(printerBlock, ItemPrinterBlock.class, "openprinter.printer");
+		GameRegistry.registerBlock(printerBlock, ItemPrinterBlock.class, "printer");
 
 		shredderBlock = new BlockShredder();
-		GameRegistry.registerBlock(shredderBlock, "openprinter.shredder");
+		GameRegistry.registerBlock(shredderBlock, "shredder");
 		
 		fileCabinetBlock = new BlockFileCabinet();
-		GameRegistry.registerBlock(fileCabinetBlock, ItemBlockFileCabinet.class, "openprinter.filecabinet");
+		GameRegistry.registerBlock(fileCabinetBlock, "filecabinet");
 		
 		GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
 		GameRegistry.registerTileEntity(ShredderTE.class, "ShredderTE");

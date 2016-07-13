@@ -54,7 +54,6 @@ public class OpenPrinter {
 
 		PacketHandler.init();
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
-		render3D = cfg.render3D;
 
 		if ((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient() && cfg.enableMUD) {
 			logger.info("Registering mod with OpenUpdater");

@@ -98,51 +98,6 @@ public class GuiFolderView extends GuiScreen {
 		GL11.glRotated(90, 0, 0, 1);
 		mc.fontRendererObj.drawString(limit(name,14), 0, 0, 0x000000);
 		GL11.glPopMatrix();
-<<<<<<< HEAD
-		if(stack.hasTagCompound()) {
-			if (stack.getTagCompound().hasKey("ItemInventory", Constants.NBT.TAG_LIST)) {
-				NBTTagList ItemInventory = stack.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
-				this.pageCount = ItemInventory.tagCount();
-
-				GL11.glPushMatrix();
-				GL11.glTranslated(this.width / 2 + 12, this.height / 2 - 114, 0);
-				GL11.glScaled(0.9, 0.9, 0);
-				if (this.pageCount > 0)
-					mc.fontRendererObj.drawString("Page " + (this.currPage + 1) + " Of " + this.pageCount, 0, 0, 0x000000);
-				GL11.glPopMatrix();
-				
-				if (this.currPage <= 0)
-					this.buttonPreviousPage.visible = false;
-				else
-					this.buttonPreviousPage.visible = true;
-
-				if (this.currPage >= this.pageCount - 1)
-					this.buttonNextPage.visible = false;
-				else
-					this.buttonNextPage.visible = true;
-				for (int l = 0; l <= ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getKeySet().size(); l++) {
-					if (ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getDouble("version") == 2.0) {
-						String output = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("line"+l);
-						String[] parts = output.split("∞");
-						if(parts.length > 1) {
-							Integer outleng = parts[0].replaceAll("(?:§[0-9a-fk-or])+", "").length();
-							if (outleng > 30) {
-								parts[0] = limit(parts[0],30);
-							}
-							Integer color = Integer.parseInt(parts[1]);
-							String alignment = parts[2];
-							if (alignment.equalsIgnoreCase("center")) {
-								mc.fontRendererObj.drawString(parts[0], width/2 - mc.fontRendererObj.getStringWidth(parts[0])/2 + 10, height / 2 - offset, color);	
-							} else {
-								mc.fontRendererObj.drawString(parts[0] , width/2 - xSizeOfTexture/2 + 6 + 10, height / 2 - offset, color);
-							}
-							offset = offset - 10;	
-						}
-					} else {
-						drawCenteredString(mc.fontRendererObj, stack.getTagCompound().getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
-						String output = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("line"+l);
-						Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
-=======
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("ItemInventory", Constants.NBT.TAG_LIST)) {
 			NBTTagList ItemInventory = stack.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
 			this.pageCount = ItemInventory.tagCount();
@@ -151,7 +106,7 @@ public class GuiFolderView extends GuiScreen {
 			GL11.glTranslated(this.width / 2 + 12, this.height / 2 - 114, 0);
 			GL11.glScaled(0.9, 0.9, 0);
 			if (this.pageCount > 0)
-				mc.fontRenderer.drawString("Page " + (this.currPage + 1) + " Of " + this.pageCount, 0, 0, 0x000000);
+				mc.fontRendererObj.drawString("Page " + (this.currPage + 1) + " Of " + this.pageCount, 0, 0, 0x000000);
 			GL11.glPopMatrix();
 			
 			if (this.currPage <= 0)
@@ -163,33 +118,26 @@ public class GuiFolderView extends GuiScreen {
 				this.buttonNextPage.visible = false;
 			else
 				this.buttonNextPage.visible = true;
-			for (int l = 0; l <= ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").func_150296_c().size(); l++) {
+			for (int l = 0; l <= ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getKeySet().size(); l++) {
 				if (ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getDouble("version") == 2.0) {
 					String output = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("line"+l);
 					String[] parts = output.split("∞");
 					if(parts.length > 1) {
 						Integer outleng = parts[0].replaceAll("(?:§[0-9a-fk-or])+", "").length();
->>>>>>> origin/1.8
 						if (outleng > 30) {
 							parts[0] = limit(parts[0],30);
 						}
 						Integer color = Integer.parseInt(parts[1]);
 						String alignment = parts[2];
 						if (alignment.equalsIgnoreCase("center")) {
-<<<<<<< HEAD
 							mc.fontRendererObj.drawString(output, width/2 - mc.fontRendererObj.getStringWidth(output)/2, height / 2 - offset, color);	
 						} else {
 							mc.fontRendererObj.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
-=======
-							mc.fontRenderer.drawString(parts[0], width/2 - mc.fontRenderer.getStringWidth(parts[0])/2 + 10, height / 2 - offset, color);	
-						} else {
-							mc.fontRenderer.drawString(parts[0] , width/2 - xSizeOfTexture/2 + 6 + 10, height / 2 - offset, color);
->>>>>>> origin/1.8
 						}
 						offset = offset - 10;	
 					}
 				} else {
-					drawCenteredString(mc.fontRenderer, stack.stackTagCompound.getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
+					drawCenteredString(mc.fontRendererObj, stack.getTagCompound().getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
 					String output = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("line"+l);
 					Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
 					if (outleng > 30) {
@@ -198,9 +146,9 @@ public class GuiFolderView extends GuiScreen {
 					Integer color = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getInteger("color"+l);
 					String alignment = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("alignment"+l);
 					if (alignment.equalsIgnoreCase("center")) {
-						mc.fontRenderer.drawString(output, width/2 - mc.fontRenderer.getStringWidth(output)/2, height / 2 - offset, color);	
+						mc.fontRendererObj.drawString(output, width/2 - mc.fontRendererObj.getStringWidth(output)/2, height / 2 - offset, color);	
 					} else {
-						mc.fontRenderer.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
+						mc.fontRendererObj.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
 					}
 					offset = offset - 10;
 				}

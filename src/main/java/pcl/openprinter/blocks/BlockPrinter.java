@@ -75,29 +75,17 @@ public class BlockPrinter extends BlockContainer {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if (tileEntity == null || player.isSneaking()) {
 			return false;
 		}
-		// code to open gui explained later		
+	
 		player.openGui(OpenPrinter.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 
 	public static final PropertyDirection PROPERTYFACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-=======
-	public boolean isOpaqueCube() {
-		return !OpenPrinter.render3D;
-
-	}
-
-	@Override
-	public boolean renderAsNormalBlock() {
-		return !OpenPrinter.render3D;
-	}
->>>>>>> origin/1.8
 
 	@Override
 	public IBlockState getStateFromMeta(int meta)

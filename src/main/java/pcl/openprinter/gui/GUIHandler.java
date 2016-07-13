@@ -42,7 +42,7 @@ public class GUIHandler implements IGuiHandler {
 		} else if (id == 4) {
 			//Client only Folder View
 		} else if (id == 5) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
+			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 			if(tileEntity instanceof FileCabinetTE){
 				return new FileCabinetContainer(player.inventory, (FileCabinetTE) tileEntity);
 			}
@@ -70,7 +70,7 @@ public class GUIHandler implements IGuiHandler {
 		} else if (id == 4) { //Folder view GUI (Client only)
 			return new GuiFolderView(world, player);
 		} else if (id == 5) {
-			TileEntity tileEntity = world.getTileEntity(x, y, z);
+			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 			return new FileCabinetGUI(player.inventory, (FileCabinetTE) tileEntity);
 		}
 

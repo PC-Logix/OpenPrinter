@@ -16,12 +16,15 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ITickable;
 
 /**
  * @author Caitlyn
  *
  */
-public class ShredderTE extends TileEntity implements IInventory, ISidedInventory {
+public class ShredderTE extends TileEntity implements ITickable, IInventory, ISidedInventory {
 	private ItemStack[] shredderItemStacks = new ItemStack[20];
 
 	private int processingTime = 0;
@@ -69,12 +72,12 @@ public class ShredderTE extends TileEntity implements IInventory, ISidedInventor
 	public net.minecraft.network.Packet getDescriptionPacket() {
 		NBTTagCompound tag = new NBTTagCompound();
 		this.writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+		return new S35PacketUpdateTileEntity(pos, 1, tag);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-		readFromNBT(packet.func_148857_g());
+		readFromNBT(packet.getNbtCompound());
 	}
 
 
@@ -117,7 +120,7 @@ public class ShredderTE extends TileEntity implements IInventory, ISidedInventor
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int i) {
+	public ItemStack removeStackFromSlot(int i) {
 		if (getStackInSlot(i) != null)
 		{
 			ItemStack var2 = getStackInSlot(i);
@@ -148,8 +151,8 @@ public class ShredderTE extends TileEntity implements IInventory, ISidedInventor
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this &&
-				entityplayer.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
+		return worldObj.getTileEntity(pos) == this &&
+				entityplayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < 64;
 	}
 
 
@@ -162,22 +165,7 @@ public class ShredderTE extends TileEntity implements IInventory, ISidedInventor
 	}
 
 	@Override
-	public int[] getAccessibleSlotsFromSide(int par1) {
-		return par1 == 0 ? slots_bottom : (par1 == 1 ? slots_top : slots_sides);
-	}
-
-	@Override
-	public boolean canInsertItem(int i, ItemStack itemstack, int j) {
-		return this.isItemValidForSlot(i, itemstack);
-	}
-
-	@Override
-	public boolean canExtractItem(int i, ItemStack itemstack, int j) {
-		return true;
-	}
-
-	@Override
-	public String getInventoryName() {
+	public String getName() {
 		return "shredder";
 	}
 
@@ -223,15 +211,71 @@ public class ShredderTE extends TileEntity implements IInventory, ISidedInventor
 	}
 
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public void openInventory() {
+	public IChatComponent getDisplayName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public void closeInventory() {
+	public int[] getSlotsForFace(EnumFacing side) {
+		return side == EnumFacing.DOWN ? slots_bottom : (side == EnumFacing.UP ? slots_top : slots_sides);
+	}
+
+	@Override
+	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing face) {
+		return this.isItemValidForSlot(slot, stack);
+	}
+
+	@Override
+	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing face) {
+		return true;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 }

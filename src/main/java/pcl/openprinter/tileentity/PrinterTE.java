@@ -15,7 +15,6 @@ import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
-import li.cil.oc.Settings;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -27,7 +26,6 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import li.cil.oc.common.item.InkCartridge;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -39,12 +37,14 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ITickable;
 
 /**
  * @author Caitlyn
  *
  */
-public class PrinterTE extends TileEntity implements Environment, IInventory, ISidedInventory {
+public class PrinterTE extends TileEntity implements ITickable, Environment, IInventory, ISidedInventory {
 
 	public Double PrinterFormatVersion = 2.0;
 	protected ComponentConnector node = Network.newNode(this, Visibility.Network).withComponent(getComponentName()).withConnector(32).create();
@@ -57,11 +57,8 @@ public class PrinterTE extends TileEntity implements Environment, IInventory, IS
 	}
 
 	private String getComponentName() {
-		// TODO Auto-generated method stub
 		return "openprinter";
 	}
-
-	//private li.cil.oc.api.network.ManagedEnvironment oc_fs;
 
 	private Object oc_fs;
 	protected ManagedEnvironment oc_fs(){
@@ -109,8 +106,7 @@ public class PrinterTE extends TileEntity implements Environment, IInventory, IS
 	}
 
 	@Override
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 		if(!addedToNetwork) {
 			addToNetwork();
 		}
@@ -543,5 +539,47 @@ public class PrinterTE extends TileEntity implements Environment, IInventory, IS
 
 	@Override
 	public void onMessage(Message arg0) {
+	}
+
+	@Override
+	public IChatComponent getDisplayName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeInventory(EntityPlayer player) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getField(int id) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getFieldCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
 	}
 }

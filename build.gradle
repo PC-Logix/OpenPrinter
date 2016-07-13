@@ -43,7 +43,7 @@ minecraft {
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
 	runDir = "run"
-	mappings = "stable_20"
+	mappings = "stable_22"
 }
 version = "MC${minecraft.version}-${version}.${project.ext.buildNumber}"
 sourceSets.main.java.srcDir("./src/externs/java")

@@ -4,13 +4,12 @@ import java.util.Random;
 
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.tileentity.FileCabinetTE;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,31 +17,27 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockFileCabinet extends BlockContainer {
 	private Random random;
 	
-	@SideOnly(Side.CLIENT)
-	public static IIcon sideIcon;
-	@SideOnly(Side.CLIENT)
-	public static IIcon frontIcon;
-	
 	public BlockFileCabinet() {
 		super(Material.iron );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setBlockName("filecabinet");
+		setUnlocalizedName("filecabinet");
 		setHardness(.5f);
 		random = new Random();
 	}
-
+	
 	@Override
-	public void breakBlock (World world, int x, int y, int z, Block block, int meta) {
-		FileCabinetTE tileEntity = (FileCabinetTE) world.getTileEntity(x, y, z);
-		dropContent(tileEntity, world, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-		super.breakBlock(world, x, y, z, block, meta);
+	public void breakBlock (World world, BlockPos pos, IBlockState state) {
+		FileCabinetTE tileEntity = (FileCabinetTE) world.getTileEntity(pos);
+		dropContent(tileEntity, world, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ());
+		super.breakBlock(world, pos, state);
 	}
 
 	public void dropContent(IInventory chest, World world, int xCoord, int yCoord, int zCoord) {
@@ -79,78 +74,49 @@ public class BlockFileCabinet extends BlockContainer {
 	}
 
 	@Override
-	public boolean isOpaqueCube() {
-		return !OpenPrinter.render3D;
-
-	}
-
-	@Override
-	public boolean renderAsNormalBlock() {
-		return !OpenPrinter.render3D;
-	}
-
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int metadata, float clickX, float clickY, float clickZ) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 		if (tileEntity == null || player.isSneaking()) {
 			return false;
 		}
-		// code to open gui explained later		
-		player.openGui(OpenPrinter.instance, 5, world, x, y, z);
+	
+		player.openGui(OpenPrinter.instance, 5, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
 	}
 
+	public static final PropertyDirection PROPERTYFACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+
 	@Override
-	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLiving, ItemStack par6ItemStack)
+	public IBlockState getStateFromMeta(int meta)
 	{
-		int l = MathHelper.floor_double(par5EntityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
-		par1World.setBlockMetadataWithNotify(par2, par3, par4, l + 1, 2);
+		EnumFacing facing = EnumFacing.getHorizontal(meta);
+		return this.getDefaultState().withProperty(PROPERTYFACING, facing);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister registry) {
-		registry.registerIcon(OpenPrinter.MODID + ":filingcabinet");
+	@Override
+	public int getMetaFromState(IBlockState state)
+	{
+		EnumFacing facing = (EnumFacing)state.getValue(PROPERTYFACING);
+		int facingbits = facing.getHorizontalIndex();
+		return facingbits;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister ir)
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos)
 	{
-		sideIcon = ir.registerIcon(OpenPrinter.MODID + ":filingcabinet_bottom");
-		frontIcon = ir.registerIcon(OpenPrinter.MODID + ":filingcabinet_front");
+		return state;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int i, int j)
+	@Override
+	protected BlockState createBlockState()
 	{
-		switch (i)
-		{
-		case 2: 
-			if (j == 1)
-			{
-				return frontIcon;
-			}
-			return sideIcon;
-		case 3: 
-			if (j == 0)
-				return frontIcon;
-			if (j == 3) {
-				return frontIcon;
-			}
-			return sideIcon;
-		case 4: 
-			if (j == 4)
-			{
-				return frontIcon;
-			}
-			return sideIcon;
-		case 5: 
-			if (j == 2)
-			{
-				return frontIcon;
-			}
-			return sideIcon;
-		}
-		return sideIcon;
+		return new BlockState(this, new IProperty[] {PROPERTYFACING});
+	}
+	
+	@Override
+	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.fromAngle(placer.rotationYaw);
+		return this.getDefaultState().withProperty(PROPERTYFACING, enumfacing);
 	}
 
 	@Override
