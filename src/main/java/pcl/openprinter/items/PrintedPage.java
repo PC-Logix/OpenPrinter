@@ -6,6 +6,9 @@ package pcl.openprinter.items;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.gui.PaperGUI;
@@ -24,14 +27,14 @@ public class PrintedPage extends Item{
 		//setTextureName("minecraft:paper");
 	}
 	
-	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer player)
-	{
-		if (!par2World.isRemote) {
-			return par1ItemStack;
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer player, EnumHand hand) {
+		if (!world.isRemote) {
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 		} else {
 			player.openGui(OpenPrinter.instance, 1, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
-			PaperGUI.stack = par1ItemStack;
-			return par1ItemStack;
+			PaperGUI.stack = itemstack;
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 		}
 	}
 }
