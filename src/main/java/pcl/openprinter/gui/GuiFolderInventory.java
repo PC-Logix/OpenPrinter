@@ -22,7 +22,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 
 public class GuiFolderInventory extends GuiContainer {
 	/** x and y size of the inventory window in pixels. Defined as float, passed as int
@@ -50,7 +50,7 @@ public class GuiFolderInventory extends GuiContainer {
 		this.text = new GuiTextField(1, this.fontRendererObj, this.width / 2 - 68, this.height/2-78, 137, 10);
 		text.setMaxStringLength(203);
 		text.setText("Name");
-		String s = this.inventory.hasCustomName() ? this.inventory.getName() : StatCollector.translateToLocal(this.inventory.getName());
+		String s = this.inventory.hasCustomName() ? this.inventory.getName() : I18n.translateToLocal(this.inventory.getName());
 		//this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
 		this.text.setText(s);
 		this.text.setFocused(true);
@@ -173,7 +173,7 @@ public class GuiFolderInventory extends GuiContainer {
 		entity.prevRotationYawHead = entity.rotationYaw;
 		GL11.glTranslated(0.0F, entity.getYOffset(), 0.0F);
 		Minecraft.getMinecraft().getRenderManager().playerViewY = 180.0F;
-		Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+		Minecraft.getMinecraft().getRenderManager().doRenderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
 		entity.renderYawOffset = f2;
 		entity.rotationYaw = f3;
 		entity.rotationPitch = f4;

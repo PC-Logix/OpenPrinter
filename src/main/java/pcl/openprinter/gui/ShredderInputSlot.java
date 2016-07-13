@@ -17,14 +17,14 @@ public class ShredderInputSlot extends Slot {
     public boolean isItemValid(ItemStack itemstack)
     {
 
-            if (itemstack.getItem() instanceof PrintedPage || itemstack.getItem().equals(Items.book) || itemstack.getItem().equals(Items.paper) || itemstack.getItem().equals(Items.written_book) || itemstack.getItem().equals(Items.writable_book))
+            if (itemstack.getItem() instanceof PrintedPage || itemstack.getItem().equals(Items.BOOK) || itemstack.getItem().equals(Items.PAPER) || itemstack.getItem().equals(Items.WRITTEN_BOOK) || itemstack.getItem().equals(Items.WRITABLE_BOOK))
             {
             	return true;
             }
-            else if (itemstack.getItem().equals(Items.paper)) {
+            else if (itemstack.getItem().equals(Items.PAPER)) {
             	return true;
             }
-            else if (itemstack.getItem().equals(Items.book)) {
+            else if (itemstack.getItem().equals(Items.BOOK)) {
                 return true;
             }
             return false;

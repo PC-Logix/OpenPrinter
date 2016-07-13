@@ -3,10 +3,8 @@ package pcl.openprinter.gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 
-
-
+import net.minecraft.util.text.translation.I18n;
 
 /**
  * @author Caitlyn
@@ -39,7 +37,7 @@ public class FileCabinetGUI extends GuiContainer {
 		if (name.length() > 0) {
 			mc.fontRendererObj.drawString(name, (this.xSize -  mc.fontRendererObj.getStringWidth(name)) / 2 , 4, 4210752);
 		} else {
-			mc.fontRendererObj.drawString(StatCollector.translateToLocal("gui.string.filecabinet"), 65, 4, 4210752);
+			mc.fontRendererObj.drawString(I18n.translateToLocal("gui.string.filecabinet"), 65, 4, 4210752);
 		}
 	}
 

@@ -3,14 +3,14 @@
  */
 package pcl.openprinter.items;
 
-import pcl.openprinter.OpenPrinter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
+import pcl.openprinter.OpenPrinter;
 
 /**
  * @author Caitlyn
@@ -243,7 +243,7 @@ public class FolderInventory implements IInventory {
 	}
 
 	@Override
-	public IChatComponent getDisplayName() {
+	public ITextComponent getDisplayName() {
 		// TODO Auto-generated method stub
 		return null;
 	}

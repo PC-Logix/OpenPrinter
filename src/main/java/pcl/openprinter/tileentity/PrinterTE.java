@@ -7,14 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import pcl.openprinter.ContentRegistry;
-import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.items.PrintedPage;
-import pcl.openprinter.items.PrinterInkBlack;
-import pcl.openprinter.items.PrinterInkColor;
-import pcl.openprinter.items.PrinterPaperRoll;
 import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
@@ -34,11 +29,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.text.ITextComponent;
+import pcl.openprinter.ContentRegistry;
+import pcl.openprinter.OpenPrinter;
+import pcl.openprinter.items.PrintedPage;
+import pcl.openprinter.items.PrinterInkBlack;
+import pcl.openprinter.items.PrinterInkColor;
+import pcl.openprinter.items.PrinterPaperRoll;
 
 /**
  * @author Caitlyn
@@ -157,7 +158,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt)
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		super.writeToNBT(nbt);
 
@@ -184,19 +185,21 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 			}
 		}
 		nbt.setTag("Items", var2);
+		return nbt;
 	}
 
 	@Override
-	public net.minecraft.network.Packet getDescriptionPacket() {
+	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound tag = new NBTTagCompound();
 		this.writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(pos, 1, tag);
+		return tag;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		readFromNBT(packet.getNbtCompound());
 	}
+
 
 	@Callback
 	public Object[] greet(Context context, Arguments args) {
@@ -240,11 +243,11 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 	public Object[] printTag(Context context, Arguments args) throws Exception {
 		if (OpenPrinter.cfg.enableNameTag) {
 			if (getStackInSlot(0) != null) {
-				if (getStackInSlot(2) != null && getStackInSlot(2).getItem().equals(Items.name_tag)) { //No paper
+				if (getStackInSlot(2) != null && getStackInSlot(2).getItem().equals(Items.NAME_TAG)) { //No paper
 					for (int x = 3; x <= 12; x++) { //Loop the 9 output slots checking for a empty one
 						if (getStackInSlot(x) == null) { //The slot is empty lets make us a NameTag
 
-							printerItemStacks[x] = new ItemStack(Items.name_tag);
+							printerItemStacks[x] = new ItemStack(Items.NAME_TAG);
 							printerItemStacks[x].setTagCompound(new NBTTagCompound());
 
 							NBTTagCompound nameTag = new NBTTagCompound();
@@ -504,7 +507,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 				return true;
 			}
 		} else if (i == 2) {
-			if (itemstack.getItem() instanceof PrinterPaperRoll || itemstack.getItem().equals(Items.paper) || itemstack.getItem().equals(Items.name_tag)) {
+			if (itemstack.getItem() instanceof PrinterPaperRoll || itemstack.getItem().equals(Items.PAPER) || itemstack.getItem().equals(Items.NAME_TAG)) {
 				return true;
 			}
 		}
@@ -542,7 +545,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 	}
 
 	@Override
-	public IChatComponent getDisplayName() {
+	public ITextComponent getDisplayName() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -8,7 +8,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 
@@ -24,7 +24,7 @@ else
 
 version = "0.1.0"
 group = "pcl.openprinter"
-archivesBaseName = "OpenPrinter-1.8.9"
+archivesBaseName = "OpenPrinter-1.9.4"
 
 
 repositories {
@@ -35,15 +35,15 @@ repositories {
 }
 
 dependencies {
-    compile "li.cil.oc:OpenComputers:MC1.8.9-1.6.0.4-rc.1:api"
+    compile "li.cil.oc:OpenComputers:MC1.9.4-1.6.0.52-dev:api"
 }
 
 minecraft {
-	version = "1.8.9-11.15.1.1722"
+    version = "1.9.4-12.17.0.1976"
+    runDir = "run"
+    mappings = "snapshot_20160518"
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
-	runDir = "run"
-	mappings = "stable_22"
 }
 version = "${version}.${project.ext.buildNumber}"
 sourceSets.main.java.srcDir("./src/externs/java")

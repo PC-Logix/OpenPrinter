@@ -3,20 +3,17 @@
  */
 package pcl.openprinter.tileentity;
 
-import pcl.openprinter.ContentRegistry;
-import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.items.PrintedPage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import pcl.openprinter.items.PrintedPage;
 
 /**
  * @author Caitlyn
@@ -50,7 +47,7 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+	public NBTTagCompound writeToNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.writeToNBT(par1NBTTagCompound);
 		NBTTagList var2 = new NBTTagList();
@@ -67,17 +64,18 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 		par1NBTTagCompound.setTag("Items", var2);
 		
 		par1NBTTagCompound.setString("name", this.name);
+		return par1NBTTagCompound;
 	}
 
 	@Override
-	public net.minecraft.network.Packet getDescriptionPacket() {
+	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound tag = new NBTTagCompound();
 		this.writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(pos, 1, tag);
+		return tag;
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		readFromNBT(packet.getNbtCompound());
 	}
 
@@ -158,7 +156,7 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		if (i == 0 && (itemstack.getItem() instanceof PrintedPage || itemstack.getItem().equals(Items.book))) {
+		if (i == 0 && (itemstack.getItem() instanceof PrintedPage || itemstack.getItem().equals(Items.BOOK))) {
 			return true;
 		}
 		return false;
@@ -178,13 +176,6 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 		return name.length() > 0;
 	}
 	
-
-	@Override
-	public IChatComponent getDisplayName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public void openInventory(EntityPlayer player) {
 		// TODO Auto-generated method stub
@@ -219,5 +210,11 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 	public void clear() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

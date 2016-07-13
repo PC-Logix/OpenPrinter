@@ -22,10 +22,10 @@ public class PrinterPaperSlot extends Slot {
             {
             	return true;
             }
-            else if (itemstack.getItem().equals(Items.paper)) {
+            else if (itemstack.getItem().equals(Items.PAPER)) {
             	return true;
             }
-            else if (itemstack.getItem().equals(Items.name_tag)) {
+            else if (itemstack.getItem().equals(Items.NAME_TAG)) {
                 return true;
             }
             return false;

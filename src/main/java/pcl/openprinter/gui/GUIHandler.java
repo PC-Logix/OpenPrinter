@@ -17,7 +17,7 @@ import pcl.openprinter.tileentity.ShredderContainer;
 import pcl.openprinter.tileentity.ShredderTE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
@@ -38,7 +38,7 @@ public class GUIHandler implements IGuiHandler {
 			}
 		} else if (id == 3) { //Folder Container GUI
 			// Use the player's held item to create the inventory
-			return new FolderContainer(player, player.inventory, new FolderInventory(player.getHeldItem()));
+			return new FolderContainer(player, player.inventory, new FolderInventory(player.getHeldItemMainhand()));
 		} else if (id == 4) {
 			//Client only Folder View
 		} else if (id == 5) {
@@ -66,7 +66,7 @@ public class GUIHandler implements IGuiHandler {
 				return new ShredderGUI(player.inventory, (ShredderTE) tileEntity);
 			}
 		} else if (id == 3) {
-			return new GuiFolderInventory((FolderContainer) new FolderContainer(player, player.inventory, new FolderInventory(player.getHeldItem())));
+			return new GuiFolderInventory((FolderContainer) new FolderContainer(player, player.inventory, new FolderInventory(player.getHeldItemMainhand())));
 		} else if (id == 4) { //Folder view GUI (Client only)
 			return new GuiFolderView(world, player);
 		} else if (id == 5) {

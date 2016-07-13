@@ -34,10 +34,10 @@ public class PrinterPaperRollRecipe implements IRecipe
             if (emptyCount != 5)
                 return false;
 
-            return stack00.getItem() == Items.paper && stack00.stackSize == 64
-                && stack01.getItem() == Items.paper && stack01.stackSize == 64
-                && stack10.getItem() == Items.paper && stack10.stackSize == 64
-                && stack11.getItem() == Items.paper && stack11.stackSize == 64;
+            return stack00.getItem() == Items.PAPER && stack00.stackSize == 64
+                && stack01.getItem() == Items.PAPER && stack01.stackSize == 64
+                && stack10.getItem() == Items.PAPER && stack10.stackSize == 64
+                && stack11.getItem() == Items.PAPER && stack11.stackSize == 64;
         }
         else
             return false;

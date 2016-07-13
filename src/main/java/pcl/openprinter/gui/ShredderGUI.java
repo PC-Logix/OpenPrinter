@@ -3,7 +3,7 @@ package pcl.openprinter.gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 
 
 /**
@@ -29,7 +29,7 @@ public class ShredderGUI extends GuiContainer {
 
         @Override
         protected void drawGuiContainerForegroundLayer(int param1, int param2) {
-        	mc.fontRendererObj.drawString(StatCollector.translateToLocal("gui.string.shredder"), 65, 4, 4210752);
+        	mc.fontRendererObj.drawString(I18n.translateToLocal("gui.string.shredder"), 65, 4, 4210752);
         }
 
         @Override

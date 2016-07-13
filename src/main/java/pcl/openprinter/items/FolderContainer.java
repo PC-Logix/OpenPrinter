@@ -4,6 +4,7 @@ import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.gui.PrintedPaperSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -112,11 +113,11 @@ public class FolderContainer extends Container {
 	 * be able to save properly
 	 */
 	@Override
-	public ItemStack slotClick(int slot, int button, int flag, EntityPlayer player) {
+	public ItemStack slotClick(int slot, int button, ClickType clickTypeIn, EntityPlayer player) {
 		// this will prevent the player from interacting with the item that opened the inventory:
-		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem()) {
+		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItemMainhand()) {
 			return null;
 		}
-		return super.slotClick(slot, button, flag, player);
+		return super.slotClick(slot, button, clickTypeIn, player);
 	}
 }
