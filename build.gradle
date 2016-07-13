@@ -45,7 +45,7 @@ minecraft {
 	runDir = "run"
 	mappings = "stable_22"
 }
-version = "MC${minecraft.version}-${version}.${project.ext.buildNumber}"
+version = "${version}.${project.ext.buildNumber}"
 sourceSets.main.java.srcDir("./src/externs/java")
 
 jar.doFirst {
