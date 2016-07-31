@@ -1,0 +1,16 @@
+tile.printer.name=æ‰“å�°æœº
+item.printerPaper.name=æ‰“å�°çº¸
+item.printerPaperRoll.name=æ‰“å�°å�·çº¸
+item.printedPage.name=æ‰“å�°é¡µé�¢
+item.printerInkBlack.name=é»‘è‰²å¢¨ç›’
+item.printerInkColor.name=å½©è‰²å¢¨ç›’
+gui.string.printer=æ‰“å�°æœº
+gui.string.blackInk=é»‘è‰²å¢¨ç›’
+gui.string.colorInk=å½©è‰²å¢¨ç›’
+gui.string.paperInput=æ‰“å�°çº¸è¾“å…¥
+gui.string.paperOutput=æ‰“å�°çº¸è¾“å‡º
+gui.string.scannerInput=æ‰«æ��ä»ªè¾“å…¥
+itemGroup.OpenPrinter=OpenPrinter
+
+openprinter.outdated=OpenPrinter is outdated
+openprinter.uptodate=OpenPrinter is up to date.

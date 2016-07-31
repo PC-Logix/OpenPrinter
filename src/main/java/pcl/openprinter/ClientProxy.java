@@ -29,13 +29,13 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	public static void registerBlockItem(final Block block, int meta, final String blockName) {
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(OpenPrinter.MODID + ":" + blockName, "inventory"));
-		OpenPrinter.logger.info("Registering " + blockName + " Item Renderer");
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(OpenPrinter.MODID + ":" + blockName.toLowerCase(), "inventory"));
+		OpenPrinter.logger.info("Registering " + blockName.toLowerCase() + " Item Renderer");
     }
 	
 	public static void registerItem(final Item item, final String itemName) {
-		ModelLoader.setCustomModelResourceLocation(item,  0, new ModelResourceLocation(OpenPrinter.MODID + ":" + itemName, "inventory"));
-		OpenPrinter.logger.info("Registering " + itemName + " Item Renderer");
+		ModelLoader.setCustomModelResourceLocation(item,  0, new ModelResourceLocation(OpenPrinter.MODID + ":" + itemName.toLowerCase(), "inventory"));
+		OpenPrinter.logger.info("Registering " + itemName.toLowerCase() + " Item Renderer");
     }
 	
     @Override
