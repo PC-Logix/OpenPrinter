@@ -169,7 +169,8 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 		return "shredder";
 	}
 
-	public void updateEntity() {
+	@Override
+	public void update() {
 		boolean flag = this.processingTime > 0;
 
 		if (getStackInSlot(0) != null) {
@@ -269,12 +270,6 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void update() {
 		// TODO Auto-generated method stub
 		
 	}
