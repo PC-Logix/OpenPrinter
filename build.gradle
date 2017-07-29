@@ -35,7 +35,7 @@ repositories {
 }
 
 dependencies {
-    compile "li.cil.oc:OpenComputers:MC1.9.4-1.6.1.90-dev:api"
+    compile "li.cil.oc:OpenComputers:MC1.9.4-1.6.2.105-dev"
 }
 
 minecraft {

@@ -87,3 +87,6 @@ pip-log.txt
 *.lnk
 output.txt
 /bin
+*.iml
+OpenPrinter.ipr
+OpenPrinter.iws
