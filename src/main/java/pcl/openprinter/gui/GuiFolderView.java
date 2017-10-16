@@ -130,9 +130,9 @@ public class GuiFolderView extends GuiScreen {
 						Integer color = Integer.parseInt(parts[1]);
 						String alignment = parts[2];
 						if (alignment.equalsIgnoreCase("center")) {
-							mc.fontRendererObj.drawString(output, width/2 - mc.fontRendererObj.getStringWidth(output)/2, height / 2 - offset, color);	
+							mc.fontRendererObj.drawString(parts[0], width/2 - mc.fontRendererObj.getStringWidth(parts[0])/2, height / 2 - offset, color);
 						} else {
-							mc.fontRendererObj.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
+							mc.fontRendererObj.drawString(parts[0] , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
 						}
 						offset = offset - 10;	
 					}
@@ -146,7 +146,7 @@ public class GuiFolderView extends GuiScreen {
 					Integer color = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getInteger("color"+l);
 					String alignment = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("alignment"+l);
 					if (alignment.equalsIgnoreCase("center")) {
-						mc.fontRendererObj.drawString(output, width/2 - mc.fontRendererObj.getStringWidth(output)/2, height / 2 - offset, color);	
+						mc.fontRendererObj.drawString(output, width/2 - mc.fontRendererObj.getStringWidth(output)/2, height / 2 - offset, color);
 					} else {
 						mc.fontRendererObj.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
 					}

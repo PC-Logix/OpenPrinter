@@ -29,6 +29,6 @@ public class PrinterInkBlack extends Item {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int n, boolean b) {
 		if (stack.getItemDamage() >= stack.getMaxDamage())
-			stack.stackSize -= 1; // if this is reduced to 0, it is automatically "destroyed"
+			stack.setCount(stack.getCount() - 1); // if this is reduced to 0, it is automatically "destroyed"
 	}
 }

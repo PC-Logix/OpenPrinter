@@ -15,7 +15,7 @@ public class GUIFolderMessageHandlerServer implements IMessageHandler<MessageGUI
 	     PacketHandler.INSTANCE.sendToAll(message);
 	     WorldServer targetWorld = null;
 	     //net.minecraft.tileentity.TileEntity tileEntity = null;
-	     WorldServer[] ws = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers;
+	     WorldServer[] ws = FMLCommonHandler.instance().getMinecraftServerInstance().getServer().worlds;
 	     for (WorldServer s : ws) {
 	       if (s.provider.getDimension() == message.dim) {
 	         targetWorld = s;

@@ -40,7 +40,7 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 			byte var5 = var4.getByte("Slot");
 			if (var5 >= 0 && var5 < this.fileCabinetItemStacks.length)
 			{
-				this.fileCabinetItemStacks[var5] = ItemStack.loadItemStackFromNBT(var4);
+				this.fileCabinetItemStacks[var5] = new ItemStack(var4);
 			}
 		}
 		this.name = par1NBTTagCompound.getString("name");
@@ -88,6 +88,15 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 	}
 
 	@Override
+	public boolean isEmpty() {
+		for(ItemStack s : fileCabinetItemStacks)
+		{
+			if (!s.isEmpty()) return false;
+		}
+		return true;
+	}
+
+	@Override
 	public ItemStack getStackInSlot(int i) {
 		return this.fileCabinetItemStacks[i];
 	}
@@ -96,12 +105,12 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 	public ItemStack decrStackSize(int slot, int amt) {
 		ItemStack stack = getStackInSlot(slot);
 		if (stack != null) {
-			if (stack.stackSize <= amt) {
-				setInventorySlotContents(slot, null);
+			if (stack.getCount() <= amt) {
+				setInventorySlotContents(slot, ItemStack.EMPTY);
 			} else {
 				stack = stack.splitStack(amt);
-				if (stack.stackSize == 0) {
-					setInventorySlotContents(slot, null);
+				if (stack.getCount() == 0) {
+					setInventorySlotContents(slot, ItemStack.EMPTY);
 				}
 			}
 		}
@@ -112,10 +121,10 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 
 		if(fileCabinetItemStacks[i] == null)
 			return;
-		else if(fileCabinetItemStacks[i].stackSize + amt > fileCabinetItemStacks[i].getMaxStackSize())
-			fileCabinetItemStacks[i].stackSize = fileCabinetItemStacks[i].getMaxStackSize();
+		else if(fileCabinetItemStacks[i].getCount() + amt > fileCabinetItemStacks[i].getMaxStackSize())
+			fileCabinetItemStacks[i].setCount(fileCabinetItemStacks[i].getMaxStackSize());
 		else
-			fileCabinetItemStacks[i].stackSize += amt;
+			fileCabinetItemStacks[i].setCount(fileCabinetItemStacks[i].getCount() + amt);
 	}
 
 	@Override
@@ -123,7 +132,7 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 		if (getStackInSlot(i) != null)
 		{
 			ItemStack var2 = getStackInSlot(i);
-			setInventorySlotContents(i,null);
+			setInventorySlotContents(i,ItemStack.EMPTY);
 			return var2;
 		}
 		else
@@ -135,9 +144,9 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		this.fileCabinetItemStacks[i] = itemstack;
-		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
+		if (itemstack != null && itemstack.getCount() > this.getInventoryStackLimit())
 		{
-			itemstack.stackSize = this.getInventoryStackLimit();
+			itemstack.setCount(this.getInventoryStackLimit());
 		}
 	}
 
@@ -148,8 +157,8 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return worldObj.getTileEntity(pos) == this &&
+	public boolean isUsableByPlayer(EntityPlayer entityplayer) {
+		return getWorld().getTileEntity(pos) == this &&
 				entityplayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < 64;
 	}
 

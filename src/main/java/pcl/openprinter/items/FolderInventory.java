@@ -32,7 +32,7 @@ public class FolderInventory implements IInventory {
 	private ItemStack stack;
 	
 	/**
-	 * @param itemstack - the ItemStack to which this inventory belongs
+	 * @param stack - the ItemStack to which this inventory belongs
 	 */
 	public FolderInventory(ItemStack stack)
 	{
@@ -62,6 +62,15 @@ public class FolderInventory implements IInventory {
 		return inventory.length;
 	}
 
+	@Override
+	public boolean isEmpty() {
+		for (ItemStack s : inventory)
+		{
+			if (!s.isEmpty()) return false;
+		}
+		return true;
+	}
+
 	/* (non-Javadoc)
 	 * @see net.minecraft.inventory.IInventory#getStackInSlot(int)
 	 */
@@ -80,7 +89,7 @@ public class FolderInventory implements IInventory {
 		ItemStack stack = getStackInSlot(slot);
 		if(stack != null)
 		{
-			if(stack.stackSize > amount)
+			if(stack.getCount() > amount)
 			{
 				stack = stack.splitStack(amount);
 				// Don't forget this line or your inventory will not be saved!
@@ -89,7 +98,7 @@ public class FolderInventory implements IInventory {
 			else
 			{
 				// this method also calls onInventoryChanged, so we don't need to call it again
-				setInventorySlotContents(slot, null);
+				setInventorySlotContents(slot, ItemStack.EMPTY);
 			}
 		}
 		return stack;
@@ -102,7 +111,7 @@ public class FolderInventory implements IInventory {
 	public ItemStack removeStackFromSlot(int slot)
 	{
 		ItemStack stack = getStackInSlot(slot);
-		setInventorySlotContents(slot, null);
+		setInventorySlotContents(slot, ItemStack.EMPTY);
 		return stack;
 	}
 
@@ -114,9 +123,9 @@ public class FolderInventory implements IInventory {
 	{
 		inventory[slot] = stack;
 
-		if (stack != null && stack.stackSize > getInventoryStackLimit())
+		if (stack != null && !stack.isEmpty() && stack.getCount() > getInventoryStackLimit())
 		{
-			stack.stackSize = getInventoryStackLimit();
+			stack.setCount(getInventoryStackLimit());
 		}
 
 		// Don't forget this line or your inventory will not be saved!
@@ -155,7 +164,7 @@ public class FolderInventory implements IInventory {
 	public void markDirty() {
 		for (int i = 0; i < getSizeInventory(); ++i)
 		{
-			if (getStackInSlot(i) != null && getStackInSlot(i).stackSize == 0) {
+			if (getStackInSlot(i) != null && getStackInSlot(i).getCount() == 0) {
 				inventory[i] = null;
 			}
 		}
@@ -166,10 +175,10 @@ public class FolderInventory implements IInventory {
 	}
 
 	/* (non-Javadoc)
-	 * @see net.minecraft.inventory.IInventory#isUseableByPlayer(net.minecraft.entity.player.EntityPlayer)
+	 * @see net.minecraft.inventory.IInventory#isUsableByPlayer(net.minecraft.entity.player.EntityPlayer)
 	 */
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+	public boolean isUsableByPlayer(EntityPlayer p_70300_1_) {
 		return true;
 	}
 
@@ -203,7 +212,7 @@ public class FolderInventory implements IInventory {
 
 			// Just double-checking that the saved slot index is within our inventory array bounds
 			if (slot >= 0 && slot < getSizeInventory()) {
-				inventory[slot] = ItemStack.loadItemStackFromNBT(item);
+				inventory[slot] = new ItemStack(item);
 			}
 		}
 	}

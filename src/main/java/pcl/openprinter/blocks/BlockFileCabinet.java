@@ -62,12 +62,12 @@ public class BlockFileCabinet extends BlockContainer {
 				float offsetZ = random.nextFloat() * 0.8F + 0.1F;
 				EntityItem entityitem;
 
-				for (; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem)) {
+				for (; itemstack.getCount() > 0; world.spawnEntity(entityitem)) {
 					int stackSize = random.nextInt(21) + 10;
-					if (stackSize > itemstack.stackSize)
-						stackSize = itemstack.stackSize;
+					if (stackSize > itemstack.getCount())
+						stackSize = itemstack.getCount();
 
-					itemstack.stackSize -= stackSize;
+					itemstack.setCount(itemstack.getCount() - stackSize);
 					entityitem = new EntityItem(world, (double)((float)xCoord + offsetX), (double)((float)yCoord + offsetY), (double)((float)zCoord + offsetZ), new ItemStack(itemstack.getItem(), stackSize, itemstack.getItemDamage()));
 
 					float velocity = 0.05F;
@@ -83,7 +83,7 @@ public class BlockFileCabinet extends BlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 		TileEntity tileEntity = world.getTileEntity(pos);
 		if (tileEntity == null || player.isSneaking()) {
 			return false;
@@ -120,12 +120,6 @@ public class BlockFileCabinet extends BlockContainer {
 	protected BlockStateContainer createBlockState()
 	{
 		return new BlockStateContainer (this, new IProperty[] {PROPERTYFACING});
-	}
-	
-	@Override
-	public IBlockState onBlockPlaced(World world, BlockPos pos, EnumFacing blockFaceClickedOn, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		EnumFacing enumfacing = (placer == null) ? EnumFacing.NORTH : EnumFacing.fromAngle(placer.rotationYaw);
-		return this.getDefaultState().withProperty(PROPERTYFACING, enumfacing);
 	}
 
 	@Override

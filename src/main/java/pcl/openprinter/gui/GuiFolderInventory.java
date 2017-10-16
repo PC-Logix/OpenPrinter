@@ -80,7 +80,7 @@ public class GuiFolderInventory extends GuiContainer {
 		}
 
 		if (par2 == 1) {
-			this.mc.thePlayer.closeScreen();
+			this.mc.player.closeScreen();
 		}
 
 		if (key == '\r') {

@@ -44,7 +44,7 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 			byte var5 = var4.getByte("Slot");
 			if (var5 >= 0 && var5 < this.shredderItemStacks.length)
 			{
-				this.shredderItemStacks[var5] = ItemStack.loadItemStackFromNBT(var4);
+				this.shredderItemStacks[var5] = new ItemStack(var4);
 			}
 		}
 	}
@@ -90,6 +90,15 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 	}
 
 	@Override
+	public boolean isEmpty() {
+		for(ItemStack s : shredderItemStacks)
+		{
+			if (!s.isEmpty()) return false;
+		}
+		return true;
+	}
+
+	@Override
 	public ItemStack getStackInSlot(int i) {
 		return this.shredderItemStacks[i];
 	}
@@ -98,12 +107,12 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 	public ItemStack decrStackSize(int slot, int amt) {
 		ItemStack stack = getStackInSlot(slot);
 		if (stack != null) {
-			if (stack.stackSize <= amt) {
-				setInventorySlotContents(slot, null);
+			if (stack.getCount() <= amt) {
+				setInventorySlotContents(slot, ItemStack.EMPTY);
 			} else {
 				stack = stack.splitStack(amt);
-				if (stack.stackSize == 0) {
-					setInventorySlotContents(slot, null);
+				if (stack.getCount() == 0) {
+					setInventorySlotContents(slot, ItemStack.EMPTY);
 				}
 			}
 		}
@@ -114,10 +123,10 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 
 		if(shredderItemStacks[i] == null)
 			return;
-		else if(shredderItemStacks[i].stackSize + amt > shredderItemStacks[i].getMaxStackSize())
-			shredderItemStacks[i].stackSize = shredderItemStacks[i].getMaxStackSize();
+		else if(shredderItemStacks[i].getCount() + amt > shredderItemStacks[i].getMaxStackSize())
+			shredderItemStacks[i].setCount(shredderItemStacks[i].getMaxStackSize());
 		else
-			shredderItemStacks[i].stackSize += amt;
+			shredderItemStacks[i].setCount(shredderItemStacks[i].getCount() + amt);
 	}
 
 	@Override
@@ -125,7 +134,7 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 		if (getStackInSlot(i) != null)
 		{
 			ItemStack var2 = getStackInSlot(i);
-			setInventorySlotContents(i,null);
+			setInventorySlotContents(i,ItemStack.EMPTY);
 			return var2;
 		}
 		else
@@ -137,9 +146,9 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		this.shredderItemStacks[i] = itemstack;
-		if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
+		if (!itemstack.isEmpty() && itemstack.getCount() > this.getInventoryStackLimit())
 		{
-			itemstack.stackSize = this.getInventoryStackLimit();
+			itemstack.setCount(this.getInventoryStackLimit());
 		}
 	}
 
@@ -151,8 +160,8 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-		return worldObj.getTileEntity(pos) == this &&
+	public boolean isUsableByPlayer(EntityPlayer entityplayer) {
+		return getWorld().getTileEntity(pos) == this &&
 				entityplayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < 64;
 	}
 
@@ -178,17 +187,17 @@ public class ShredderTE extends TileEntity implements ITickable, IInventory, ISi
 			++this.processingTime;
 			if (this.processingTime > 10) {
 				for (int x = 1; x <= 9; x++) { //Loop the 18 output slots checking for a empty on
-					if(getStackInSlot(x) != null && getStackInSlot(x).getItem() instanceof pcl.openprinter.items.ItemPaperShreds && getStackInSlot(x).stackSize < 64) {
+					if(getStackInSlot(x) != null && getStackInSlot(x).getItem() instanceof pcl.openprinter.items.ItemPaperShreds && getStackInSlot(x).getCount() < 64) {
 						if (getStackInSlot(0).getItem().equals(Items.BOOK) || getStackInSlot(0).getItem().equals(Items.WRITABLE_BOOK) || getStackInSlot(0).getItem().equals(Items.WRITTEN_BOOK)) {
-							if (getStackInSlot(x).stackSize + 3 > 64 && x < 18) {
+							if (getStackInSlot(x).getCount() + 3 > 64 && x < 18) {
 								for (int x2 = 1; x2 <= x - 9; x2++) {
 									if(getStackInSlot(x2 + 1) == null) {
 										this.shredderItemStacks[x + 1] = new ItemStack(ContentRegistry.shreddedPaper);
-										if (64 - getStackInSlot(x).stackSize == 1) {
-											incStackSize(x2 + 1, 64 - getStackInSlot(x).stackSize);					
+										if (64 - getStackInSlot(x).getCount() == 1) {
+											incStackSize(x2 + 1, 64 - getStackInSlot(x).getCount());
 										}
 									} else {
-										incStackSize(x2 + 1, 64 - getStackInSlot(x).stackSize);
+										incStackSize(x2 + 1, 64 - getStackInSlot(x).getCount());
 									}
 								}
 							}

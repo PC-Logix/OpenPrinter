@@ -54,38 +54,48 @@ public class ContentRegistry {
 		registerRecipes();
 	}
 
+	public static Item init(Item item, String name)
+	{
+		return item.setUnlocalizedName(name).setRegistryName("openprinter:" + name);
+	}
+
 	private static void registerItems() {
 		shreddedPaper = new ItemPaperShreds();
-		GameRegistry.registerItem(shreddedPaper, "paperShreds");
+		GameRegistry.register(init(shreddedPaper, "paper_shreds"));
 
 		printerPaperRoll = new PrinterPaperRoll();
-		GameRegistry.registerItem(printerPaperRoll, "printerPaperRoll");
+		GameRegistry.register(init(printerPaperRoll, "printer_paper_roll"));
 
 		printerInkColor = new PrinterInkColor();
-		GameRegistry.registerItem(printerInkColor, "printerInkColor");
+		GameRegistry.register(init(printerInkColor, "printer_ink_color"));
 
 		printerInkBlack = new PrinterInkBlack();
-		GameRegistry.registerItem(printerInkBlack, "printerInkBlack");
+		GameRegistry.register(init(printerInkBlack, "printer_ink_black"));
 
 		printedPage = new PrintedPage();
-		GameRegistry.registerItem(printedPage, "printedPage");
+		GameRegistry.register(init(printedPage, "printed_page"));
 		
 		folder = new ItemFolder();
-		GameRegistry.registerItem(folder, "folder");
+		GameRegistry.register(init(folder, "folder"));
 		
+	}
+
+	public static Block init(Block block, String name)
+	{
+		return block.setUnlocalizedName(name).setRegistryName("openprinter:" + name);
 	}
 
 	private static void registerBlocks() {
 		//Register Blocks
 		printerBlock = new BlockPrinter();
-		GameRegistry.registerBlock(printerBlock, ItemPrinterBlock.class, "printer");
+		GameRegistry.register(init(printerBlock, "printer"));
 
 		shredderBlock = new BlockShredder();
-		GameRegistry.registerBlock(shredderBlock, "shredder");
+		GameRegistry.register(init(shredderBlock, "shredder"));
 		
 		fileCabinetBlock = new BlockFileCabinet();
-		GameRegistry.registerBlock(fileCabinetBlock, "filecabinet");
-		
+		GameRegistry.register(init(fileCabinetBlock, "filecabinet"));
+
 		GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
 		GameRegistry.registerTileEntity(ShredderTE.class, "ShredderTE");
 		GameRegistry.registerTileEntity(FileCabinetTE.class, "FileCabinetTE");

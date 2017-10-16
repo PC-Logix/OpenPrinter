@@ -57,7 +57,7 @@ public class PrinterContainer extends Container{
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-            return tileEntity.isUseableByPlayer(player);
+            return tileEntity.isUsableByPlayer(player);
     }
 
 
@@ -124,16 +124,16 @@ public class PrinterContainer extends Container{
                     else if (!mergeItemStack(stackInSlot, inventoryStart, hotbarEnd, false))
                         return null;
 
-                    if (stackInSlot.stackSize == 0) {
-                            slotObject.putStack(null);
+                    if (stackInSlot.getCount() == 0) {
+                            slotObject.putStack(ItemStack.EMPTY);
                     } else {
                             slotObject.onSlotChanged();
                     }
 
-                    if (stackInSlot.stackSize == stack.stackSize) {
-                            return null;
+                    if (stackInSlot.getCount() == stack.getCount()) {
+                            return ItemStack.EMPTY;
                     }
-                    slotObject.onPickupFromSlot(player, stackInSlot);
+                    slotObject.onTake(player, stackInSlot);
             }
             return stack;
     }

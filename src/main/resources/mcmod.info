@@ -5,12 +5,12 @@
  	"version": "${version}",
  	"mcversion": "${mcversion}",
 	"url": "",
-	"updateUrl": "",
+	"updateUrl": "http://modupdates.pc-logix.com/openprinter",
 	"authors": ["Michiyo"],
 	"credits": "Michiyo",
 	"logoFile": "",
-	"requiredMods": [ "Forge" ],
-	"dependencies": [ "OpenComputers" ],
+	"requiredMods": [ "forge" ],
+	"dependencies": [ "opencomputers" ],
 	"dependants": [ ],
 	"useDependencyInformation": "true"
 }]

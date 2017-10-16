@@ -24,14 +24,15 @@ public class ItemFolder extends Item {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		ItemStack itemstack = player.getHeldItem(hand);
 		if (!world.isRemote) {
 			if (player.isSneaking()) {
 				player.openGui(OpenPrinter.instance, 3, world, 0, 0, 0);
 			}
 		} else {
 			if (!player.isSneaking()) {
-				player.openGui(OpenPrinter.instance, 4, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+				player.openGui(OpenPrinter.instance, 4, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
 				GuiFolderView.stack = itemstack;
 				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 			}

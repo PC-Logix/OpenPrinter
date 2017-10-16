@@ -1,10 +1,12 @@
 package pcl.openprinter.client;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import pcl.openprinter.ContentRegistry;
 import pcl.openprinter.OpenPrinter;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 
 public class CreativeTab extends CreativeTabs {
 	public CreativeTab(String unlocalizedName) {
@@ -13,7 +15,7 @@ public class CreativeTab extends CreativeTabs {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Item getTabIconItem() {
-		return Item.getItemFromBlock(ContentRegistry.printerBlock);
+	public ItemStack getTabIconItem() {
+		return new ItemStack(Item.getItemFromBlock(ContentRegistry.printerBlock));
 	}
 }

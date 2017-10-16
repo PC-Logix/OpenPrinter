@@ -28,11 +28,12 @@ public class PrintedPage extends Item{
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemstack, World world, EntityPlayer player, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+		ItemStack itemstack = player.getHeldItem(hand);
 		if (!world.isRemote) {
 			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 		} else {
-			player.openGui(OpenPrinter.instance, 1, player.worldObj, (int) player.posX, (int) player.posY, (int) player.posZ);
+			player.openGui(OpenPrinter.instance, 1, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
 			PaperGUI.stack = itemstack;
 			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 		}

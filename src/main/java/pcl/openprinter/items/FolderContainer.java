@@ -10,7 +10,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class FolderContainer extends Container {
-	/** The Item Inventory for this Container, only needed if you want to reference isUseableByPlayer */
+	/** The Item Inventory for this Container, only needed if you want to reference isUsableByPlayer */
 	public final FolderInventory inventory;
 
 	/** Using these will make transferStackInSlot easier to understand and implement
@@ -57,9 +57,9 @@ public class FolderContainer extends Container {
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
-		// be sure to return the inventory's isUseableByPlayer method
+		// be sure to return the inventory's isUsableByPlayer method
 		// if you defined special behavior there:
-		return inventory.isUseableByPlayer(entityplayer);
+		return inventory.isUsableByPlayer(entityplayer);
 	}
 
 	/**
@@ -91,17 +91,17 @@ public class FolderContainer extends Container {
 
 			}
 
-			if (itemstack1.stackSize == 0) {
-				slot.putStack((ItemStack) null);
+			if (itemstack1.getCount() == 0) {
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}
 
-			if (itemstack1.stackSize == itemstack.stackSize) {
+			if (itemstack1.getCount() == itemstack.getCount()) {
 				return null;
 			}
 
-			slot.onPickupFromSlot(par1EntityPlayer, itemstack1);
+			slot.onTake(par1EntityPlayer, itemstack1);
 		}
 
 		return itemstack;

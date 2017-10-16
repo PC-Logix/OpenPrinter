@@ -83,7 +83,7 @@ public class PaperGUI extends GuiScreen {
 					Integer color = Integer.parseInt(parts[1]);
 					String alignment = parts[2];
 					if (alignment.equalsIgnoreCase("center")) {
-						mc.fontRendererObj.drawString(parts[0], width/2 - mc.fontRendererObj.getStringWidth(parts[0])/2, height / 2 - offset, color);	
+						mc.fontRendererObj.drawString(parts[0], width/2 - mc.fontRendererObj.getStringWidth(parts[0])/2, height / 2 - offset, color);
 					} else {
 						mc.fontRendererObj.drawString(parts[0] , width/2 , height / 2 - offset, color);
 					}
@@ -115,7 +115,7 @@ public class PaperGUI extends GuiScreen {
 							Integer color = Integer.parseInt(parts[1]);
 							String alignment = parts[2];
 							if (alignment.equalsIgnoreCase("center")) {
-								mc.fontRendererObj.drawString(parts[0], width/2 - mc.fontRendererObj.getStringWidth(parts[0])/2, height / 2 - offset, color);	
+								mc.fontRendererObj.drawString(parts[0], width/2 - mc.fontRendererObj.getStringWidth(parts[0])/2, height / 2 - offset, color);
 							} else {
 								mc.fontRendererObj.drawString(parts[0] , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
 							}
@@ -133,7 +133,7 @@ public class PaperGUI extends GuiScreen {
 						Integer color = stack.getTagCompound().getInteger("color"+x);
 						String alignment = stack.getTagCompound().getString("alignment"+x);
 						if (alignment.equalsIgnoreCase("center")) {
-							mc.fontRendererObj.drawString(output, width/2 - mc.fontRendererObj.getStringWidth(output)/2, height / 2 - offset, color);	
+							mc.fontRendererObj.drawString(output, width/2 - mc.fontRendererObj.getStringWidth(output)/2, height / 2 - offset, color);
 						} else {
 							mc.fontRendererObj.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
 						}
@@ -141,7 +141,7 @@ public class PaperGUI extends GuiScreen {
 					}				
 				}
 			} else {
-				mc.fontRendererObj.drawString("This page intentionally left blank.", width/2 - mc.fontRendererObj.getStringWidth("This page intentionally left blank.")/2, height / 2 - offset, 0x000000);	
+				mc.fontRendererObj.drawString("This page intentionally left blank.", width/2 - mc.fontRendererObj.getStringWidth("This page intentionally left blank.")/2, height / 2 - offset, 0x000000);
 			}
 		}
 		super.drawScreen(i, j, f);

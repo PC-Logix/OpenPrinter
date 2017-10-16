@@ -86,17 +86,17 @@ public class FileCabinetContainer extends Container{
 				//}
 			}
 
-			if (itemstack1.stackSize == 0) {
-				slot.putStack((ItemStack) null);
+			if (itemstack1.getCount() == 0) {
+				slot.putStack(ItemStack.EMPTY);
 			} else {
 				slot.onSlotChanged();
 			}
 
-			if (itemstack1.stackSize == itemstack.stackSize) {
+			if (itemstack1.getCount() == itemstack.getCount()) {
 				return null;
 			}
 
-			slot.onPickupFromSlot(par1EntityPlayer, itemstack1);
+			slot.onTake(par1EntityPlayer, itemstack1);
 		}
 
 		return itemstack;
@@ -116,43 +116,43 @@ public class FileCabinetContainer extends Container{
 
 		if (is.isStackable())
 		{
-			while (is.stackSize > 0 && (!par4 && slotIndex < slotFinish || par4 && slotIndex >= slotStart))
+			while (is.getCount() > 0 && (!par4 && slotIndex < slotFinish || par4 && slotIndex >= slotStart))
 			{
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
 
-				if (slotstack != null
+				if (!slotstack.isEmpty()
 						&& slotstack.getItem() == is.getItem()
 						//&& !is.getHasSubtypes()
 						&& is.getItemDamage() == slotstack.getItemDamage()
 						&& ItemStack.areItemStackTagsEqual(is, slotstack)
-						&& slotstack.stackSize < slot.getSlotStackLimit())
+						&& slotstack.getCount() < slot.getSlotStackLimit())
 				{
-					int mergedStackSize = is.stackSize + getSmaller(slotstack.stackSize, slot.getSlotStackLimit());
+					int mergedStackSize = is.getCount() + getSmaller(slotstack.getCount(), slot.getSlotStackLimit());
 
 					//First we check if we can add the two stacks together and the resulting stack is smaller than the maximum size for the slot or the stack
 					if (mergedStackSize <= is.getMaxStackSize() && mergedStackSize <= slot.getSlotStackLimit())
 					{
-						is.stackSize = 0;
-						slotstack.stackSize = mergedStackSize;
+						is.setCount(0);
+						slotstack.setCount(mergedStackSize);
 						slot.onSlotChanged();
 						merged = true;
 					}
-					else if (slotstack.stackSize < is.getMaxStackSize() && slotstack.stackSize < slot.getSlotStackLimit())
+					else if (slotstack.getCount() < is.getMaxStackSize() && slotstack.getCount() < slot.getSlotStackLimit())
 					{
 						// Slot stack size is greater than or equal to the item's max stack size. Most containers are this case.
 						if (slot.getSlotStackLimit() >= is.getMaxStackSize())
 						{
-							is.stackSize -= is.getMaxStackSize() - slotstack.stackSize;
-							slotstack.stackSize = is.getMaxStackSize();
+							is.setCount(is.getCount() - is.getMaxStackSize() - slotstack.getCount());
+							slotstack.setCount(is.getMaxStackSize());
 							slot.onSlotChanged();
 							merged = true;
 						}
 						// Slot stack size is smaller than the item's normal max stack size. Example: Log Piles
 						else if (slot.getSlotStackLimit() < is.getMaxStackSize())
 						{
-							is.stackSize -= slot.getSlotStackLimit() - slotstack.stackSize;
-							slotstack.stackSize = slot.getSlotStackLimit();
+							is.setCount(is.getCount() - slot.getSlotStackLimit() - slotstack.getCount());
+							slotstack.setCount(slot.getSlotStackLimit());
 							slot.onSlotChanged();
 							merged = true;
 						}
@@ -166,7 +166,7 @@ public class FileCabinetContainer extends Container{
 			}
 		}
 
-		if (is.stackSize > 0)
+		if (is.getCount() > 0)
 		{
 			if (par4)
 				slotIndex = slotFinish - 1;
@@ -177,22 +177,22 @@ public class FileCabinetContainer extends Container{
 			{
 				slot = (Slot)this.inventorySlots.get(slotIndex);
 				slotstack = slot.getStack();
-				if (slotstack == null && slot.isItemValid(is) && slot.getSlotStackLimit() < is.stackSize)
+				if (slotstack.isEmpty() && slot.isItemValid(is) && slot.getSlotStackLimit() < is.getCount())
 				{
 					ItemStack copy = is.copy();
-					copy.stackSize = slot.getSlotStackLimit();
-					is.stackSize -= slot.getSlotStackLimit();
+					copy.setCount(slot.getSlotStackLimit());
+					is.setCount(is.getCount() -  slot.getSlotStackLimit());
 					slot.putStack(copy);
 					slot.onSlotChanged();
 					merged = true;
 					//this.bagsSlotNum = slotIndex;
 					break;
 				}
-				else if (slotstack == null && slot.isItemValid(is))
+				else if (slotstack.isEmpty() && slot.isItemValid(is))
 				{
 					slot.putStack(is.copy());
 					slot.onSlotChanged();
-					is.stackSize = 0;
+					is.setCount(0);
 					merged = true;
 					break;
 				}

@@ -28,7 +28,7 @@ public class PrinterPaperRoll extends Item {
 	public void onUpdate(ItemStack stack, World world, Entity entity, int n,
 			boolean b) {
 		if (stack.getItemDamage() >= stack.getMaxDamage())
-			stack.stackSize -= 1; // if this is reduced to 0, it is
+			stack.setCount(stack.getCount() - 1); // if this is reduced to 0, it is
 									// automatically "destroyed"
 	}
 	

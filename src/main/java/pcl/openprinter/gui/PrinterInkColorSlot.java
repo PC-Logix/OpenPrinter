@@ -25,10 +25,10 @@ public class PrinterInkColorSlot extends Slot {
     /**
      * Called when the player picks up an item from an inventory slot
      */
-    public void onPickupFromSlot(EntityPlayer par1EntityPlayer, ItemStack par2ItemStack)
+    public ItemStack onTake(EntityPlayer par1EntityPlayer, ItemStack par2ItemStack)
     {
             this.onCrafting(par2ItemStack);
-            super.onPickupFromSlot(par1EntityPlayer, par2ItemStack);
+           	return super.onTake(par1EntityPlayer, par2ItemStack);
     }
 
 }
