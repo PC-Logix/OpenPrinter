@@ -7,7 +7,7 @@
 	"url": "",
 	"updateUrl": "http://modupdates.pc-logix.com/openprinter",
 	"authors": ["Michiyo"],
-	"credits": "Michiyo",
+	"credits": "Sangar/MightyPirates/All OpenComputers contributors for OC, 1.11 port by BrisingrAerowing",
 	"logoFile": "",
 	"requiredMods": [ "forge" ],
 	"dependencies": [ "opencomputers" ],
