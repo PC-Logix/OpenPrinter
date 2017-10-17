@@ -77,7 +77,7 @@ public class PrinterContainer extends Container{
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-            ItemStack stack = null;
+            ItemStack stack = ItemStack.EMPTY;
             Slot slotObject = (Slot) inventorySlots.get(slot);
 
             int outputSlotStart = outputSlots.get(0).slotNumber;
@@ -96,7 +96,7 @@ public class PrinterContainer extends Container{
                     // Try merge output into inventory and signal change
                     if (slot >= outputSlotStart && slot < outputSlotEnd) {
                         if (!mergeItemStack(stackInSlot, inventoryStart, hotbarEnd, true))
-                            return null;
+                            return ItemStack.EMPTY;
                         slotObject.onSlotChange(stackInSlot, stack);
                     }
                     // Try merge stacks within inventory and hotbar spaces
@@ -115,9 +115,9 @@ public class PrinterContainer extends Container{
                         if (!handledSpecialItem) {
                             if (slot >= inventoryStart && slot < hotbarStart) {
                                 if (!mergeItemStack(stackInSlot, hotbarStart, hotbarEnd, false))
-                                    return null;
+                                    return ItemStack.EMPTY;
                             } else if (slot >= hotbarStart && slot < hotbarEnd && !this.mergeItemStack(stackInSlot, inventoryStart, hotbarStart, false))
-                                return null;
+                                return ItemStack.EMPTY;
                         }
                     }
                     // Try merge stack into inventory

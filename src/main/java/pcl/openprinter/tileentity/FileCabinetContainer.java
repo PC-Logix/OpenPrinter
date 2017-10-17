@@ -62,7 +62,7 @@ public class FileCabinetContainer extends Container{
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int index)
 	{
-		ItemStack itemstack = null;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = (Slot) this.inventorySlots.get(index);
 
 		if (slot != null && slot.getHasStack()) {
@@ -74,14 +74,14 @@ public class FileCabinetContainer extends Container{
 				// try to place in player inventory / action bar
 				if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END+1, true))
 				{
-					return null;
+					return ItemStack.EMPTY;
 				}
 
 				slot.onSlotChange(itemstack1, itemstack);
 			} else {
 				//if (itemstack1.getItem() instanceof PrintedPage) {
 					if (!this.mergeItemStack(itemstack1, 0, 27, false)) {
-						return null;
+						return ItemStack.EMPTY;
 					}
 				//}
 			}
@@ -93,7 +93,7 @@ public class FileCabinetContainer extends Container{
 			}
 
 			if (itemstack1.getCount() == itemstack.getCount()) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			slot.onTake(par1EntityPlayer, itemstack1);

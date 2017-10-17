@@ -68,7 +68,7 @@ public class FolderContainer extends Container {
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int index)
 	{
-		ItemStack itemstack = null;
+		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = (Slot) this.inventorySlots.get(index);
 
 		if (slot != null && slot.getHasStack()) {
@@ -80,13 +80,13 @@ public class FolderContainer extends Container {
 				// try to place in player inventory / action bar
 				if (!this.mergeItemStack(itemstack1, INV_START, HOTBAR_END+1, true))
 				{
-					return null;
+					return ItemStack.EMPTY;
 				}
 
 				slot.onSlotChange(itemstack1, itemstack);
 			} else {
 				if (itemstack1.getItem() instanceof PrintedPage && !this.mergeItemStack(itemstack1, 0, FolderInventory.INV_SIZE, false)) {
-					return null;
+					return ItemStack.EMPTY;
 				}
 
 			}
@@ -98,7 +98,7 @@ public class FolderContainer extends Container {
 			}
 
 			if (itemstack1.getCount() == itemstack.getCount()) {
-				return null;
+				return ItemStack.EMPTY;
 			}
 
 			slot.onTake(par1EntityPlayer, itemstack1);
@@ -116,7 +116,7 @@ public class FolderContainer extends Container {
 	public ItemStack slotClick(int slot, int button, ClickType clickTypeIn, EntityPlayer player) {
 		// this will prevent the player from interacting with the item that opened the inventory:
 		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItemMainhand()) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		return super.slotClick(slot, button, clickTypeIn, player);
 	}
