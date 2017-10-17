@@ -8,7 +8,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
@@ -39,7 +39,7 @@ else
 
 version = "0.1.0"
 group = "pcl.openprinter"
-archivesBaseName = "OpenPrinter-1.11.2"
+archivesBaseName = "OpenPrinter-1.12.1"
 
 
 repositories {
@@ -50,13 +50,13 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "li.cil.oc:OpenComputers:MC1.11.2-1.7.+"
+    deobfCompile "li.cil.oc:OpenComputers:MC1.12.1-1.7.+"
 }
 
 minecraft {
-    version = "1.11.2-13.20.1.2421"
+    version = "1.12.1-14.22.1.2485"
     runDir = "run"
-    mappings = "snapshot_20161220"
+    mappings = "snapshot_20170629"
     useDepAts = true
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
@@ -84,7 +84,7 @@ curseforge {
 	apiKey = curseforge_key
 	project {
 		id = "225127"
-		addGameVersion '1.10.2'
+		//addGameVersion '1.10.2'
 		releaseType = "release"
 		changelog = curse_changlog
 	}
