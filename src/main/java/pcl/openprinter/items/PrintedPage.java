@@ -24,6 +24,7 @@ public class PrintedPage extends Item{
 		maxStackSize = 1;
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("printedPage");
+		setRegistryName("printed_page");
 		//setTextureName("minecraft:paper");
 	}
 	

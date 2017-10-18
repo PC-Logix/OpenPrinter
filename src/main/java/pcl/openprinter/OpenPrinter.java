@@ -64,7 +64,7 @@ public class OpenPrinter {
 				logger.info("OpenUpdater is not installed, not registering.");
 			}
 		}
-		ContentRegistry.preInit();
+		ContentRegistry.registerAll(event);
 		proxy.registerItemRenderers();
 	}
 

@@ -20,6 +20,7 @@ public class PrinterPaperRoll extends Item {
 		this.setMaxDamage(256);
 		setNoRepair();
 		setUnlocalizedName("printerPaperRoll");
+		setRegistryName("printer_paper_roll");
 		//setTextureName("openprinter:PrinterPaperRoll");
 		setCreativeTab(OpenPrinter.CreativeTab);
 	}

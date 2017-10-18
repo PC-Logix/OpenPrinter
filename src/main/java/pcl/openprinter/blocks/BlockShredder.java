@@ -34,6 +34,7 @@ public class BlockShredder extends BlockContainer {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("shredder");
+		setRegistryName("shredder");
 		setHardness(.5f);
 
 		random = new Random();

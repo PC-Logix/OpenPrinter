@@ -33,6 +33,7 @@ public class BlockFileCabinet extends BlockContainer {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("filecabinet");
+		setRegistryName("file_cabinet");
 		setHardness(.5f);
 		random = new Random();
 	}

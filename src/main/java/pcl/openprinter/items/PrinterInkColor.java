@@ -22,6 +22,7 @@ public class PrinterInkColor extends Item {
 		this.setMaxDamage(OpenPrinter.cfg.printerInkUse);
 		setNoRepair();
 		setUnlocalizedName("printerInkColor");
+		setRegistryName("printer_ink_color");
 		//setTextureName("openprinter:PrinterInkColor");
 		setCreativeTab(OpenPrinter.CreativeTab);
 	}

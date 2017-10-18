@@ -17,15 +17,15 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void registerItemRenderers() {
-		registerBlockItem(ContentRegistry.printerBlock, 0, "printer");
-		registerBlockItem(ContentRegistry.shredderBlock, 0, "shredder");
-		registerBlockItem(ContentRegistry.fileCabinetBlock, 0, "file_cabinet");
-		registerItem(ContentRegistry.printedPage, "printed_page");
-		registerItem(ContentRegistry.printerInkBlack, "printer_ink_black");
-		registerItem(ContentRegistry.printerInkColor, "printer_ink_color");
-		registerItem(ContentRegistry.printerPaperRoll, "printer_paper_roll");
-		registerItem(ContentRegistry.shreddedPaper, "shredded_paper");
-		registerItem(ContentRegistry.folder, "folder");
+		//registerBlockItem(ContentRegistry.printerBlock, 0, "printer");
+		//registerBlockItem(ContentRegistry.shredderBlock, 0, "shredder");
+		//registerBlockItem(ContentRegistry.fileCabinetBlock, 0, "file_cabinet");
+		//registerItem(ContentRegistry.printedPage, "printed_page");
+		//registerItem(ContentRegistry.printerInkBlack, "printer_ink_black");
+		//registerItem(ContentRegistry.printerInkColor, "printer_ink_color");
+		//registerItem(ContentRegistry.printerPaperRoll, "printer_paper_roll");
+		//registerItem(ContentRegistry.shreddedPaper, "shredded_paper");
+		//registerItem(ContentRegistry.folder, "folder");
 	}
 	
 	public static void registerBlockItem(final Block block, int meta, final String blockName) {

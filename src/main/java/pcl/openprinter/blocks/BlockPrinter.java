@@ -33,6 +33,7 @@ public class BlockPrinter extends BlockContainer {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setUnlocalizedName("printer");
+		setRegistryName("printer");
 		setHardness(.5f);
 		random = new Random();
 	}

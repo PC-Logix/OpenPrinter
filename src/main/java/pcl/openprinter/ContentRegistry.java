@@ -6,7 +6,6 @@ import pcl.openprinter.blocks.BlockShredder;
 import pcl.openprinter.items.ItemBlockFileCabinet;
 import pcl.openprinter.items.ItemFolder;
 import pcl.openprinter.items.ItemPaperShreds;
-import pcl.openprinter.items.ItemPrinterBlock;
 import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
@@ -30,7 +29,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@EventBusSubscriber
 public class ContentRegistry {
 	
 	public static CreativeTabs creativeTab;
@@ -47,7 +45,10 @@ public class ContentRegistry {
 	public static ItemBlock  printeritemBlock;
 
 	public static void registerAll(FMLPreInitializationEvent event) {
-		registerBlocks(event, new BlockPrinter());
+		registerBlocks(event, new BlockPrinter(), new BlockShredder());
+		registerBlocksWithItemBlock(event, new ItemBlockFileCabinet(new BlockFileCabinet()), new BlockFileCabinet());
+		registerItems(event, new ItemFolder(), new ItemPaperShreds(), new PrintedPage(),
+							 new PrinterInkBlack(), new PrinterInkColor(), new PrinterPaperRoll());
 	}
 	
 	public static void registerBlocks(FMLPreInitializationEvent event, Block...blocks) {
@@ -57,7 +58,17 @@ public class ContentRegistry {
 				GameRegistry.register(block);
 				GameRegistry.register(itemblock, block.getRegistryName());
 				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block),0,new ModelResourceLocation(block.getRegistryName(), "inventory"));
-				
+			}
+		}
+	}
+	
+	public static void registerBlocksWithItemBlock(FMLPreInitializationEvent event, ItemBlock iBlock, Block...blocks) {
+		for (Block block : blocks) {
+			final ItemBlock itemblock = iBlock;
+			if (event.getSide() == Side.CLIENT) {
+				GameRegistry.register(block);
+				GameRegistry.register(itemblock, block.getRegistryName());
+				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block),0,new ModelResourceLocation(block.getRegistryName(), "inventory"));
 			}
 		}
 	}
@@ -76,8 +87,8 @@ public class ContentRegistry {
 
 	// Called on mod preInit()
 	public static void preInit() {
-        registerBlocks();
-        registerItems();
+        //registerBlocks();
+        //registerItems();
 	}
 
 	//Called on mod init()
