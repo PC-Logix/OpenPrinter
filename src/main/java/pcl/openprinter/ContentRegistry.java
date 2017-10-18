@@ -15,8 +15,13 @@ import pcl.openprinter.items.PrinterPaperRollRecipe;
 import pcl.openprinter.tileentity.FileCabinetTE;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.tileentity.ShredderTE;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -25,6 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
+@EventBusSubscriber
 public class ContentRegistry {
 	
 	public static CreativeTabs creativeTab;
@@ -40,6 +46,31 @@ public class ContentRegistry {
 	public static Item  folder;
 	public static ItemBlock  printeritemBlock;
 
+	public static void registerAll(FMLPreInitializationEvent event) {
+		registerBlocks(event, new BlockPrinter());
+	}
+	
+	public static void registerBlocks(FMLPreInitializationEvent event, Block...blocks) {
+		for (Block block : blocks) {
+			final ItemBlock itemblock = new ItemBlock(block);
+			if (event.getSide() == Side.CLIENT) {
+				GameRegistry.register(block);
+				GameRegistry.register(itemblock, block.getRegistryName());
+				ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block),0,new ModelResourceLocation(block.getRegistryName(), "inventory"));
+				
+			}
+		}
+	}
+	
+	public static void registerItems(FMLPreInitializationEvent event, Item...items) {
+		for (Item item : items) {
+			if (event.getSide() == Side.CLIENT) {
+				GameRegistry.register(item);
+				ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+			}
+		}
+	}
+	
 	private ContentRegistry() {
 	}
 
@@ -105,7 +136,7 @@ public class ContentRegistry {
 		ItemStack redstone		= new ItemStack(Items.REDSTONE);
 		ItemStack shears		= new ItemStack(Items.SHEARS);
 		ItemStack microchip		= li.cil.oc.api.Items.get("chip1").createItemStack(1);
-		ItemStack pcb			= li.cil.oc.api.Items.get("printedCircuitBoard").createItemStack(1);
+		ItemStack pcb			= li.cil.oc.api.Items.get("printedcircuitboard").createItemStack(1);
 		String blackInk			= "dyeBlack";
 		String redInk			= "dyeRed";
 		String greenInk			= "dyeGreen";
