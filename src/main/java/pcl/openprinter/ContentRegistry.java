@@ -41,16 +41,31 @@ public class ContentRegistry {
 	public static Item  printerInkColor;
 	public static Item  printerInkBlack;
 	public static Item  shreddedPaper;
-	public static Item  folder;
+	public static Item  folder; 
+	 
 	public static ItemBlock  printeritemBlock;
 
 	public static void registerAll(FMLPreInitializationEvent event) {
-		registerBlocks(event, new BlockPrinter(), new BlockShredder());
-		registerBlocksWithItemBlock(event, new ItemBlockFileCabinet(new BlockFileCabinet()), new BlockFileCabinet());
-		registerItems(event, new ItemFolder(), new ItemPaperShreds(), new PrintedPage(),
-							 new PrinterInkBlack(), new PrinterInkColor(), new PrinterPaperRoll());
+		
+		shreddedPaper = new ItemPaperShreds();
+		printerPaperRoll = new PrinterPaperRoll();
+		printerInkColor = new PrinterInkColor();
+		printerInkBlack = new PrinterInkBlack();
+		printedPage = new PrintedPage();
+		folder = new ItemFolder();
+		printerBlock = new BlockPrinter();
+		shredderBlock = new BlockShredder();
+		fileCabinetBlock = new BlockFileCabinet();
+		
+		registerBlocks(event, printerBlock, shredderBlock);
+		registerBlocksWithItemBlock(event, new ItemBlockFileCabinet(fileCabinetBlock), fileCabinetBlock);
+		registerItems(event, folder, shreddedPaper, printedPage, printerInkBlack, printerInkColor, printerPaperRoll);
+		
+		GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
+		GameRegistry.registerTileEntity(ShredderTE.class, "ShredderTE");
+		GameRegistry.registerTileEntity(FileCabinetTE.class, "FileCabinetTE");
 	}
-	
+		
 	public static void registerBlocks(FMLPreInitializationEvent event, Block...blocks) {
 		for (Block block : blocks) {
 			final ItemBlock itemblock = new ItemBlock(block);
@@ -99,48 +114,6 @@ public class ContentRegistry {
 	public static Item init(Item item, String name)
 	{
 		return item.setUnlocalizedName(name).setRegistryName("openprinter:" + name);
-	}
-
-	private static void registerItems() {
-		shreddedPaper = new ItemPaperShreds();
-		GameRegistry.register(init(shreddedPaper, "paper_shreds"));
-
-		printerPaperRoll = new PrinterPaperRoll();
-		GameRegistry.register(init(printerPaperRoll, "printer_paper_roll"));
-
-		printerInkColor = new PrinterInkColor();
-		GameRegistry.register(init(printerInkColor, "printer_ink_color"));
-
-		printerInkBlack = new PrinterInkBlack();
-		GameRegistry.register(init(printerInkBlack, "printer_ink_black"));
-
-		printedPage = new PrintedPage();
-		GameRegistry.register(init(printedPage, "printed_page"));
-		
-		folder = new ItemFolder();
-		GameRegistry.register(init(folder, "folder"));
-		
-	}
-
-	public static Block init(Block block, String name)
-	{
-		return block.setUnlocalizedName(name).setRegistryName("openprinter:" + name);
-	}
-
-	private static void registerBlocks() {
-		//Register Blocks
-		printerBlock = new BlockPrinter();
-		GameRegistry.register(init(printerBlock, "printer"));
-
-		shredderBlock = new BlockShredder();
-		GameRegistry.register(init(shredderBlock, "shredder"));
-		
-		fileCabinetBlock = new BlockFileCabinet();
-		GameRegistry.register(init(fileCabinetBlock, "filecabinet"));
-
-		GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
-		GameRegistry.registerTileEntity(ShredderTE.class, "ShredderTE");
-		GameRegistry.registerTileEntity(FileCabinetTE.class, "FileCabinetTE");
 	}
 	
 	private static void registerRecipes() {
