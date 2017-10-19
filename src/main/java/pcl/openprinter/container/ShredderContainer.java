@@ -1,8 +1,9 @@
-package pcl.openprinter.tileentity;
+package pcl.openprinter.container;
 
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.gui.PrinterPaperSlot;
 import pcl.openprinter.gui.ShredderInputSlot;
+import pcl.openprinter.tileentity.ShredderTE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -30,18 +31,18 @@ public class ShredderContainer extends Container{
 		//Blank Paper
 		paperSlot = addSlotToContainer(new ShredderInputSlot(tileEntity, 0, 79, 34));
 
-		specialSlots = new ArrayList<Slot>();
-		specialSlots.add(paperSlot);
+		//specialSlots = new ArrayList<Slot>();
+		//specialSlots.add(paperSlot);
 
 		//Output slots
 		outputSlots = new ArrayList<Slot>();
 		for (int i = 1; i < 10; i++) {
 			//outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 44 + i * 18 - 54, 69)));
-			outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 44 + i * 18 - 54, 87)));
+			//outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 44 + i * 18 - 54, 87)));
 		}
 
 		//commonly used vanilla code that adds the player's inventory
-		bindPlayerInventory(inventoryPlayer);
+		//bindPlayerInventory(inventoryPlayer);
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class ShredderContainer extends Container{
 		}
 	}
 
-	@Override
+/*	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
 		ItemStack stack = ItemStack.EMPTY;
 		Slot slotObject = (Slot) inventorySlots.get(slot);
@@ -126,5 +127,5 @@ public class ShredderContainer extends Container{
 		}
 		return stack;
 	}
-
+*/
 }

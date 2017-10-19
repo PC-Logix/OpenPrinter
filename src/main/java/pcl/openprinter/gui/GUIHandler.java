@@ -3,17 +3,17 @@
  */
 package pcl.openprinter.gui;
 
+import pcl.openprinter.container.FileCabinetContainer;
+import pcl.openprinter.container.PrinterContainer;
+import pcl.openprinter.container.ShredderContainer;
 /**
  * @author Caitlyn
  *
  */
 import pcl.openprinter.items.FolderContainer;
 import pcl.openprinter.items.FolderInventory;
-import pcl.openprinter.tileentity.FileCabinetContainer;
 import pcl.openprinter.tileentity.FileCabinetTE;
-import pcl.openprinter.tileentity.PrinterContainer;
 import pcl.openprinter.tileentity.PrinterTE;
-import pcl.openprinter.tileentity.ShredderContainer;
 import pcl.openprinter.tileentity.ShredderTE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

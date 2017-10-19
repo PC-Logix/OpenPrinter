@@ -13,9 +13,9 @@ import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 
 import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.tileentity.PrinterContainer;
+import pcl.openprinter.container.PrinterContainer;
+import pcl.openprinter.container.ShredderContainer;
 import pcl.openprinter.tileentity.PrinterTE;
-import pcl.openprinter.tileentity.ShredderContainer;
 import pcl.openprinter.tileentity.ShredderTE;
 
 public class ShredderGUI extends GuiContainer {

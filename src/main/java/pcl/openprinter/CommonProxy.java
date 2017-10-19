@@ -3,7 +3,7 @@
  */
 package pcl.openprinter;
 
-import pcl.openprinter.tileentity.PrinterContainer;
+import pcl.openprinter.container.PrinterContainer;
 import pcl.openprinter.tileentity.PrinterTE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

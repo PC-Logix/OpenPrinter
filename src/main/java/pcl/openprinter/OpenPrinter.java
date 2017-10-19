@@ -53,17 +53,6 @@ public class OpenPrinter {
 
 		PacketHandler.init();
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
-
-		if ((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient() && cfg.enableMUD) {
-			logger.info("Registering mod with OpenUpdater");
-			try {
-				Class.forName("pcl.mud.OpenUpdater").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null, FMLCommonHandler.instance().findContainerFor(this),
-						new URL("http://PC-Logix.com/OpenPrinter/get_latest_build.php?mcver=1.7.10"),
-						new URL("http://PC-Logix.com/OpenPrinter/changelog.php?mcver=1.7.10"));
-			} catch (Throwable e) {
-				logger.info("OpenUpdater is not installed, not registering.");
-			}
-		}
 		ContentRegistry.registerAll(event);
 		proxy.registerItemRenderers();
 	}

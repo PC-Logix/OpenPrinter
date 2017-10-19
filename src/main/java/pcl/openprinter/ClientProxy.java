@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import pcl.openprinter.CommonProxy;
-import pcl.openprinter.tileentity.PrinterContainer;
+import pcl.openprinter.container.PrinterContainer;
 import pcl.openprinter.tileentity.PrinterTE;
 
 public class ClientProxy extends CommonProxy {

@@ -1,9 +1,10 @@
-package pcl.openprinter.tileentity;
+package pcl.openprinter.container;
 
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.gui.FileCabinetSlot;
 import pcl.openprinter.items.FolderInventory;
 import pcl.openprinter.items.PrintedPage;
+import pcl.openprinter.tileentity.FileCabinetTE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
