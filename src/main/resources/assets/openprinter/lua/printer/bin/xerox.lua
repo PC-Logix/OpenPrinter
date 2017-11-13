@@ -27,8 +27,8 @@ if amt > 9 then
 end
  
 local pageTitle, lines = printer.scan()
-printer.setTitle(pageTitle)
 for cnt = 1,amt do
+	printer.setTitle(pageTitle)
 	for x = 0,#lines do
 		printer.writeln(lines[x])
 	end
