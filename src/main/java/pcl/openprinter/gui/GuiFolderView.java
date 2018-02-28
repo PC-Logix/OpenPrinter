@@ -96,7 +96,7 @@ public class GuiFolderView extends GuiScreen {
 		GL11.glPushMatrix();
 		GL11.glTranslated(this.width / 2 + 92, this.height / 2 - 106, 0);
 		GL11.glRotated(90, 0, 0, 1);
-		mc.fontRendererObj.drawString(limit(name,14), 0, 0, 0x000000);
+		mc.fontRenderer.drawString(limit(name,14), 0, 0, 0x000000);
 		GL11.glPopMatrix();
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("ItemInventory", Constants.NBT.TAG_LIST)) {
 			NBTTagList ItemInventory = stack.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
@@ -106,7 +106,7 @@ public class GuiFolderView extends GuiScreen {
 			GL11.glTranslated(this.width / 2 + 12, this.height / 2 - 114, 0);
 			GL11.glScaled(0.9, 0.9, 0);
 			if (this.pageCount > 0)
-				mc.fontRendererObj.drawString("Page " + (this.currPage + 1) + " Of " + this.pageCount, 0, 0, 0x000000);
+				mc.fontRenderer.drawString("Page " + (this.currPage + 1) + " Of " + this.pageCount, 0, 0, 0x000000);
 			GL11.glPopMatrix();
 			
 			if (this.currPage <= 0)
@@ -130,14 +130,14 @@ public class GuiFolderView extends GuiScreen {
 						Integer color = Integer.parseInt(parts[1]);
 						String alignment = parts[2];
 						if (alignment.equalsIgnoreCase("center")) {
-							mc.fontRendererObj.drawString(parts[0], width/2 - mc.fontRendererObj.getStringWidth(parts[0])/2, height / 2 - offset, color);
+							mc.fontRenderer.drawString(parts[0], width/2 - mc.fontRenderer.getStringWidth(parts[0])/2, height / 2 - offset, color);
 						} else {
-							mc.fontRendererObj.drawString(parts[0] , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
+							mc.fontRenderer.drawString(parts[0] , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
 						}
 						offset = offset - 10;	
 					}
 				} else {
-					drawCenteredString(mc.fontRendererObj, stack.getTagCompound().getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
+					drawCenteredString(mc.fontRenderer, stack.getTagCompound().getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
 					String output = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("line"+l);
 					Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
 					if (outleng > 30) {
@@ -146,9 +146,9 @@ public class GuiFolderView extends GuiScreen {
 					Integer color = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getInteger("color"+l);
 					String alignment = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("alignment"+l);
 					if (alignment.equalsIgnoreCase("center")) {
-						mc.fontRendererObj.drawString(output, width/2 - mc.fontRendererObj.getStringWidth(output)/2, height / 2 - offset, color);
+						mc.fontRenderer.drawString(output, width/2 - mc.fontRenderer.getStringWidth(output)/2, height / 2 - offset, color);
 					} else {
-						mc.fontRendererObj.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
+						mc.fontRenderer.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
 					}
 					offset = offset - 10;
 				}
@@ -199,9 +199,9 @@ public class GuiFolderView extends GuiScreen {
 			this.x = x;
 			this.y = y;
 		}
-
+		
 		@Override
-		public void drawButton(Minecraft mc, int x, int y) {
+		public void drawButton(Minecraft mc, int x, int y, float partialTicks) {
 			if (this.visible) {
 				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				mc.getTextureManager().bindTexture(folderView);

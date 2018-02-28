@@ -19,7 +19,7 @@ public class ClientProxy extends CommonProxy {
 	public void registerItemRenderers() {
 		registerBlockItem(ContentRegistry.printerBlock, 0, "printer");
 		registerBlockItem(ContentRegistry.shredderBlock, 0, "shredder");
-		registerBlockItem(ContentRegistry.fileCabinetBlock, 0, "file_cabinet");
+		registerBlockItem(ContentRegistry.fileCabinetBlock, 0, "filecabinet");
 		registerItem(ContentRegistry.printedPage, "printed_page");
 		registerItem(ContentRegistry.printerInkBlack, "printer_ink_black");
 		registerItem(ContentRegistry.printerInkColor, "printer_ink_color");

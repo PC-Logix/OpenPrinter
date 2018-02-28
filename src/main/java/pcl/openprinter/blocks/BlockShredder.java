@@ -58,7 +58,7 @@ public class BlockShredder extends BlockContainer {
 		for (int i1 = 0; i1 < chest.getSizeInventory(); ++i1) {
 			ItemStack itemstack = chest.getStackInSlot(i1);
 
-			if (itemstack != null) {
+			if (!itemstack.isEmpty()) {
 				float offsetX = random.nextFloat() * 0.8F + 0.1F;
 				float offsetY = random.nextFloat() * 0.8F + 0.1F;
 				float offsetZ = random.nextFloat() * 0.8F + 0.1F;
@@ -70,15 +70,16 @@ public class BlockShredder extends BlockContainer {
 						stackSize = itemstack.getCount();
 
 					itemstack.setCount(itemstack.getCount() - stackSize);
-					entityitem = new EntityItem(world, (double)((float)xCoord + offsetX), (double)((float)yCoord + offsetY), (double)((float)zCoord + offsetZ), new ItemStack(itemstack.getItem(), stackSize, itemstack.getItemDamage()));
+					ItemStack stack = new ItemStack(itemstack.getItem(), stackSize, itemstack.getItemDamage());
+					if(itemstack.hasTagCompound()){
+						stack.setTagCompound(itemstack.getTagCompound().copy());
+					}
+					entityitem = new EntityItem(world, (double)((float)xCoord + offsetX), (double)((float)yCoord + offsetY), (double)((float)zCoord + offsetZ), stack);
 
 					float velocity = 0.05F;
 					entityitem.motionX = (double)((float)random.nextGaussian() * velocity);
 					entityitem.motionY = (double)((float)random.nextGaussian() * velocity + 0.2F);
 					entityitem.motionZ = (double)((float)random.nextGaussian() * velocity);
-
-					if (itemstack.hasTagCompound())
-						entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
 				}
 			}
 		}

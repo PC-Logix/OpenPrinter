@@ -19,7 +19,7 @@ public class GUIFolderMessageHandlerServer implements IMessageHandler<MessageGUI
 	     for (WorldServer s : ws) {
 	       if (s.provider.getDimension() == message.dim) {
 	         targetWorld = s;
-	         ctx.getServerHandler().playerEntity.getHeldItemMainhand().setStackDisplayName(message.folderName);
+	         ctx.getServerHandler().player.getHeldItemMainhand().setStackDisplayName(message.folderName);
 	       }
 	     }
 		return null;

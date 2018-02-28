@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "openprinter:items/PrinterInkBlack"
+        "layer0": "openprinter:items/printer_paper_roll"
     },
     "display": {
         "thirdperson": {

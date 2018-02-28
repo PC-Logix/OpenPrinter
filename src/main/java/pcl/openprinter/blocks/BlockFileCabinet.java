@@ -68,15 +68,18 @@ public class BlockFileCabinet extends BlockContainer {
 						stackSize = itemstack.getCount();
 
 					itemstack.setCount(itemstack.getCount() - stackSize);
-					entityitem = new EntityItem(world, (double)((float)xCoord + offsetX), (double)((float)yCoord + offsetY), (double)((float)zCoord + offsetZ), new ItemStack(itemstack.getItem(), stackSize, itemstack.getItemDamage()));
+					ItemStack stack = new ItemStack(itemstack.getItem(), stackSize, itemstack.getItemDamage());
+					
+					if (itemstack.hasTagCompound())
+						stack.setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+					
+					entityitem = new EntityItem(world, (double)((float)xCoord + offsetX), (double)((float)yCoord + offsetY), (double)((float)zCoord + offsetZ), stack);
 
 					float velocity = 0.05F;
 					entityitem.motionX = (double)((float)random.nextGaussian() * velocity);
 					entityitem.motionY = (double)((float)random.nextGaussian() * velocity + 0.2F);
 					entityitem.motionZ = (double)((float)random.nextGaussian() * velocity);
 
-					if (itemstack.hasTagCompound())
-						entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
 				}
 			}
 		}
