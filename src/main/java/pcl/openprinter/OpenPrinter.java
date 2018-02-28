@@ -9,6 +9,8 @@ import java.net.URL;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import pcl.openprinter.gui.GUIHandler;
@@ -28,6 +30,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 @Mod(modid=OpenPrinter.MODID, name="OpenPrinter", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "required-after:OpenComputers@[1.4.0,)")
@@ -47,10 +51,15 @@ public class OpenPrinter {
 	public static final Logger  logger  = LogManager.getFormatterLogger(MODID);
 
 	public static CreativeTabs CreativeTab = new CreativeTab("OpenPrinter");
-
+	
+	private static ContentRegistry contentRegistry = new ContentRegistry();
+	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-
+		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(contentRegistry);
+		
+		FMLCommonHandler.instance().bus().register(this);
 		PacketHandler.init();
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
 
@@ -64,16 +73,19 @@ public class OpenPrinter {
 				logger.info("OpenUpdater is not installed, not registering.");
 			}
 		}
-		ContentRegistry.preInit();
+		contentRegistry.preInit();
+	}
+	
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onRegisterModels(ModelRegistryEvent event) {
 		proxy.registerItemRenderers();
+		proxy.registerRenderers();
 	}
 
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		ContentRegistry.init();
-		proxy.registerRenderers();
-		FMLCommonHandler.instance().bus().register(this);
 		NetworkRegistry.INSTANCE.registerGuiHandler(OpenPrinter.instance, new GUIHandler());
 	}
 	
@@ -82,7 +94,7 @@ public class OpenPrinter {
 		if (event.crafting.getItem() instanceof PrinterPaperRoll) {
 			for (int i = 0; i < event.craftMatrix.getSizeInventory(); i++) {
 				ItemStack item = event.craftMatrix.getStackInSlot(i);
-				if (item != null)
+				if (!item.isEmpty())
 					event.craftMatrix.setInventorySlotContents(i, new ItemStack(item.getItem(), 1, item.getItemDamage()));
 			}
 		}

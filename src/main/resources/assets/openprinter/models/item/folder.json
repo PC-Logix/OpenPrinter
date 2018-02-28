@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "openprinter:items/folderEmpty"
+        "layer0": "openprinter:items/folder_empty"
     },
     "display": {
         "thirdperson": {

@@ -21,7 +21,7 @@ public class PrinterInkBlack extends Item {
 		maxStackSize = 1;
 		this.setMaxDamage(OpenPrinter.cfg.printerInkUse);
 		setNoRepair();
-		setUnlocalizedName("printerInkBlack");
+		setUnlocalizedName("printer_ink_black");
 		//setTextureName("openprinter:PrinterInkBlack");
 		setCreativeTab(OpenPrinter.CreativeTab);
 	}

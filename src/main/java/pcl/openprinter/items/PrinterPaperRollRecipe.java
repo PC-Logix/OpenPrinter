@@ -10,10 +10,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
-import pcl.openprinter.ContentRegistry;
-import pcl.openprinter.OpenPrinter;
 
-public class PrinterPaperRollRecipe implements IRecipe
+import net.minecraftforge.registries.IForgeRegistryEntry;
+
+import pcl.openprinter.ContentRegistry;
+
+public class PrinterPaperRollRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe
 {
     @Override
     public boolean matches (InventoryCrafting inventory, World world) {
@@ -48,10 +50,10 @@ public class PrinterPaperRollRecipe implements IRecipe
     public ItemStack getCraftingResult (InventoryCrafting inventory) {
         return new ItemStack(ContentRegistry.printerPaperRoll, 1);
     }
-
+    
     @Override
-    public int getRecipeSize () {
-        return 9;
+    public boolean canFit(int width, int height) {
+        return width >= 3 && height >= 3;
     }
 
     @Override
@@ -61,7 +63,6 @@ public class PrinterPaperRollRecipe implements IRecipe
 
 	@Override
 	public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-		// TODO Auto-generated method stub
 		return NonNullList.create();
 	}
 }

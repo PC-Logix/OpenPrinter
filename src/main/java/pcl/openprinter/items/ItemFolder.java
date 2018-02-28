@@ -15,7 +15,7 @@ public class ItemFolder extends Item {
 	public ItemFolder() {
 		super();
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setUnlocalizedName("filefolder");
+		//setUnlocalizedName("folder");
 	}
 	
 	@Override

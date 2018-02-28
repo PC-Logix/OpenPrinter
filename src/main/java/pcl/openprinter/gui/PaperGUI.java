@@ -83,9 +83,9 @@ public class PaperGUI extends GuiScreen {
 					Integer color = Integer.parseInt(parts[1]);
 					String alignment = parts[2];
 					if (alignment.equalsIgnoreCase("center")) {
-						mc.fontRendererObj.drawString(parts[0], width/2 - mc.fontRendererObj.getStringWidth(parts[0])/2, height / 2 - offset, color);
+						mc.fontRenderer.drawString(parts[0], width/2 - mc.fontRenderer.getStringWidth(parts[0])/2, height / 2 - offset, color);
 					} else {
-						mc.fontRendererObj.drawString(parts[0] , width/2 , height / 2 - offset, color);
+						mc.fontRenderer.drawString(parts[0] , width/2 , height / 2 - offset, color);
 					}
 					offset = offset - 10;	
 				}
@@ -93,7 +93,7 @@ public class PaperGUI extends GuiScreen {
 		} else {
 			final int xSizeOfTexture = 171;
 			final int ySizeOfTexture = 208;
-			final ResourceLocation theTexture = new ResourceLocation("openprinter", "textures/gui/printerPaper.png");
+			final ResourceLocation theTexture = new ResourceLocation("openprinter", "textures/gui/printer_paper.png");
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			this.mc.renderEngine.bindTexture(theTexture);
 
@@ -115,9 +115,9 @@ public class PaperGUI extends GuiScreen {
 							Integer color = Integer.parseInt(parts[1]);
 							String alignment = parts[2];
 							if (alignment.equalsIgnoreCase("center")) {
-								mc.fontRendererObj.drawString(parts[0], width/2 - mc.fontRendererObj.getStringWidth(parts[0])/2, height / 2 - offset, color);
+								mc.fontRenderer.drawString(parts[0], width/2 - mc.fontRenderer.getStringWidth(parts[0])/2, height / 2 - offset, color);
 							} else {
-								mc.fontRendererObj.drawString(parts[0] , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
+								mc.fontRenderer.drawString(parts[0] , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
 							}
 							offset = offset - 10;	
 						}
@@ -133,15 +133,15 @@ public class PaperGUI extends GuiScreen {
 						Integer color = stack.getTagCompound().getInteger("color"+x);
 						String alignment = stack.getTagCompound().getString("alignment"+x);
 						if (alignment.equalsIgnoreCase("center")) {
-							mc.fontRendererObj.drawString(output, width/2 - mc.fontRendererObj.getStringWidth(output)/2, height / 2 - offset, color);
+							mc.fontRenderer.drawString(output, width/2 - mc.fontRenderer.getStringWidth(output)/2, height / 2 - offset, color);
 						} else {
-							mc.fontRendererObj.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
+							mc.fontRenderer.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
 						}
 						offset = offset - 10;
 					}				
 				}
 			} else {
-				mc.fontRendererObj.drawString("This page intentionally left blank.", width/2 - mc.fontRendererObj.getStringWidth("This page intentionally left blank.")/2, height / 2 - offset, 0x000000);
+				mc.fontRenderer.drawString("This page intentionally left blank.", width/2 - mc.fontRenderer.getStringWidth("This page intentionally left blank.")/2, height / 2 - offset, 0x000000);
 			}
 		}
 		super.drawScreen(i, j, f);

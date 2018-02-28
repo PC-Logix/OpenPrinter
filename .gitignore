@@ -87,3 +87,9 @@ pip-log.txt
 *.lnk
 output.txt
 /bin
+
+#IntelliJ IDEA
+/out/
+*.iml
+*.ipr
+*.iws

@@ -29,7 +29,7 @@ public class ShredderGUI extends GuiContainer {
 
         @Override
         protected void drawGuiContainerForegroundLayer(int param1, int param2) {
-        	mc.fontRendererObj.drawString(I18n.translateToLocal("gui.string.shredder"), 65, 4, 4210752);
+        	mc.fontRenderer.drawString(I18n.translateToLocal("gui.string.shredder"), 65, 4, 4210752);
         }
 
         @Override

@@ -3,6 +3,8 @@
  */
 package pcl.openprinter.tileentity;
 
+import java.util.Arrays;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
@@ -13,6 +15,9 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.translation.I18n;
+
 import pcl.openprinter.items.PrintedPage;
 
 /**
@@ -28,6 +33,10 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 	private static final int[] slots_bottom = new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
 	private static final int[] slots_sides = new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18};
 
+	public FileCabinetTE(){
+		Arrays.fill(fileCabinetItemStacks, ItemStack.EMPTY);
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
 	{
@@ -53,13 +62,11 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 		NBTTagList var2 = new NBTTagList();
 		for (int var3 = 0; var3 < this.fileCabinetItemStacks.length; ++var3)
 		{
-			if (this.fileCabinetItemStacks[var3] != null)
-			{
+
 				NBTTagCompound var4 = new NBTTagCompound();
 				var4.setByte("Slot", (byte)var3);
 				this.fileCabinetItemStacks[var3].writeToNBT(var4);
 				var2.appendTag(var4);
-			}
 		}
 		par1NBTTagCompound.setTag("Items", var2);
 		
@@ -78,9 +85,6 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
 		readFromNBT(packet.getNbtCompound());
 	}
-
-
-	public FileCabinetTE() { }
 
 	@Override
 	public int getSizeInventory() {
@@ -104,7 +108,7 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 	@Override
 	public ItemStack decrStackSize(int slot, int amt) {
 		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			if (stack.getCount() <= amt) {
 				setInventorySlotContents(slot, ItemStack.EMPTY);
 			} else {
@@ -119,7 +123,7 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 
 	public void incStackSize(int i, int amt) {
 
-		if(fileCabinetItemStacks[i] == null)
+		if(fileCabinetItemStacks[i].isEmpty())
 			return;
 		else if(fileCabinetItemStacks[i].getCount() + amt > fileCabinetItemStacks[i].getMaxStackSize())
 			fileCabinetItemStacks[i].setCount(fileCabinetItemStacks[i].getMaxStackSize());
@@ -129,7 +133,7 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 
 	@Override
 	public ItemStack removeStackFromSlot(int i) {
-		if (getStackInSlot(i) != null)
+		if (!getStackInSlot(i).isEmpty())
 		{
 			ItemStack var2 = getStackInSlot(i);
 			setInventorySlotContents(i,ItemStack.EMPTY);
@@ -137,14 +141,14 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 		}
 		else
 		{
-			return null;
+			return ItemStack.EMPTY;
 		}
 	}
 
 	@Override
 	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		this.fileCabinetItemStacks[i] = itemstack;
-		if (itemstack != null && itemstack.getCount() > this.getInventoryStackLimit())
+		if (!itemstack.isEmpty() && itemstack.getCount() > this.getInventoryStackLimit())
 		{
 			itemstack.setCount(this.getInventoryStackLimit());
 		}
@@ -223,7 +227,6 @@ public class FileCabinetTE extends TileEntity implements IInventory {
 
 	@Override
 	public ITextComponent getDisplayName() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TextComponentString(I18n.translateToLocal("gui.string.filecabinet"));
 	}
 }

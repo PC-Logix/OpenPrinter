@@ -47,7 +47,7 @@ public class GuiFolderInventory extends GuiContainer {
 	{
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
-		this.text = new GuiTextField(1, this.fontRendererObj, this.width / 2 - 68, this.height/2-78, 137, 10);
+		this.text = new GuiTextField(1, this.fontRenderer, this.width / 2 - 68, this.height/2-78, 137, 10);
 		text.setMaxStringLength(203);
 		text.setText("Name");
 		String s = this.inventory.hasCustomName() ? this.inventory.getName() : I18n.translateToLocal(this.inventory.getName());
@@ -173,7 +173,7 @@ public class GuiFolderInventory extends GuiContainer {
 		entity.prevRotationYawHead = entity.rotationYaw;
 		GL11.glTranslated(0.0F, entity.getYOffset(), 0.0F);
 		Minecraft.getMinecraft().getRenderManager().playerViewY = 180.0F;
-		Minecraft.getMinecraft().getRenderManager().doRenderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+		Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entity).doRender(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
 		entity.renderYawOffset = f2;
 		entity.rotationYaw = f3;
 		entity.rotationPitch = f4;

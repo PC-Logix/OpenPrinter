@@ -28,10 +28,10 @@ public class PrinterGUI extends GuiContainer {
         	super.drawGuiContainerForegroundLayer(x, y);
         	GL11.glEnable(GL11.GL_ALPHA_TEST);
         	//the parameters for drawString are: string, x, y, color
-        	mc.fontRendererObj.drawSplitString(I18n.translateToLocal("gui.string.blackInk"), 25, 25, 40, 0x404040);
-        	mc.fontRendererObj.drawSplitString(I18n.translateToLocal("gui.string.colorInk"), 55, 25, 40, 0x404040);
-        	mc.fontRendererObj.drawSplitString(I18n.translateToLocal("gui.string.paperInput"), 125, 25, 40, 0x404040);
-        	mc.fontRendererObj.drawString(I18n.translateToLocal("gui.string.scannerInput"), 70, 4, 0x404040);
+        	mc.fontRenderer.drawSplitString(I18n.translateToLocal("gui.string.blackInk"), 25, 25, 40, 0x404040);
+        	mc.fontRenderer.drawSplitString(I18n.translateToLocal("gui.string.colorInk"), 55, 25, 40, 0x404040);
+        	mc.fontRenderer.drawSplitString(I18n.translateToLocal("gui.string.paperInput"), 125, 25, 40, 0x404040);
+        	mc.fontRenderer.drawString(I18n.translateToLocal("gui.string.scannerInput"), 70, 4, 0x404040);
         }
 
         @Override

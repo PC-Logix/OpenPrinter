@@ -4,6 +4,7 @@
 package pcl.openprinter.tileentity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.translation.I18n;
+
 import pcl.openprinter.ContentRegistry;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.items.PrintedPage;
@@ -55,6 +59,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 		if (this.node() != null) {
 			initOCFilesystem();
 		}
+		Arrays.fill(printerItemStacks, ItemStack.EMPTY);
 	}
 
 	private String getComponentName() {
@@ -176,13 +181,10 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 		NBTTagList var2 = new NBTTagList();
 		for (int var3 = 0; var3 < this.printerItemStacks.length; ++var3)
 		{
-			if (this.printerItemStacks[var3] != null)
-			{
 				NBTTagCompound var4 = new NBTTagCompound();
 				var4.setByte("Slot", (byte)var3);
 				this.printerItemStacks[var3].writeToNBT(var4);
 				var2.appendTag(var4);
-			}
 		}
 		nbt.setTag("Items", var2);
 		return nbt;
@@ -277,10 +279,10 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 		boolean markColor = false;
 		boolean markBlack = false;
 		for (int i = 0; i < copies; i++) {
-			if((getStackInSlot(0) != null && getStackInSlot(1) != null)) { //No color ink
-				if(getStackInSlot(2) != null) { //No paper
+			if((!getStackInSlot(0).isEmpty() && !getStackInSlot(1).isEmpty())) { //No color ink
+				if(!getStackInSlot(2).isEmpty()) { //No paper
 					for (int x = 3; x <= 12; x++) { //Loop the 9 output slots checking for a empty one
-						if (getStackInSlot(x) == null) { //The slot is empty lets make us a new page
+						if (getStackInSlot(x).isEmpty()) { //The slot is empty lets make us a new page
 							printerItemStacks[x] = new ItemStack(ContentRegistry.printedPage);
 							printerItemStacks[x].setTagCompound(new NBTTagCompound());
 							if(pageTitle != "") {
@@ -316,7 +318,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 							if (getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
 								getStackInSlot(2).setItemDamage(getStackInSlot(2).getItemDamage() + 1);
 								if(getStackInSlot(2).getItemDamage() >= getStackInSlot(2).getMaxDamage()) {
-									setInventorySlotContents(2, null);
+									setInventorySlotContents(2, ItemStack.EMPTY);
 								}
 							} else {
 								decrStackSize(2, 1);
@@ -324,13 +326,13 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 							if (markColor) {
 								getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + colorUses++);
 								if(getStackInSlot(1).getItemDamage() >= getStackInSlot(1).getMaxDamage()) {
-									setInventorySlotContents(1, null);
+									setInventorySlotContents(1, ItemStack.EMPTY);
 								}
 							}
 							if (markBlack) {
 								getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + blackUses);
 								if(getStackInSlot(0).getItemDamage() >= getStackInSlot(0).getMaxDamage()) {
-									setInventorySlotContents(0, null);
+									setInventorySlotContents(0, ItemStack.EMPTY);
 								}
 							}
 							return new Object[] { true };
@@ -456,7 +458,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 	@Override
 	public ItemStack decrStackSize(int slot, int amt) {
 		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
+		if (!stack.isEmpty()) {
 			if (stack.getCount() <= amt) {
 				setInventorySlotContents(slot, ItemStack.EMPTY);
 			} else {
@@ -479,7 +481,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 		}
 		else
 		{
-			return null;
+			return ItemStack.EMPTY;
 		}
 	}
 
@@ -556,7 +558,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 	@Override
 	public ITextComponent getDisplayName() {
 		// TODO Auto-generated method stub
-		return null;
+		return new TextComponentString(I18n.translateToLocal("gui.string.printer"));
 	}
 
 	@Override
