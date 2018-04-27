@@ -23,7 +23,9 @@ public class MessageGUIFolder implements IMessage {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		this.folderNameLength = buf.readInt();
-		this.folderName = new String(buf.readBytes(this.folderNameLength).array());
+		byte[] stringBuffer = new byte[this.folderNameLength];
+		buf.readBytes(stringBuffer);
+		this.folderName = new String(stringBuffer);
 	}
 
 	@Override

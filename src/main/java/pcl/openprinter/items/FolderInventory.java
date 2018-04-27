@@ -3,6 +3,8 @@
  */
 package pcl.openprinter.items;
 
+import java.util.Arrays;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -36,6 +38,7 @@ public class FolderInventory implements IInventory {
 	 */
 	public FolderInventory(ItemStack stack)
 	{
+		Arrays.fill(inventory, ItemStack.EMPTY);
 		invItem = stack;
 		this.stack = stack;
 
@@ -123,7 +126,7 @@ public class FolderInventory implements IInventory {
 	{
 		inventory[slot] = stack;
 
-		if (stack != null && !stack.isEmpty() && stack.getCount() > getInventoryStackLimit())
+		if (!stack.isEmpty() && stack.getCount() > getInventoryStackLimit())
 		{
 			stack.setCount(getInventoryStackLimit());
 		}
@@ -164,8 +167,8 @@ public class FolderInventory implements IInventory {
 	public void markDirty() {
 		for (int i = 0; i < getSizeInventory(); ++i)
 		{
-			if (getStackInSlot(i) != null && getStackInSlot(i).getCount() == 0) {
-				inventory[i] = null;
+			if (!getStackInSlot(i).isEmpty() && getStackInSlot(i).getCount() == 0) {
+				inventory[i] = ItemStack.EMPTY;
 			}
 		}
 
@@ -228,7 +231,7 @@ public class FolderInventory implements IInventory {
 		for (int i = 0; i < getSizeInventory(); ++i)
 		{
 			// Only write stacks that contain items
-			if (getStackInSlot(i) != null)
+			if (!getStackInSlot(i).isEmpty())
 			{
 				// Make a new NBT Tag Compound to write the itemstack and slot index to
 				NBTTagCompound item = new NBTTagCompound();
