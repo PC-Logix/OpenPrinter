@@ -35,8 +35,8 @@ public class GuiFolderView extends GuiScreen {
 	private GuiFolderView.NextPageButton buttonNextPage;
 	private GuiFolderView.NextPageButton buttonPreviousPage;
 
-	public final static ResourceLocation folderView = new ResourceLocation("openprinter", "textures/gui/folderView.png");
-	public final static ResourceLocation folderViewEmpty = new ResourceLocation("openprinter", "textures/gui/folderViewEmpty.png");
+	public final static ResourceLocation folderView = new ResourceLocation("openprinter", "textures/gui/folder_view.png");
+	public final static ResourceLocation folderViewEmpty = new ResourceLocation("openprinter", "textures/gui/folder_view_empty.png");
 	
 	public static String limit(String value, int length)
 	{
