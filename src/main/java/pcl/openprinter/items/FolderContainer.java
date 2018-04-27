@@ -116,7 +116,7 @@ public class FolderContainer extends Container {
 	public ItemStack slotClick(int slot, int button, ClickType clickTypeIn, EntityPlayer player) {
 		// this will prevent the player from interacting with the item that opened the inventory:
 		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItemMainhand()) {
-			return null;
+			return ItemStack.EMPTY;
 		}
 		return super.slotClick(slot, button, clickTypeIn, player);
 	}
