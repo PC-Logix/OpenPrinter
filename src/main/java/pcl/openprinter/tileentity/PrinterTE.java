@@ -366,10 +366,11 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 		if (args.count() == 3){
 			if (args.isInteger(1)) {
 				color = args.checkInteger(1);
-			} else if (args.isString(2)) {
+			}
+			if (args.isString(2)) {
 				alignment = args.checkString(2);
 			}
-		} 
+		}
 
 		lines.add(args.checkString(0));
 		colors.add(color);
