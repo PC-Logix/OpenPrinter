@@ -32,6 +32,12 @@ public class FileCabinetGUI extends GuiContainer {
 		}
 	}
 
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		this.drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		this.renderHoveredToolTip(mouseX, mouseY);
+	}
+
 	@Override
 	protected void drawGuiContainerForegroundLayer(int param1, int param2) {
 		if (name.length() > 0) {
