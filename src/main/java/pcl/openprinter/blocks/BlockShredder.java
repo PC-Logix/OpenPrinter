@@ -104,7 +104,12 @@ public class BlockShredder extends BlockContainer {
 		EnumFacing facing = EnumFacing.getHorizontal(meta);
 		return this.getDefaultState().withProperty(PROPERTYFACING, facing);
 	}
-	
+
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+		return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand).withProperty(PROPERTYFACING, placer.getHorizontalFacing());
+	}
+
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
