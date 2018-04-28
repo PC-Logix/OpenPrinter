@@ -1,5 +1,6 @@
 package pcl.openprinter;
 
+import net.minecraft.init.Blocks;
 import pcl.openprinter.blocks.BlockFileCabinet;
 import pcl.openprinter.blocks.BlockPrinter;
 import pcl.openprinter.blocks.BlockShredder;
@@ -106,6 +107,7 @@ public class ContentRegistry {
 	public void registerRecipes(RegistryEvent.Register<IRecipe> event) {
 		ItemStack redstone		= new ItemStack(Items.REDSTONE);
 		ItemStack shears		= new ItemStack(Items.SHEARS);
+		ItemStack chest			= new ItemStack(Blocks.CHEST);
 		ItemStack microchip		= li.cil.oc.api.Items.get("chip1").createItemStack(1);
 		ItemStack pcb			= li.cil.oc.api.Items.get("printedcircuitboard").createItemStack(1);
 		String blackInk			= "dyeBlack";
@@ -127,6 +129,12 @@ public class ContentRegistry {
 				"ISI",
 				"IRI",
 				'I', "nuggetIron", 'R', redstone, 'S', shears).setRegistryName(OpenPrinter.MODID,"shredder"));
+
+		event.getRegistry().register(new ShapedOreRecipe(fileCabinetBlock.getRegistryName(), new ItemStack(fileCabinetBlock, 1),
+				"I I",
+				"ICI",
+				"I I",
+				'I', "nuggetIron", 'C', chest).setRegistryName(OpenPrinter.MODID,"filecabinet"));
 		
 		event.getRegistry().register(new ShapedOreRecipe(printerInkBlack.getRegistryName(), new ItemStack(printerInkBlack, 1),
 				"BBB",
