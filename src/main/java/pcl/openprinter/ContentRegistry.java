@@ -102,7 +102,8 @@ public class ContentRegistry {
 		return block.setUnlocalizedName(name).setRegistryName("openprinter:" + name);
 	}
 	
-	
+
+	//todo: make json recipes
 	@SubscribeEvent
 	public void registerRecipes(RegistryEvent.Register<IRecipe> event) {
 		ItemStack redstone		= new ItemStack(Items.REDSTONE);
