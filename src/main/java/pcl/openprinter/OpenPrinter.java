@@ -6,6 +6,10 @@ package pcl.openprinter;
  */
 import java.net.URL;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.Item;
+import net.minecraftforge.client.model.ModelLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,9 +50,6 @@ public class OpenPrinter {
 	@Instance(value = MODID)
 	public static OpenPrinter instance;
 
-	@SidedProxy(clientSide="pcl.openprinter.ClientProxy", serverSide="pcl.openprinter.CommonProxy")
-	public static CommonProxy proxy;
-
 	public static Config cfg = null;
 
 	private static boolean debug = true;
@@ -83,8 +84,27 @@ public class OpenPrinter {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onRegisterModels(ModelRegistryEvent event) {
-		proxy.registerItemRenderers();
-		proxy.registerRenderers();
+		registerBlockModel(ContentRegistry.printerBlock, 0, "printer");
+		registerBlockModel(ContentRegistry.shredderBlock, 0, "shredder");
+		registerBlockModel(ContentRegistry.fileCabinetBlock, 0, "filecabinet");
+		registerItemModel(ContentRegistry.printedPage, "printed_page");
+		registerItemModel(ContentRegistry.printerInkBlack, "printer_ink_black");
+		registerItemModel(ContentRegistry.printerInkColor, "printer_ink_color");
+		registerItemModel(ContentRegistry.printerPaperRoll, "printer_paper_roll");
+		registerItemModel(ContentRegistry.shreddedPaper, "shredded_paper");
+		registerItemModel(ContentRegistry.folder, "folder");
+	}
+
+	@SideOnly(Side.CLIENT)
+	private static void registerBlockModel(final Block block, int meta, final String blockName) {
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(OpenPrinter.MODID + ":" + blockName.toLowerCase(), "inventory"));
+		OpenPrinter.logger.info("Registering " + blockName.toLowerCase() + " Item Renderer");
+	}
+
+	@SideOnly(Side.CLIENT)
+	private static void registerItemModel(final Item item, final String itemName) {
+		ModelLoader.setCustomModelResourceLocation(item,  0, new ModelResourceLocation(OpenPrinter.MODID + ":" + itemName.toLowerCase(), "inventory"));
+		OpenPrinter.logger.info("Registering " + itemName.toLowerCase() + " Item Renderer");
 	}
 
 	@EventHandler
