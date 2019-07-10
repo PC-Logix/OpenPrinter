@@ -1,9 +1,6 @@
 package pcl.openprinter.tileentity;
 
-import pcl.openprinter.gui.PrintedPaperSlot;
-import pcl.openprinter.gui.PrinterInkBlackSlot;
-import pcl.openprinter.gui.PrinterInkColorSlot;
-import pcl.openprinter.gui.PrinterPaperSlot;
+import pcl.openprinter.gui.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -49,7 +46,7 @@ public class PrinterContainer extends Container{
             	outputSlots.add(addSlotToContainer(new Slot(tileEntity, i, 8 + i * 18 - 54, 87)));
             }
             
-            scanSlot = addSlotToContainer(new PrintedPaperSlot(tileEntity, 13, 94, 17));
+            scanSlot = addSlotToContainer(new ScannerSlot(tileEntity, 13, 94, 17));
             
             //commonly used vanilla code that adds the player's inventory
             bindPlayerInventory(inventoryPlayer);

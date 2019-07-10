@@ -3,11 +3,7 @@
  */
 package pcl.openprinter.tileentity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,23 +23,31 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemWritableBook;
+import net.minecraft.item.ItemWrittenBook;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.datafix.fixes.BookPagesStrictJSON;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.translation.I18n;
 
 import pcl.openprinter.ContentRegistry;
 import pcl.openprinter.OpenPrinter;
+import pcl.openprinter.books.BiblioCraftBigBook;
+import pcl.openprinter.books.VanillaBook;
 import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
+import scala.Int;
 
 /**
  * @author Caitlyn
@@ -218,27 +222,48 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 		} else {
 			return new Object[] { false };
 		}
-
-
 	}
 
 	@Callback
 	public Object[] scan(Context context, Arguments args) {
-		ItemStack scannedPage = getStackInSlot(13);
+		ItemStack scannerInput = getStackInSlot(13);
+
+		if (scannerInput.getItem() instanceof PrintedPage) {
+			return readPrintedPage(scannerInput);
+		}
+
+		return new Object[] { false };
+	}
+
+	@Callback
+	public Object[] scanBook(Context context, Arguments args) {
+		ItemStack scannerInput = getStackInSlot(13);
+
+		if (scannerInput.getItem() instanceof ItemWritableBook || scannerInput.getItem() instanceof ItemWrittenBook) {
+			return new VanillaBook().readFromStack(scannerInput);
+		}
+		else if (scannerInput.getItem().getRegistryName().toString().equals("bibliocraft:bigbook"))
+			return new BiblioCraftBigBook().readFromStack(scannerInput);
+
+		return new Object[] { false };
+	}
+
+	private static Object[] readPrintedPage(ItemStack printedPage){
+		if(!printedPage.hasTagCompound())
+			return new Object[] { false, "page doesnt have nbt data"};
+
 		String outPageTitle = null;
 		Map<Integer, String> output = new HashMap<Integer, String>();
-		if (scannedPage.getItem() instanceof PrintedPage) {
-			if (scannedPage.getTagCompound().getString("pageTitle") != null) {
-				outPageTitle = scannedPage.getTagCompound().getString("pageTitle");
-			}
-			for (int x = 0; x <= 20; x++) {
-				if(scannedPage.hasTagCompound() && scannedPage.getTagCompound().hasKey("line"+x)) {
-					output.put(x, scannedPage.getTagCompound().getString("line"+x));					
-				}
-			}
-			return new Object[] { outPageTitle, output };
+
+		if (printedPage.getTagCompound().hasKey("pageTitle")) {
+			outPageTitle = printedPage.getTagCompound().getString("pageTitle");
 		}
-		return new Object[] { false };
+		for (int x = 0; x <= 20; x++) {
+			if(printedPage.getTagCompound().hasKey("line"+x)) {
+				output.put(x, printedPage.getTagCompound().getString("line"+x));
+			}
+		}
+		return new Object[] { outPageTitle, output };
 	}
 
 	@Callback
