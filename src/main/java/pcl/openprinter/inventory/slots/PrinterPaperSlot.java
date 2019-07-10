@@ -1,7 +1,6 @@
 package pcl.openprinter.inventory.slots;
 
 import pcl.openprinter.items.PrinterPaperRoll;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -15,28 +14,22 @@ public class PrinterPaperSlot extends Slot {
 	}
 	
 	@Override
-    public boolean isItemValid(ItemStack itemstack)
-    {
-
-            if (itemstack.getItem() instanceof PrinterPaperRoll)
-            {
-            	return true;
-            }
-            else if (itemstack.getItem().equals(Items.PAPER)) {
-            	return true;
-            }
-            else if (itemstack.getItem().equals(Items.NAME_TAG)) {
-                return true;
-            }
-            return false;
+    public boolean isItemValid(ItemStack itemstack) {
+        if (itemstack.getItem() instanceof PrinterPaperRoll) {
+            return true;
+        }
+        else if (itemstack.getItem().equals(Items.PAPER)) {
+            return true;
+        }
+        else if (itemstack.getItem().equals(Items.NAME_TAG)) {
+            return true;
+        }
+        return false;
     }
-    /**
-     * Called when the player picks up an item from an inventory slot
-     */
+
     @Override
-    public ItemStack onTake(EntityPlayer par1EntityPlayer, ItemStack par2ItemStack)
+    public int getSlotStackLimit()
     {
-            this.onCrafting(par2ItemStack);
-            return super.onTake(par1EntityPlayer, par2ItemStack);
+        return 1;
     }
 }
