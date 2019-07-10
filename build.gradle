@@ -17,6 +17,11 @@ plugins {
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
 
+compileJava.options.encoding = 'UTF-8'
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 def getGitRef() {
   try {
     def stdout = new ByteArrayOutputStream()
@@ -37,9 +42,9 @@ else if (System.getenv("BUILD_NUMBER") != null && System.getenv("BUILD_NUMBER") 
 else
     ext.buildNumber = "+" + getGitRef()
 
-version = "0.1.0"
-group = "pcl.openprinter"
-archivesBaseName = "OpenPrinter-1.12.2"
+version = modVersion
+group = modGroup
+archivesBaseName = modBaseName
 
 
 repositories {
@@ -50,13 +55,13 @@ repositories {
 }
 
 dependencies {
-    deobfCompile "li.cil.oc:OpenComputers:MC1.12.2-1.7.1.+"
+    deobfCompile "li.cil.oc:OpenComputers:${opencomputers_version}"
 }
 
 minecraft {
-    version = "1.12.2-14.23.2.2619"
+    version = "${minecraft_version}-${forge_version}"
     runDir = "run"
-    mappings = "snapshot_20180120"
+    mappings = mcp_version
     useDepAts = true
 	replace "@VERSION@", project.version
 	replace "@BUILD@", project.ext.buildNumber
@@ -72,9 +77,6 @@ jar.doFirst {
 //jar.classifier = "${ext.buildNumber}"
 
 
-def curseforge_key = 0
-def curse_changlog = "default"
-
 if (project.hasProperty('openprinter_curseforge_key')) {
 	curseforge_key = project.openprinter_curseforge_key
 	curse_changlog = project.changelog
@@ -83,8 +85,8 @@ if (project.hasProperty('openprinter_curseforge_key')) {
 curseforge {
 	apiKey = curseforge_key
 	project {
-		id = "225127"
-		//addGameVersion '1.10.2'
+		id = curseforge_id
+        //addGameVersion '1.10.2'
 		releaseType = "release"
 		changelog = curse_changlog
 	}
