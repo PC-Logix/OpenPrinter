@@ -1,6 +1,5 @@
 package pcl.openprinter.gui;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -14,19 +13,16 @@ import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.tileentity.PrinterContainer;
 import pcl.openprinter.tileentity.PrinterTE;
 
-public class PrinterGUI extends GuiContainer {
+public class PrinterGUI extends ContainerGUI {
 
         public PrinterGUI (InventoryPlayer inventoryPlayer, PrinterTE tileEntity) {
-                //the container is instanciated and passed to the superclass for handling
-                super(new PrinterContainer(inventoryPlayer, tileEntity));
-        		this.xSize = 175;
-        		this.ySize = 195;
+            //the container is instanciated and passed to the superclass for handling
+            super(new PrinterContainer(inventoryPlayer, tileEntity), 175, 195);
         }
 
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
-        this.renderHoveredToolTip(mouseX, mouseY);
     }
 
         @Override
