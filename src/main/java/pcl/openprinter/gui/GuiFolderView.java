@@ -3,6 +3,7 @@
  */
 package pcl.openprinter.gui;
 
+import net.minecraft.nbt.NBTTagCompound;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -37,18 +38,6 @@ public class GuiFolderView extends GuiScreen {
 
 	public final static ResourceLocation folderView = new ResourceLocation("openprinter", "textures/gui/folder_view.png");
 	public final static ResourceLocation folderViewEmpty = new ResourceLocation("openprinter", "textures/gui/folder_view_empty.png");
-	
-	public static String limit(String value, int length)
-	{
-		StringBuilder buf = new StringBuilder(value);
-		if (buf.length() > length)
-		{
-			buf.setLength(length);
-			buf.append("...");
-		}
-
-		return buf.toString();
-	}
 
 	@Override
 	public boolean doesGuiPauseGame()
@@ -96,7 +85,7 @@ public class GuiFolderView extends GuiScreen {
 		GL11.glPushMatrix();
 		GL11.glTranslated(this.width / 2 + 92, this.height / 2 - 106, 0);
 		GL11.glRotated(90, 0, 0, 1);
-		mc.fontRenderer.drawString(limit(name,14), 0, 0, 0x000000);
+		mc.fontRenderer.drawString(PaperGUI.limit(name,14), 0, 0, 0x000000);
 		GL11.glPopMatrix();
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("ItemInventory", Constants.NBT.TAG_LIST)) {
 			NBTTagList ItemInventory = stack.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
@@ -119,39 +108,8 @@ public class GuiFolderView extends GuiScreen {
 			else
 				this.buttonNextPage.visible = true;
 			for (int l = 0; l <= ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getKeySet().size(); l++) {
-				if (ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getDouble("version") == 2.0) {
-					String output = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("line"+l);
-					String[] parts = output.split("∞");
-					if(parts.length > 1) {
-						Integer outleng = parts[0].replaceAll("(?:§[0-9a-fk-or])+", "").length();
-						if (outleng > 30) {
-							parts[0] = limit(parts[0],30);
-						}
-						Integer color = Integer.parseInt(parts[1]);
-						String alignment = parts[2];
-						if (alignment.equalsIgnoreCase("center")) {
-							mc.fontRenderer.drawString(parts[0], width/2 - mc.fontRenderer.getStringWidth(parts[0])/2, height / 2 - offset, color);
-						} else {
-							mc.fontRenderer.drawString(parts[0] , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
-						}
-						offset = offset - 10;	
-					}
-				} else {
-					drawCenteredString(mc.fontRenderer, stack.getTagCompound().getString("pageTitle"), width / 2, height / 2 - 110, 0x000000);
-					String output = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("line"+l);
-					Integer outleng = output.replaceAll("(?:§[0-9a-fk-or])+", "").length();
-					if (outleng > 30) {
-						output = limit(output,30);
-					}
-					Integer color = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getInteger("color"+l);
-					String alignment = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getString("alignment"+l);
-					if (alignment.equalsIgnoreCase("center")) {
-						mc.fontRenderer.drawString(output, width/2 - mc.fontRenderer.getStringWidth(output)/2, height / 2 - offset, color);
-					} else {
-						mc.fontRenderer.drawString(output , width/2 - xSizeOfTexture/2 + 6, height / 2 - offset, color);
-					}
-					offset = offset - 10;
-				}
+				NBTTagCompound nbt = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag");
+				PaperGUI.drawPrintedPage(nbt, width, height, posX + 16, posY + 16);
 			}
 		}
 
