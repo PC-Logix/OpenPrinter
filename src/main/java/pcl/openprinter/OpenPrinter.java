@@ -16,7 +16,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import pcl.openprinter.gui.GUIHandler;
 import pcl.openprinter.items.PrinterPaperRoll;
 import pcl.openprinter.network.PacketHandler;
-import pcl.openprinter.BuildInfo;
 import pcl.openprinter.client.CreativeTab;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraft.creativetab.CreativeTabs;
@@ -34,17 +33,22 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 
-@Mod(modid=OpenPrinter.MODID, name="OpenPrinter", version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber, dependencies = "required-after:OpenComputers@[1.4.0,)")
+@Mod(
+		modid=OpenPrinter.MODID,
+		name="OpenPrinter",
+		version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber,
+		dependencies = "required-after:OpenComputers@[1.7.1,)"
+)
 
 public class OpenPrinter {
+	public static final String MODID = BuildInfo.modID;
 
-	public static final String MODID = "openprinter";
 	@Instance(value = MODID)
 	public static OpenPrinter instance;
 
-
 	@SidedProxy(clientSide="pcl.openprinter.ClientProxy", serverSide="pcl.openprinter.CommonProxy")
 	public static CommonProxy proxy;
+
 	public static Config cfg = null;
 
 	private static boolean debug = true;
@@ -67,8 +71,8 @@ public class OpenPrinter {
 			logger.info("Registering mod with OpenUpdater");
 			try {
 				Class.forName("pcl.mud.OpenUpdater").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null, FMLCommonHandler.instance().findContainerFor(this),
-						new URL("http://PC-Logix.com/OpenPrinter/get_latest_build.php?mcver=1.7.10"),
-						new URL("http://PC-Logix.com/OpenPrinter/changelog.php?mcver=1.7.10"));
+						new URL("http://PC-Logix.com/OpenPrinter/get_latest_build.php?mcver=1.12.2"),
+						new URL("http://PC-Logix.com/OpenPrinter/changelog.php?mcver=1.12.2"));
 			} catch (Throwable e) {
 				logger.info("OpenUpdater is not installed, not registering.");
 			}
