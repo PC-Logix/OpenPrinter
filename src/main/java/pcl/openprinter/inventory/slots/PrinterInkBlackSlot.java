@@ -1,4 +1,4 @@
-package pcl.openprinter.gui;
+package pcl.openprinter.inventory.slots;
 
 import pcl.openprinter.items.PrinterInkBlack;
 import net.minecraft.entity.player.EntityPlayer;

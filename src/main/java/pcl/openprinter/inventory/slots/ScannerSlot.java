@@ -1,4 +1,4 @@
-package pcl.openprinter.gui;
+package pcl.openprinter.inventory.slots;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

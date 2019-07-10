@@ -1,7 +1,6 @@
 package pcl.openprinter.items;
 
-import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.gui.PrintedPaperSlot;
+import pcl.openprinter.inventory.slots.PrintedPaperSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;

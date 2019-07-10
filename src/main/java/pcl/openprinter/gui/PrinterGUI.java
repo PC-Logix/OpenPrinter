@@ -10,7 +10,7 @@ import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 
 import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.tileentity.PrinterContainer;
+import pcl.openprinter.inventory.PrinterContainer;
 import pcl.openprinter.tileentity.PrinterTE;
 
 public class PrinterGUI extends ContainerGUI {

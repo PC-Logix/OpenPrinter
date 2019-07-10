@@ -1,14 +1,12 @@
-package pcl.openprinter.tileentity;
+package pcl.openprinter.inventory;
 
-import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.gui.FileCabinetSlot;
-import pcl.openprinter.items.FolderInventory;
-import pcl.openprinter.items.PrintedPage;
+import pcl.openprinter.inventory.slots.FileCabinetSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import pcl.openprinter.tileentity.FileCabinetTE;
 
 import java.util.ArrayList;
 import java.util.List;
