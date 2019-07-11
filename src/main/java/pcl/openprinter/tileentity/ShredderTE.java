@@ -42,7 +42,8 @@ public class ShredderTE extends TileEntity implements ITickable {
 				|| stack.getItem().equals(Items.WRITTEN_BOOK)
 				|| stack.getItem().equals(Items.WRITABLE_BOOK)
 				|| stack.getItem().equals(Items.PAPER)
-				|| stack.getItem().equals(Items.BOOK);
+				|| stack.getItem().equals(Items.BOOK)
+				|| stack.getItem().getRegistryName().toString().equals("bibliocraft:bigbook");
 		}
 
 		@Override
@@ -121,13 +122,21 @@ public class ShredderTE extends TileEntity implements ITickable {
 
 		++this.processingTime;
 		if (this.processingTime > 10) {
+			int outCount = 1;
+
+			if(inputStack.getItem().getRegistryName().equals("bibliocraft:bigbook"))
+				outCount = 11; // bigbook involves 11 paper sheets
+			else if(inputStack.getItem().equals(Items.BOOK) || inputStack.getItem().equals(Items.WRITABLE_BOOK) || inputStack.getItem().equals(Items.WRITTEN_BOOK))
+				outCount = 3;
+
+			ItemStack left = new ItemStack(ContentRegistry.shreddedPaper, outCount);
+
 			for (int slot = 0; slot < inventoryOutput.getSlots(); slot++) {
-				ItemStack left = inventoryOutput.insertItem(slot, new ItemStack(ContentRegistry.shreddedPaper, 1), false);
-				if(left.isEmpty()){
-					inventoryInput.extractItem(0, 1, false);
+				left = inventoryOutput.insertItem(slot, left, false);
+				if(left.isEmpty())
 					break;
-				}
 			}
+			inventoryInput.extractItem(0, 1, false);
 			this.processingTime = 0;
 		}
 	}

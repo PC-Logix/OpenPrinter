@@ -40,7 +40,8 @@ public class FileCabinetTE extends TileEntity {
 					|| stack.getItem().equals(Items.WRITTEN_BOOK)
 					|| stack.getItem().equals(Items.WRITABLE_BOOK)
 					|| stack.getItem().equals(Items.PAPER)
-					|| stack.getItem().equals(Items.BOOK);
+					|| stack.getItem().equals(Items.BOOK)
+					|| stack.getItem().getRegistryName().toString().equals("bibliocraft:bigbook");
 		}
 
 		@Override
