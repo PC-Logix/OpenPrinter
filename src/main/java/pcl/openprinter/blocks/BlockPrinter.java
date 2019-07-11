@@ -2,8 +2,6 @@ package pcl.openprinter.blocks;
 
 import java.util.Random;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -15,8 +13,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -105,8 +103,22 @@ public class BlockPrinter extends BlockContainer {
 	}
 
 	@Override
+	@Deprecated
+	public boolean isOpaqueCube(IBlockState blockState) {
+		return false;
+	}
+
+	@Override
+	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos){
+		return new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+	}
+
+
+
+	@Override
 	public int getMetaFromState(IBlockState state)
 	{
+
 		EnumFacing facing = (EnumFacing)state.getValue(PROPERTYFACING);
 		int facingbits = facing.getHorizontalIndex();
 		return facingbits;

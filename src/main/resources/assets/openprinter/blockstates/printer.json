@@ -2,11 +2,13 @@
 	"forge_marker": 1,
 	"defaults": {
 		"textures": {
-			"top": "openprinter:blocks/block_side",
-			"front": "openprinter:blocks/printer_front",
-			"side": "openprinter:blocks/block_side"
+			"all": "openprinter:blocks/printer"
 		},
-		"model": "minecraft:orientable"
+		"custom": {
+			"flip-v": true
+		},
+		"model": "openprinter:printer/printer.obj",
+		"transform": "forge:default-block"
 	},
 	"variants": {
 		"normal": [{}],
@@ -14,10 +16,10 @@
 			"transform": "forge:default-block"
 		}],
 		"facing": {
-			"north": {"model": "minecraft:orientable", "y": 180},
-			"south": {"model": "minecraft:orientable"},
-			"west": {"model": "minecraft:orientable", "y": 90},
-			"east": {"model": "minecraft:orientable", "y": 270}
+			"north": {"model": "openprinter:printer/printer.obj", "y": 0},
+			"south": {"model": "openprinter:printer/printer.obj", "y": 180},
+			"west": {"model": "openprinter:printer/printer.obj", "y": 270},
+			"east": {"model": "openprinter:printer/printer.obj", "y": 90}
 		}
 	}
 }

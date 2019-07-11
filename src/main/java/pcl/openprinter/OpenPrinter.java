@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,36 +80,41 @@ public class OpenPrinter {
 		}
 		contentRegistry.preInit();
 	}
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onRegisterModels(ModelRegistryEvent event) {
-		registerBlockModel(ContentRegistry.printerBlock, 0, "printer");
-		registerBlockModel(ContentRegistry.shredderBlock, 0, "shredder");
-		registerBlockModel(ContentRegistry.fileCabinetBlock, 0, "filecabinet");
-		registerItemModel(ContentRegistry.printedPage, "printed_page");
-		registerItemModel(ContentRegistry.printerInkBlack, "printer_ink_black");
-		registerItemModel(ContentRegistry.printerInkColor, "printer_ink_color");
-		registerItemModel(ContentRegistry.printerPaperRoll, "printer_paper_roll");
-		registerItemModel(ContentRegistry.shreddedPaper, "shredded_paper");
-		registerItemModel(ContentRegistry.folder, "folder");
-	}
 
-	@SideOnly(Side.CLIENT)
-	private static void registerBlockModel(final Block block, int meta, final String blockName) {
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(OpenPrinter.MODID + ":" + blockName.toLowerCase(), "inventory"));
-		OpenPrinter.logger.info("Registering " + blockName.toLowerCase() + " Item Renderer");
-	}
+	@Mod.EventBusSubscriber
+	public static class ObjectRegistryHandler {
 
-	@SideOnly(Side.CLIENT)
-	private static void registerItemModel(final Item item, final String itemName) {
-		ModelLoader.setCustomModelResourceLocation(item,  0, new ModelResourceLocation(OpenPrinter.MODID + ":" + itemName.toLowerCase(), "inventory"));
-		OpenPrinter.logger.info("Registering " + itemName.toLowerCase() + " Item Renderer");
+		@SubscribeEvent
+		@SideOnly(Side.CLIENT)
+		public static void onRegisterModels(ModelRegistryEvent event) {
+			OBJLoader.INSTANCE.addDomain(OpenPrinter.MODID);
+
+			registerBlockModel(ContentRegistry.printerBlock, 0, "printer");
+			registerBlockModel(ContentRegistry.shredderBlock, 0, "shredder");
+			registerBlockModel(ContentRegistry.fileCabinetBlock, 0, "filecabinet");
+			registerItemModel(ContentRegistry.printedPage, "printed_page");
+			registerItemModel(ContentRegistry.printerInkBlack, "printer_ink_black");
+			registerItemModel(ContentRegistry.printerInkColor, "printer_ink_color");
+			registerItemModel(ContentRegistry.printerPaperRoll, "printer_paper_roll");
+			registerItemModel(ContentRegistry.shreddedPaper, "shredded_paper");
+			registerItemModel(ContentRegistry.folder, "folder");
+		}
+
+		@SideOnly(Side.CLIENT)
+		private static void registerBlockModel(final Block block, int meta, final String blockName) {
+			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(OpenPrinter.MODID + ":" + blockName.toLowerCase(), "inventory"));
+			OpenPrinter.logger.info("Registering " + blockName.toLowerCase() + " Item Renderer");
+		}
+
+		@SideOnly(Side.CLIENT)
+		private static void registerItemModel(final Item item, final String itemName) {
+			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(OpenPrinter.MODID + ":" + itemName.toLowerCase(), "inventory"));
+			OpenPrinter.logger.info("Registering " + itemName.toLowerCase() + " Item Renderer");
+		}
 	}
 
 	@EventHandler
-	public void load(FMLInitializationEvent event)
-	{
+	public void load(FMLInitializationEvent event) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(OpenPrinter.instance, new GUIHandler());
 	}
 	
