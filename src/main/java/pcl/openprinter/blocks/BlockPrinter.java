@@ -6,6 +6,7 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -16,10 +17,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.tileentity.PrinterTE;
+import pcl.openprinter.util.AABBHelper;
 
 public class BlockPrinter extends BlockContainer {
+	private static final AxisAlignedBB emptyBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+	private static final AxisAlignedBB boundingBox = new AxisAlignedBB(0, 0, 0, 1, 1, 0.6);
+
 	public BlockPrinter() {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
@@ -66,13 +73,28 @@ public class BlockPrinter extends BlockContainer {
 	}
 
 	@Override
+	@Deprecated
+	public boolean isFullCube(IBlockState blockState) {
+		return false;
+	}
+
+
+	@Override
+	@SideOnly(Side.CLIENT)
 	public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World worldIn, BlockPos pos){
-		return new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+		return Minecraft.getMinecraft().player.isSneaking() ? super.getSelectedBoundingBox(state, worldIn, pos) : emptyBB;
+	}
+
+	@Deprecated
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		EnumFacing facing = state.getValue(PROPERTYFACING);
+		return AABBHelper.rotateHorizontal(boundingBox, facing);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-		EnumFacing facing = (EnumFacing)state.getValue(PROPERTYFACING);
+		EnumFacing facing = state.getValue(PROPERTYFACING);
 		int facingbits = facing.getHorizontalIndex();
 		return facingbits;
 	}
