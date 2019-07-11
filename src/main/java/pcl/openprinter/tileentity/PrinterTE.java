@@ -243,6 +243,8 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 
 	private void readBuffersFromNBT(NBTTagCompound nbt){
 		lines.clear();
+		align.clear();
+		colors.clear();
 		for(int i=0; nbt.hasKey("line"+i); i++){
 			NBTTagCompound lineNBT = nbt.getCompoundTag("line"+i);
 			lines.add(lineNBT.getString("text"));
@@ -373,6 +375,8 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 
 		damageMaterial(BLACK_INK_SLOT, 1);
 		damageMaterial(PAPER_SLOT, 1);
+
+		inventoryOutput.setStackInSlot(x, output);
 
 		return new Object[]{ true };
 	}
