@@ -263,8 +263,11 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	}
 
 	//Real Printer methods follow:
-	@Callback
+	@Callback(doc = "function(Integer:lineNumber):String; -- scans the given line of a printed page")
 	public Object[] scanLine(Context context, Arguments args) {
+		if(!args.isInteger(0))
+			return new Object[] { false, "first argument has to be a line number" };
+
 		ItemStack scannedPage = inventoryScanner.getStackInSlot(0);
 
 		if (scannedPage.getItem() instanceof PrintedPage && scannedPage.hasTagCompound()) {
@@ -274,7 +277,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		}
 	}
 
-	@Callback
+	@Callback(doc = "function():table; -- scans a printed page")
 	public Object[] scan(Context context, Arguments args) {
 		ItemStack scannerInput = inventoryScanner.getStackInSlot(0);
 
@@ -285,7 +288,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		return new Object[] { false };
 	}
 
-	@Callback
+	@Callback(doc = "function():table; -- scans a book")
 	public Object[] scanBook(Context context, Arguments args) {
 		ItemStack scannerInput = inventoryScanner.getStackInSlot(0);
 
@@ -316,10 +319,13 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		return new Object[] { outPageTitle, output };
 	}
 
-	@Callback
+	@Callback(doc = "function(String:title):boolean; -- prints a name tag")
 	public Object[] printTag(Context context, Arguments args) throws Exception {
 		if (!OpenPrinter.cfg.enableNameTag)
 			throw new Exception("Name Tag printing is disabled.");
+
+		if(!args.isString(0))
+			throw new Exception("First argument has to be a valid String");
 
 		if (inventoryMaterials.getStackInSlot(BLACK_INK_SLOT).isEmpty())
 			throw new Exception("Please load Black Ink.");
@@ -360,7 +366,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	}
 
 
-	@Callback
+	@Callback(doc = "function([Integer:copyCount]):boolean; -- prints the current page")
 	public Object[] print(Context context, Arguments args) throws Exception {
 		int copies = args.optInteger(0, 1);
 		int copiesDone = 0;
@@ -418,8 +424,12 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		return new Object[] { copiesDone == copies };
 	}
 
-	@Callback
+	@Callback(doc = "function(String:text[, Integer:color, String:alignment]):boolean; -- prints a line to the printer buffer")
 	public Object[] writeln(Context context, Arguments args) throws Exception{
+		if(!args.isString(0))
+			throw new Exception("First argument has to be a valid String");
+
+
 		if(lines.size() >= 20) {
 			throw new Exception("To many lines.");
 		}
@@ -448,57 +458,46 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		return new Object[] { true };
 	}
 
-	@Callback
+	@Callback(doc = "function(String:text):boolean; -- sets the page title")
 	public Object[] setTitle(Context context, Arguments args) {
-		pageTitle = args.checkString(0);
+		pageTitle = args.optString(0, "");
 		return new Object[] { true };
 	}
 
-	@Callback
+	@Callback(doc = "function():Integer; -- gets the current paper level")
 	public Object[] getPaperLevel(Context context, Arguments args) { 
-		if(!inventoryMaterials.getStackInSlot(2).isEmpty()) {
-			if (inventoryMaterials.getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
-				return new Object[] { 256 - inventoryMaterials.getStackInSlot(2).getItemDamage() };
-			} else {
-				return new Object[] { inventoryMaterials.getStackInSlot(2).getCount() };
-			}
+		if(inventoryMaterials.getStackInSlot(PAPER_SLOT).isEmpty())
+			return new Object[] { 0 };
+
+		if (inventoryMaterials.getStackInSlot(PAPER_SLOT).getItem() instanceof PrinterPaperRoll) {
+			return new Object[] { 256 - inventoryMaterials.getStackInSlot(PAPER_SLOT).getItemDamage() };
 		} else {
-			return new Object[] { false };
+			return new Object[] { inventoryMaterials.getStackInSlot(PAPER_SLOT).getCount() };
 		}
 	}
 
-	@Callback
+	@Callback(doc = "function():Integer; -- gets the current black ink level")
 	public Object[] getBlackInkLevel(Context context, Arguments args) { 
-		if(!inventoryMaterials.getStackInSlot(0).isEmpty()) {
-			if (inventoryMaterials.getStackInSlot(0).getItem() instanceof PrinterInkBlack) {
-				return new Object[] { OpenPrinter.cfg.printerInkUse - inventoryMaterials.getStackInSlot(0).getItemDamage()};
-			} else {
-				return new Object[] { false };
-			}
-		} else {
-			return new Object[] { false };
-		}
+		if(inventoryMaterials.getStackInSlot(BLACK_INK_SLOT).isEmpty())
+			return new Object[] { 0 };
+
+		return new Object[] { OpenPrinter.cfg.printerInkUse - inventoryMaterials.getStackInSlot(BLACK_INK_SLOT).getItemDamage()};
 	}
 
-	@Callback
+	@Callback(doc = "function():Integer; -- gets the current color ink level")
 	public Object[] getColorInkLevel(Context context, Arguments args) { 
-		if(!inventoryMaterials.getStackInSlot(1).isEmpty()) {
-			if (inventoryMaterials.getStackInSlot(1).getItem() instanceof PrinterInkColor) {
-				return new Object[] { OpenPrinter.cfg.printerInkUse - inventoryMaterials.getStackInSlot(1).getItemDamage() };
-			} else {
-				return new Object[] { false };
-			}
-		} else {
+		if(inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).isEmpty())
 			return new Object[] { false };
-		}
+
+		return new Object[] { OpenPrinter.cfg.printerInkUse - inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).getItemDamage() };
 	}
 
-	@Callback(direct = true)
+	@Callback(doc = "function(String:input):Integer; -- gets the character count for the given String", direct = true)
 	public Object[] charCount(Context context, Arguments args) {
 		return new Object[] { args.checkString(0).replaceAll("(?:§[0-9a-fk-or])+", "").length() };
 	}
 
-	@Callback
+	@Callback(doc = "function():boolean; -- clears the printer buffer")
 	public Object[] clear(Context context, Arguments args) {
 		lines.clear();
 		colors.clear();
