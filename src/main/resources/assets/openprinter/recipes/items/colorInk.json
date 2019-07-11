@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RGB",
+    " i ",
+    "   "
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:dye", "data": 1
+    },
+    "G": {
+      "item": "minecraft:dye", "data": 2
+    },
+    "B": {
+      "item": "minecraft:dye", "data": 4
+    },
+    "i": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "result": {
+    "item": "openprinter:printer_ink_color"
+  }
+}

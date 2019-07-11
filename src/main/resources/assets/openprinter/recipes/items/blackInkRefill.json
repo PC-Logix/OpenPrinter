@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    " Z ",
+    "   "
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:dye", "data": 0
+    },
+    "Z": {
+      "item": "openprinter:printer_ink_black", "data": 32767
+    }
+  },
+  "result": {
+    "item": "openprinter:printer_ink_black"
+  }
+}

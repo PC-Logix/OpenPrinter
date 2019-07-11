@@ -100,7 +100,7 @@ public class OpenPrinter {
 			registerItemModel(ContentRegistry.printedPage, "printed_page");
 			registerItemModel(ContentRegistry.printerInkBlack, "printer_ink_black");
 			registerItemModel(ContentRegistry.printerInkColor, "printer_ink_color");
-			registerItemModel(ContentRegistry.printerPaperRoll, "printer_paper_roll");
+			//registerItemModel(ContentRegistry.printerPaperRoll, "printer_paper_roll");
 			registerItemModel(ContentRegistry.shreddedPaper, "shredded_paper");
 			registerItemModel(ContentRegistry.folder, "folder");
 		}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "iri",
+    "cpc",
+    "iri"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "i": {
+      "item": "minecraft:iron_nugget"
+    },
+    "c": {
+      "item": "#opencomputers_pcb"
+    },
+    "p": {
+      "item": "#opencomputers_chip1"
+    }
+  },
+  "result": {
+    "item": "openprinter:printer"
+  }
+}

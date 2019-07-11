@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "i i",
+    "iSi",
+    "i i"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:shears"
+    },
+    "i": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "result": {
+    "item": "openprinter:shredder"
+  }
+}

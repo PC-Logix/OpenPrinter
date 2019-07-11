@@ -1,0 +1,15 @@
+[
+  {
+    "name": "opencomputers_pcb",
+    "ingredient": {
+      "item": "opencomputers:material",
+      "data": 4
+    }
+  },
+  {
+    "name": "opencomputers_chip1",
+    "ingredient": {
+      "item": "opencomputers:material", "data": 7
+    }
+  }
+]
