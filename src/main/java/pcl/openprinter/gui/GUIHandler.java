@@ -1,14 +1,9 @@
-/**
- * 
- */
 package pcl.openprinter.gui;
 
 /**
  * @author Caitlyn
- *
  */
-import pcl.openprinter.items.FolderContainer;
-import pcl.openprinter.items.FolderInventory;
+import pcl.openprinter.inventory.FolderContainer;
 import pcl.openprinter.inventory.FileCabinetContainer;
 import pcl.openprinter.tileentity.FileCabinetTE;
 import pcl.openprinter.inventory.PrinterContainer;
@@ -38,7 +33,7 @@ public class GUIHandler implements IGuiHandler {
 			}
 		} else if (id == 3) { //Folder Container GUI
 			// Use the player's held item to create the inventory
-			return new FolderContainer(player, player.inventory, new FolderInventory(player.getHeldItemMainhand()));
+			return new FolderContainer(player, player.inventory);
 		} else if (id == 4) {
 			//Client only Folder View
 		} else if (id == 5) {
@@ -66,7 +61,7 @@ public class GUIHandler implements IGuiHandler {
 				return new ShredderGUI(player.inventory, (ShredderTE) tileEntity);
 			}
 		} else if (id == 3) {
-			return new GuiFolderInventory((FolderContainer) new FolderContainer(player, player.inventory, new FolderInventory(player.getHeldItemMainhand())));
+			return new GuiFolderInventory(new FolderContainer(player, player.inventory));
 		} else if (id == 4) { //Folder view GUI (Client only)
 			return new GuiFolderView(world, player);
 		} else if (id == 5) {

@@ -139,14 +139,14 @@ public class ShredderTE extends TileEntity implements ITickable {
 
 	@Override
 	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-		return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null) ||  super.hasCapability(capability, facing);
+		return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) ||  super.hasCapability(capability, facing);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing != null) {
-			if(facing.equals(EnumFacing.UP))
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			if(EnumFacing.UP.equals(facing))
 				return (T) inventoryInput;
 			else
 				return (T) inventoryOutput;

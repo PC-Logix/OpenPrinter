@@ -1,6 +1,3 @@
-/**
- * 
- */
 package pcl.openprinter.gui;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,10 +11,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
+import pcl.openprinter.inventory.FolderInventory;
 
 /**
  * @author Caitlyn
@@ -45,9 +41,23 @@ public class GuiFolderView extends GuiScreen {
 		return false;
 	}
 
-	public static ItemStack stack = null;
-	public GuiFolderView(World world, EntityPlayer player) { }
-	@SuppressWarnings("unchecked")
+	public GuiFolderView(World world, EntityPlayer player) {
+		ItemStack stack = player.getHeldItemMainhand();
+		inventory = new FolderInventory(stack);
+
+		pageCount = 0;
+		for(int slot = 0; slot < inventory.getSlots(); slot++)
+			if(!inventory.getStackInSlot(slot).isEmpty())
+				pageCount++;
+
+		if(stack.hasDisplayName()) {
+			name = stack.getDisplayName();
+		}
+
+	}
+
+	FolderInventory inventory;
+
 	public void initGui(){
 		this.buttonList.clear();
 		Keyboard.enableRepeatEvents(true);
@@ -58,60 +68,37 @@ public class GuiFolderView extends GuiScreen {
 		this.buttonList.add(this.buttonPreviousPage = new NextPageButton(2, posX + 38, posY + 217, false));
 		this.updateButtons();
 	}
+
 	public void drawScreen(int i, int j, float f){
 		drawDefaultBackground();
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		
-		if(stack.hasTagCompound()) {
-			if (stack.getTagCompound().hasKey("ItemInventory", Constants.NBT.TAG_LIST) && 
-					stack.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND).tagCount() > 0) {
-				this.mc.renderEngine.bindTexture(folderView);
-			} else {
-				this.mc.renderEngine.bindTexture(folderViewEmpty);
-			}
-		} else {
-			this.mc.renderEngine.bindTexture(folderViewEmpty);
-		}
+
+		this.mc.renderEngine.bindTexture(pageCount > 0 ? folderView : folderViewEmpty);
+
 		int posX = (this.width - xSizeOfTexture) / 2;
 		int posY = (this.height - ySizeOfTexture) / 2;
 		drawTexturedModalRect(posX, posY, 0, 0, xSizeOfTexture, ySizeOfTexture);
 
-		int offset = 100;
-
-		if(stack.hasDisplayName()) {
-			name = stack.getDisplayName();
-		}
 		GL11.glPushMatrix();
 		GL11.glTranslated(this.width / 2 + 92, this.height / 2 - 106, 0);
 		GL11.glRotated(90, 0, 0, 1);
 		mc.fontRenderer.drawString(PaperGUI.limit(name,14), 0, 0, 0x000000);
 		GL11.glPopMatrix();
-		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("ItemInventory", Constants.NBT.TAG_LIST)) {
-			NBTTagList ItemInventory = stack.getTagCompound().getTagList("ItemInventory", Constants.NBT.TAG_COMPOUND);
-			this.pageCount = ItemInventory.tagCount();
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(this.width / 2 + 12, this.height / 2 - 114, 0);
-			GL11.glScaled(0.9, 0.9, 0);
-			if (this.pageCount > 0)
-				mc.fontRenderer.drawString("Page " + (this.currPage + 1) + " Of " + this.pageCount, 0, 0, 0x000000);
-			GL11.glPopMatrix();
-			
-			if (this.currPage <= 0)
-				this.buttonPreviousPage.visible = false;
-			else
-				this.buttonPreviousPage.visible = true;
+		if(pageCount == 0)
+			return;
 
-			if (this.currPage >= this.pageCount - 1)
-				this.buttonNextPage.visible = false;
-			else
-				this.buttonNextPage.visible = true;
-			for (int l = 0; l <= ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag").getKeySet().size(); l++) {
-				NBTTagCompound nbt = ItemInventory.getCompoundTagAt(this.currPage).getCompoundTag("tag");
-				PaperGUI.drawPrintedPage(nbt, width, height, posX + 16, posY + 16);
-			}
-		}
+		GL11.glPushMatrix();
+		GL11.glTranslated(this.width / 2 + 12, this.height / 2 - 114, 0);
+		GL11.glScaled(0.9, 0.9, 0);
+		mc.fontRenderer.drawString("Page " + (this.currPage + 1) + " of " + this.pageCount, 0, 0, 0x0);
+		GL11.glPopMatrix();
+
+		updateButtons();
+
+		NBTTagCompound pageNBT = inventory.getStackInSlot(currPage).getTagCompound();
+		PaperGUI.drawPrintedPage(pageNBT, width, height, posX + 16, posY + 16);
 
 		super.drawScreen(i, j, f);
 	}

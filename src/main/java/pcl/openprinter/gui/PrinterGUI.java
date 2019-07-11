@@ -3,10 +3,7 @@ package pcl.openprinter.gui;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-/**
- * @author Caitlyn
- *
- */
+
 import org.lwjgl.opengl.GL11;
 
 import pcl.openprinter.OpenPrinter;

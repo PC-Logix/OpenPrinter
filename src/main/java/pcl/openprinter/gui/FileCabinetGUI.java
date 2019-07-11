@@ -23,9 +23,6 @@ public class FileCabinetGUI extends GuiContainer {
 		super(new FileCabinetContainer(inventoryPlayer, tileEntity));
 		this.xSize = 175;
 		this.ySize = 195;
-		if(tileEntity.hasDisplayName()) {
-			name = tileEntity.getDisplayName().getFormattedText();
-		}
 	}
 
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {

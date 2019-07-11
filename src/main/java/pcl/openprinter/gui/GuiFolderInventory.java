@@ -2,27 +2,24 @@ package pcl.openprinter.gui;
 
 import java.io.IOException;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import pcl.openprinter.items.FolderContainer;
-import pcl.openprinter.items.FolderInventory;
+import pcl.openprinter.inventory.FolderContainer;
 import pcl.openprinter.network.MessageGUIFolder;
 import pcl.openprinter.network.PacketHandler;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 
 public class GuiFolderInventory extends ContainerGUI {
 	private GuiTextField text;
 	private String name;
 
 	private static final ResourceLocation iconLocation = new ResourceLocation("openprinter", "textures/gui/inventoryitem.png");
-
-	/** The inventory to render on screen */
-	private final FolderInventory inventory;
 
 	@Override
 	public boolean doesGuiPauseGame() {
@@ -32,48 +29,40 @@ public class GuiFolderInventory extends ContainerGUI {
 	@Override
 	public void initGui()
 	{
+		ItemStack folderStack = ((FolderContainer) inventorySlots).folderStack;
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
 		this.text = new GuiTextField(1, this.fontRenderer, this.width / 2 - 68, guiTop + 5, 137, 10);
 		text.setMaxStringLength(203);
 		text.setText("Name");
-		String s = this.inventory.hasCustomName() ? this.inventory.getName() : I18n.translateToLocal(this.inventory.getName());
-		//this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+		String s = folderStack.getDisplayName();
 		this.text.setText(s);
 		this.text.setFocused(true);
 	}
 
-	public GuiFolderInventory(FolderContainer containerItem)
-	{
+	public GuiFolderInventory(FolderContainer containerItem) {
 		super(containerItem, 176, 136);
-		this.inventory = containerItem.inventory;
 	}
 
 	@Override
-	public void updateScreen()
-	{
+	public void updateScreen() {
 		super.updateScreen();
 		this.text.updateCursorCounter();
 	}
 
 	@Override
-	protected void keyTyped(char key, int par2)
+	protected void keyTyped(char key, int keyCode)
 	{       
-		//super.keyTyped(key, par2);
-
-		if (text.isFocused()) {
-			text.textboxKeyTyped(key, par2);
-			//nameString = name.getText();
-		}
-
-		if (par2 == 1) {
-			this.mc.player.closeScreen();
-		}
+		if (text.isFocused())
+			text.textboxKeyTyped(key, keyCode);
 
 		if (key == '\r') {
 			this.name = this.text.getText();
 			actionPerformed();
 		}
+
+		if(keyCode == 1)
+			Minecraft.getMinecraft().player.closeScreen();
 	}
 	@Override
 	protected void mouseClicked(int x, int y, int btn) throws IOException {
@@ -88,7 +77,7 @@ public class GuiFolderInventory extends ContainerGUI {
 
 	public void onGuiClosed(){
 		Keyboard.enableRepeatEvents(false);
-		this.inventory.setInventoryName(this.text.getText());
+		//this.inventory.setInventoryName(this.text.getText());
 		super.onGuiClosed();
 	}
 

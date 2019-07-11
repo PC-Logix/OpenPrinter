@@ -8,7 +8,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.gui.GuiFolderView;
+
 
 public class ItemFolder extends Item {
 
@@ -33,11 +33,11 @@ public class ItemFolder extends Item {
 		} else {
 			if (!player.isSneaking()) {
 				player.openGui(OpenPrinter.instance, 4, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
-				GuiFolderView.stack = itemstack;
 				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 			}
 		}
 
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemstack);
 	}
+
 }

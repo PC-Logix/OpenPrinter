@@ -1,48 +1,40 @@
 package pcl.openprinter.inventory;
 
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Slot;
-import pcl.openprinter.inventory.slots.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 import pcl.openprinter.tileentity.PrinterTE;
 
-/**
- * @author Caitlyn
- *
- */
 public class PrinterContainer extends CustomContainer {
     protected PrinterTE tileEntity;
 
 
     public PrinterContainer (InventoryPlayer inventoryPlayer, PrinterTE te){
             tileEntity = te;
+            IItemHandler inventoryMaterials = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
+
             //Black Ink
-            addSlotToContainer(new PrinterInkBlackSlot(tileEntity, 0, 30, 47));
+            addSlotToContainer(new SlotItemHandler(inventoryMaterials, 0, 30, 47));
             //Color Ink
-            addSlotToContainer(new PrinterInkColorSlot(tileEntity, 1, 60, 47));
+            addSlotToContainer(new SlotItemHandler(inventoryMaterials, 1, 60, 47));
             //Blank Paper
-            addSlotToContainer(new PrinterPaperSlot(tileEntity, 2, 129, 47));
+            addSlotToContainer(new SlotItemHandler(inventoryMaterials, 2, 129, 47));
+
+
+            IItemHandler inventoryOutput = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN);
 
             //Output slots
-            for (int i = 3; i < 12; i++) {
-            	addSlotToContainer(new PrinterOutputSlot(tileEntity, i, 8 + i * 18 - 54, 87));
+            for (int i = 0; i < inventoryOutput.getSlots(); i++) {
+            	addSlotToContainer(new SlotItemHandler(inventoryOutput, i, 8 + i * 18, 87));
             }
-            
-            addSlotToContainer(new ScannerSlot(tileEntity, 13, 94, 17));
+
+            IItemHandler inventoryScanner = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+            addSlotToContainer(new SlotItemHandler(inventoryScanner, 0, 94, 17));
             
             //commonly used vanilla code that adds the player's inventory
-            bindPlayerInventory(inventoryPlayer);
-    }
-
-    protected void bindPlayerInventory(InventoryPlayer inventoryPlayer) {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18 + 15 + 15));
-            }
-        }
-
-        for (int i = 0; i < 9; i++) {
-            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, 142 + 15 + 15));
-        }
+            bindPlayerInventory(inventoryPlayer, 8, 114);
     }
 
 }

@@ -1,7 +1,5 @@
 package pcl.openprinter.network;
 
-import pcl.openprinter.OpenPrinter;
-import pcl.openprinter.gui.GuiFolderInventory;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 

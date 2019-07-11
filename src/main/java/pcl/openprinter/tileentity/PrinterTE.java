@@ -1,6 +1,3 @@
-/**
- * 
- */
 package pcl.openprinter.tileentity;
 
 import java.util.*;
@@ -18,10 +15,7 @@ import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemWritableBook;
 import net.minecraft.item.ItemWrittenBook;
@@ -32,10 +26,10 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.translation.I18n;
 
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import pcl.openprinter.ContentRegistry;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.books.BiblioCraftBigBook;
@@ -44,29 +38,114 @@ import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
+import pcl.openprinter.util.ItemUtils;
 
-/**
- * @author Caitlyn
- *
- */
-public class PrinterTE extends TileEntity implements ITickable, Environment, IInventory, ISidedInventory {
+import javax.annotation.Nonnull;
 
-	public Double PrinterFormatVersion = 2.0;
-	protected ComponentConnector node = Network.newNode(this, Visibility.Network).withComponent(getComponentName()).withConnector(32).create();
-	protected boolean addedToNetwork = false;
+import static pcl.openprinter.tileentity.PrinterTE.InventoryMaterial.*;
+
+public class PrinterTE extends TileEntity implements ITickable, Environment {
+	private static final double PrinterFormatVersion = 2.0;
+
+	private ComponentConnector node = Network.newNode(this, Visibility.Network).withComponent(getComponentName()).withConnector(32).create();
+	private boolean addedToNetwork = false;
+
+	private ItemStackHandler inventoryOutput = new InventoryOutput();
+	private ItemStackHandler inventoryScanner = new InventoryScanner();
+	private ItemStackHandler inventoryMaterials = new InventoryMaterial();
+
+	private List<String> lines = new ArrayList<String>();
+	private List<String> align = new ArrayList<String>();
+	private List<Integer> colors = new ArrayList<Integer>();
+	private String pageTitle = "";
+
+	private Object oc_fs;
 
 	public PrinterTE() {
 		if (this.node() != null) {
 			initOCFilesystem();
 		}
-		Arrays.fill(printerItemStacks, ItemStack.EMPTY);
+	}
+
+	class InventoryOutput extends ItemStackHandler {
+		InventoryOutput(){
+			super(9);
+		}
+
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
+			return stack.getItem() instanceof PrintedPage;
+		}
+
+		@Override
+		@Nonnull
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
+			return isItemValid(slot, stack) ? super.insertItem(slot, stack, simulate) : stack;
+		}
+	}
+
+	class InventoryScanner extends ItemStackHandler {
+		InventoryScanner(){
+			super(1);
+		}
+
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
+			return stack.getItem() instanceof PrintedPage
+					|| stack.getItem().equals(Items.WRITTEN_BOOK)
+					|| stack.getItem().equals(Items.WRITABLE_BOOK)
+					|| stack.getItem().getRegistryName().toString().equals("bibliocraft:bigbook");
+		}
+
+		@Override
+		@Nonnull
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
+			return isItemValid(slot, stack) ? super.insertItem(slot, stack, simulate) : stack;
+		}
+	}
+
+	class InventoryMaterial extends ItemStackHandler {
+		static final short BLACK_INK_SLOT = 0;
+		static final short COLOR_INK_SLOT = 1;
+		static final short PAPER_SLOT = 2;
+
+		InventoryMaterial(){
+			super(3);
+		}
+
+		@Override
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
+			switch(slot){
+				case PAPER_SLOT:
+					return stack.getItem() instanceof PrinterPaperRoll
+						|| stack.getItem().equals(Items.PAPER)
+						|| stack.getItem().equals(Items.NAME_TAG);
+				case COLOR_INK_SLOT:
+					return stack.getItem() instanceof PrinterInkColor;
+				case BLACK_INK_SLOT:
+					return stack.getItem() instanceof PrinterInkBlack;
+			}
+			return false;
+		}
+
+		@Override
+		@Nonnull
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
+			return isItemValid(slot, stack) ? super.insertItem(slot, stack, simulate) : stack;
+		}
+	}
+
+	public void removed(){
+		ItemUtils.dropItems(inventoryScanner, world, getPos(), true, 10);
+		ItemUtils.dropItems(inventoryMaterials, world, getPos(), true, 10);
+		ItemUtils.dropItems(inventoryOutput, world, getPos(), true, 10);
 	}
 
 	private String getComponentName() {
 		return "openprinter";
 	}
 
-	private Object oc_fs;
+
 	protected ManagedEnvironment oc_fs(){
 		return (ManagedEnvironment) this.oc_fs;
 	}
@@ -125,19 +204,39 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 		}
 	}
 
-	private ItemStack[] printerItemStacks = new ItemStack[20];
-	private List<String> lines = new ArrayList<String>();
-	private List<String> align = new ArrayList<String>();
-	private List<Integer> colors = new ArrayList<Integer>();
-	private String pageTitle = "";
 
-	Integer colorUses = 0;
-	Integer blackUses = 0;
+	@Deprecated
+	public void readOldInventoryFromNBT(NBTTagCompound nbt) {
+		if(!nbt.hasKey("Items"))
+			return;
 
+		NBTTagList var2 = nbt.getTagList("Items",nbt.getId());
+		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
+		{
+			NBTTagCompound var4 = (NBTTagCompound)var2.getCompoundTagAt(var3);
+			byte var5 = var4.getByte("Slot");
 
-	private static final int[] slots_top = new int[] {2};
-	private static final int[] slots_bottom = new int[] {3,4,5,6,7,8,9,10,11,12};
-	private static final int[] slots_sides = new int[] {0,1};
+			switch(var5){
+				case 13:
+					inventoryScanner.setStackInSlot(0, new ItemStack(var4));
+					break;
+				case 0:
+					inventoryMaterials.setStackInSlot(0, new ItemStack(var4));
+					break;
+				case 1:
+					inventoryMaterials.setStackInSlot(1, new ItemStack(var4));
+					break;
+				case 2:
+					inventoryMaterials.setStackInSlot(2, new ItemStack(var4));
+					break;
+				default:
+					var5-=3;
+					if(var5 > 0 && var5 < inventoryOutput.getSlots())
+						inventoryOutput.setStackInSlot(var5, new ItemStack(var4));
+					break;
+			}
+		}
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
@@ -149,24 +248,20 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 		if (oc_fs != null && oc_fs().node() != null) {
 			oc_fs().node().load(nbt.getCompoundTag("oc:fs"));
 		}
-		NBTTagList var2 = nbt.getTagList("Items",nbt.getId());
-		this.printerItemStacks = new ItemStack[this.getSizeInventory()];
-		for (int var3 = 0; var3 < var2.tagCount(); ++var3)
-		{
-			NBTTagCompound var4 = (NBTTagCompound)var2.getCompoundTagAt(var3);
-			byte var5 = var4.getByte("Slot");
-			if (var5 >= 0 && var5 < this.printerItemStacks.length)
-			{
-				this.printerItemStacks[var5] = new ItemStack(var4);
-			}
+
+		if(nbt.hasKey("inventoryOutput")) {
+			inventoryOutput.deserializeNBT(nbt.getCompoundTag("inventoryOutput"));
+			inventoryScanner.deserializeNBT(nbt.getCompoundTag("inventoryScanner"));
+			inventoryMaterials.deserializeNBT(nbt.getCompoundTag("inventoryMaterials"));
 		}
+		else
+			readOldInventoryFromNBT(nbt); //remove when porting upwards
+
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		super.writeToNBT(nbt);
-
 		if (node != null && node.host() == this) {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
 			node.save(nodeNbt);
@@ -178,16 +273,11 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 			nbt.setTag("oc:fs", fsNbt);
 		}
 
-		NBTTagList var2 = new NBTTagList();
-		for (int var3 = 0; var3 < this.printerItemStacks.length; ++var3)
-		{
-				NBTTagCompound var4 = new NBTTagCompound();
-				var4.setByte("Slot", (byte)var3);
-				this.printerItemStacks[var3].writeToNBT(var4);
-				var2.appendTag(var4);
-		}
-		nbt.setTag("Items", var2);
-		return nbt;
+		nbt.setTag("inventoryScanner", inventoryScanner.serializeNBT());
+		nbt.setTag("inventoryMaterials", inventoryMaterials.serializeNBT());
+		nbt.setTag("inventoryOutput", inventoryOutput.serializeNBT());
+
+		return super.writeToNBT(nbt);
 	}
 
 	@Override
@@ -211,7 +301,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 	//Real Printer methods follow:
 	@Callback
 	public Object[] scanLine(Context context, Arguments args) {
-		ItemStack scannedPage = getStackInSlot(13);
+		ItemStack scannedPage = inventoryScanner.getStackInSlot(0);
 
 		if (scannedPage.getItem() instanceof PrintedPage && scannedPage.hasTagCompound()) {
 			return new Object[] { scannedPage.getTagCompound().getString("line" + args.checkInteger(0)) };
@@ -222,7 +312,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 
 	@Callback
 	public Object[] scan(Context context, Arguments args) {
-		ItemStack scannerInput = getStackInSlot(13);
+		ItemStack scannerInput = inventoryScanner.getStackInSlot(0);
 
 		if (scannerInput.getItem() instanceof PrintedPage) {
 			return readPrintedPage(scannerInput);
@@ -233,7 +323,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 
 	@Callback
 	public Object[] scanBook(Context context, Arguments args) {
-		ItemStack scannerInput = getStackInSlot(13);
+		ItemStack scannerInput = inventoryScanner.getStackInSlot(0);
 
 		if (scannerInput.getItem() instanceof ItemWritableBook || scannerInput.getItem() instanceof ItemWrittenBook) {
 			return new VanillaBook().readFromStack(scannerInput);
@@ -264,109 +354,104 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 
 	@Callback
 	public Object[] printTag(Context context, Arguments args) throws Exception {
-		if (OpenPrinter.cfg.enableNameTag) {
-			if (!getStackInSlot(0).isEmpty()) {
-				if (!getStackInSlot(2).isEmpty() && getStackInSlot(2).getItem().equals(Items.NAME_TAG)) { //No paper
-					for (int x = 3; x <= 12; x++) { //Loop the 9 output slots checking for a empty one
-						if (!getStackInSlot(x).isEmpty()) { //The slot is empty lets make us a NameTag
-
-							printerItemStacks[x] = new ItemStack(Items.NAME_TAG);
-							printerItemStacks[x].setTagCompound(new NBTTagCompound());
-
-							NBTTagCompound nameTag = new NBTTagCompound();
-
-							nameTag.setString("Name", args.checkString(0));
-
-							printerItemStacks[x].getTagCompound().setTag("display", nameTag);
-
-							getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + 1);
-							if(getStackInSlot(0).getItemDamage() >= getStackInSlot(0).getMaxDamage()) {
-								setInventorySlotContents(0, ItemStack.EMPTY);
-							}
-							decrStackSize(2, 1);
-							return new Object[]{true};
-						}
-					} throw new Exception("No empty output slots.");
-				} else { throw new Exception("Please load Name Tags."); }
-			} else { throw new Exception("Please load Black Ink."); }
-		} else {
+		if (!OpenPrinter.cfg.enableNameTag)
 			throw new Exception("Name Tag printing is disabled.");
+
+		if (inventoryMaterials.getStackInSlot(BLACK_INK_SLOT).isEmpty())
+			throw new Exception("Please load Black Ink.");
+
+		if (!inventoryMaterials.getStackInSlot(PAPER_SLOT).getItem().equals(Items.NAME_TAG))
+			throw new Exception("Please load Name Tags.");
+
+
+		int x = getEmptyOutputSlot();
+		if(x == -1)
+			throw new Exception("no empty output slot");
+
+		ItemStack output = new ItemStack(Items.NAME_TAG);
+		output.setTagCompound(new NBTTagCompound());
+		NBTTagCompound nameTag = new NBTTagCompound();
+		nameTag.setString("Name", args.checkString(0));
+		output.getTagCompound().setTag("display", nameTag);
+
+		damageMaterial(BLACK_INK_SLOT, 1);
+		damageMaterial(PAPER_SLOT, 1);
+
+		return new Object[]{ true };
+	}
+
+	private void damageMaterial(short materialSlot, int damage){
+		inventoryMaterials.getStackInSlot(materialSlot).setItemDamage(inventoryMaterials.getStackInSlot(materialSlot).getItemDamage() + damage);
+		if(inventoryMaterials.getStackInSlot(materialSlot).getItemDamage() >= inventoryMaterials.getStackInSlot(materialSlot).getMaxDamage()) {
+			inventoryMaterials.setStackInSlot(materialSlot, ItemStack.EMPTY);
 		}
 	}
 
+	private int getEmptyOutputSlot(){
+		for(int slot = 0; slot < inventoryOutput.getSlots(); slot++)
+			if(inventoryOutput.getStackInSlot(slot).isEmpty())
+				return slot;
+
+		return -1;
+	}
+
+
 	@Callback
 	public Object[] print(Context context, Arguments args) throws Exception {
-		int copies = args.optInteger(1, 9);
-		boolean markColor = false;
-		boolean markBlack = false;
-		for (int i = 0; i < copies; i++) {
-			if((!getStackInSlot(0).isEmpty() && !getStackInSlot(1).isEmpty())) { //No color ink
-				if(!getStackInSlot(2).isEmpty()) { //No paper
-					for (int x = 3; x <= 12; x++) { //Loop the 9 output slots checking for a empty one
-						if (getStackInSlot(x).isEmpty()) { //The slot is empty lets make us a new page
-							printerItemStacks[x] = new ItemStack(ContentRegistry.printedPage);
-							printerItemStacks[x].setTagCompound(new NBTTagCompound());
-							if(pageTitle != "") {
-								printerItemStacks[x].getTagCompound().setString("pageTitle", pageTitle);
-								printerItemStacks[x].setStackDisplayName(pageTitle);
-								pageTitle = "";
-							}
-							printerItemStacks[x].getTagCompound().setDouble("version", PrinterFormatVersion);
-							int iter = 0;
-							for (String s : lines) {
-								printerItemStacks[x].getTagCompound().setString("line"+iter, lines.get(iter) + "∞" + colors.get(iter) + "∞" + align.get(iter));
+		int copies = args.optInteger(0, 1);
+		int copiesDone = 0;
 
-								if (colors.get(iter) != 0x000000) {
-									markColor = true;
-									colorUses++;
-								} else {
-									markBlack = true;
-									blackUses++;
-								}
-								if(lines.get(iter).matches(".*§[0-9a-f].*")) {
-									markColor = true;
-									markBlack = false;
-									Pattern regex = Pattern.compile("§[0-9a-f]*");
-									Matcher matcher = regex.matcher(lines.get(iter));
-									while (matcher.find())
-										colorUses++;
-								}
-								iter++; 
-							}
-							lines.clear();
-							colors.clear();
-							align.clear();
-							if (getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
-								getStackInSlot(2).setItemDamage(getStackInSlot(2).getItemDamage() + 1);
-								if(getStackInSlot(2).getItemDamage() >= getStackInSlot(2).getMaxDamage()) {
-									setInventorySlotContents(2, ItemStack.EMPTY);
-								}
-							} else {
-								decrStackSize(2, 1);
-							}
-							if (markColor) {
-								getStackInSlot(1).setItemDamage(getStackInSlot(1).getItemDamage() + colorUses++);
-								if(getStackInSlot(1).getItemDamage() >= getStackInSlot(1).getMaxDamage()) {
-									setInventorySlotContents(1, ItemStack.EMPTY);
-								}
-							}
-							if (markBlack) {
-								getStackInSlot(0).setItemDamage(getStackInSlot(0).getItemDamage() + blackUses);
-								if(getStackInSlot(0).getItemDamage() >= getStackInSlot(0).getMaxDamage()) {
-									setInventorySlotContents(0, ItemStack.EMPTY);
-								}
-							}
-							return new Object[] { true };
-						}
-					} throw new Exception("No empty output slots.");
-				} else {
-					throw new Exception("Please load Paper.");
-				}
-			} else {
+		for (int i = 0; i < copies; i++) {
+			if((inventoryMaterials.getStackInSlot(BLACK_INK_SLOT).isEmpty() && inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).isEmpty())) //No color ink
 				throw new Exception("Please load Ink.");
+
+			if(inventoryMaterials.getStackInSlot(PAPER_SLOT).isEmpty())
+				throw new Exception("Please load Paper.");
+
+			int x = getEmptyOutputSlot();
+
+			if(x == -1)
+				throw new Exception("no empty output slot");
+
+			ItemStack output = new ItemStack(ContentRegistry.printedPage);
+			output.setTagCompound(new NBTTagCompound());
+			if(pageTitle.length() > 0) {
+				output.getTagCompound().setString("pageTitle", pageTitle);
+				output.setStackDisplayName(pageTitle);
 			}
+			output.getTagCompound().setDouble("version", PrinterFormatVersion);
+			int iter = 0;
+			for (String s : lines) {
+				output.getTagCompound().setString("line"+iter, lines.get(iter) + "∞" + colors.get(iter) + "∞" + align.get(iter));
+
+				if (colors.get(iter) != 0x000000) {
+					damageMaterial(COLOR_INK_SLOT, 1);
+				} else {
+					damageMaterial(BLACK_INK_SLOT, 1);
+				}
+				if(lines.get(iter).matches(".*§[0-9a-f].*")) {
+					Pattern regex = Pattern.compile("§[0-9a-f]*");
+					Matcher matcher = regex.matcher(lines.get(iter));
+					while (matcher.find())
+						damageMaterial(COLOR_INK_SLOT, 1);
+				}
+				iter++;
+			}
+
+			damageMaterial(PAPER_SLOT, 1);
+
+			inventoryOutput.setStackInSlot(x, output);
+
+			copiesDone++;
+
 		}
-		return new Object[] { false };
+
+		pageTitle = "";
+		lines.clear();
+		colors.clear();
+		align.clear();
+
+		return new Object[] { copiesDone == copies };
 	}
 
 	@Callback
@@ -407,11 +492,11 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 
 	@Callback
 	public Object[] getPaperLevel(Context context, Arguments args) { 
-		if(!getStackInSlot(2).isEmpty()) {
-			if (getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
-				return new Object[] { 256 - getStackInSlot(2).getItemDamage() };
+		if(!inventoryMaterials.getStackInSlot(2).isEmpty()) {
+			if (inventoryMaterials.getStackInSlot(2).getItem() instanceof PrinterPaperRoll) {
+				return new Object[] { 256 - inventoryMaterials.getStackInSlot(2).getItemDamage() };
 			} else {
-				return new Object[] { getStackInSlot(2).getCount() };
+				return new Object[] { inventoryMaterials.getStackInSlot(2).getCount() };
 			}
 		} else {
 			return new Object[] { false };
@@ -420,9 +505,9 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 
 	@Callback
 	public Object[] getBlackInkLevel(Context context, Arguments args) { 
-		if(!getStackInSlot(0).isEmpty()) {
-			if (getStackInSlot(0).getItem() instanceof PrinterInkBlack) {
-				return new Object[] { OpenPrinter.cfg.printerInkUse - getStackInSlot(0).getItemDamage()};
+		if(!inventoryMaterials.getStackInSlot(0).isEmpty()) {
+			if (inventoryMaterials.getStackInSlot(0).getItem() instanceof PrinterInkBlack) {
+				return new Object[] { OpenPrinter.cfg.printerInkUse - inventoryMaterials.getStackInSlot(0).getItemDamage()};
 			} else {
 				return new Object[] { false };
 			}
@@ -433,9 +518,9 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 
 	@Callback
 	public Object[] getColorInkLevel(Context context, Arguments args) { 
-		if(!getStackInSlot(1).isEmpty()) {
-			if (getStackInSlot(1).getItem() instanceof PrinterInkColor) {
-				return new Object[] { OpenPrinter.cfg.printerInkUse - getStackInSlot(1).getItemDamage() };
+		if(!inventoryMaterials.getStackInSlot(1).isEmpty()) {
+			if (inventoryMaterials.getStackInSlot(1).getItem() instanceof PrinterInkColor) {
+				return new Object[] { OpenPrinter.cfg.printerInkUse - inventoryMaterials.getStackInSlot(1).getItemDamage() };
 			} else {
 				return new Object[] { false };
 			}
@@ -459,163 +544,27 @@ public class PrinterTE extends TileEntity implements ITickable, Environment, IIn
 	}
 
 	@Override
-	public int getSizeInventory() {
-		return this.printerItemStacks.length;
-	}
-
-	@Override
-	public boolean isEmpty() {
-		for(ItemStack s : printerItemStacks)
-		{
-			if (!s.isEmpty()) return false;
-		}
-		return true;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i) {
-		return this.printerItemStacks[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int slot, int amt) {
-		ItemStack stack = getStackInSlot(slot);
-		if (!stack.isEmpty()) {
-			if (stack.getCount() <= amt) {
-				setInventorySlotContents(slot, ItemStack.EMPTY);
-			} else {
-				stack = stack.splitStack(amt);
-				if (stack.getCount() == 0) {
-					setInventorySlotContents(slot, ItemStack.EMPTY);
-				}
-			}
-		}
-		return stack;
-	}
-
-	@Override
-	public ItemStack removeStackFromSlot(int i) {
-		if (!getStackInSlot(i).isEmpty())
-		{
-			ItemStack var2 = getStackInSlot(i);
-			setInventorySlotContents(i,ItemStack.EMPTY);
-			return var2;
-		}
-		else
-		{
-			return ItemStack.EMPTY;
-		}
-	}
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack) {
-		this.printerItemStacks[i] = itemstack;
-		if (!itemstack.isEmpty() && itemstack.getCount() > this.getInventoryStackLimit())
-		{
-			itemstack.setCount(this.getInventoryStackLimit());
-		}
-	}
-
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
-	}
-
-	@Override
-	public boolean isUsableByPlayer(EntityPlayer entityplayer) {
-		return getWorld().getTileEntity(pos) == this &&
-				entityplayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < 64;
-	}
-
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-		if (i == 0) {
-			if (itemstack.getItem() instanceof PrinterInkBlack) {
-				return true;
-			}
-		} else if(i == 1) {
-			if (itemstack.getItem() instanceof PrinterInkColor) {
-				return true;
-			}
-		} else if (i == 2) {
-			if (itemstack.getItem() instanceof PrinterPaperRoll || itemstack.getItem().equals(Items.PAPER) || itemstack.getItem().equals(Items.NAME_TAG)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	@Override
-	public int[] getSlotsForFace(EnumFacing side) {
-		return side == EnumFacing.DOWN ? slots_bottom : (side == EnumFacing.UP ? slots_top : slots_sides);
-	}
-
-	@Override
-	public boolean canInsertItem(int slot, ItemStack stack, EnumFacing face) {
-		return this.isItemValidForSlot(slot, stack);
-	}
-
-	@Override
-	public boolean canExtractItem(int slot, ItemStack stack, EnumFacing face) {
-		return true;
-	}
-
-	@Override
-	public String getName() {
-		return "openprinter";
-	}
-
-	@Override
-	public boolean hasCustomName() {
-		return false;
-	}
-
-	@Override
 	public void onMessage(Message arg0) {
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
-		// TODO Auto-generated method stub
-		return new TextComponentString(I18n.translateToLocal("gui.string.printer"));
+	public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+		return (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) ||  super.hasCapability(capability, facing);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public void openInventory(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		
+	public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			if(EnumFacing.UP.equals(facing))
+				return (T) inventoryScanner;
+			else if(EnumFacing.DOWN.equals(facing))
+				return (T) inventoryOutput;
+			else
+				return (T) inventoryMaterials;
+		}
+
+		return super.getCapability(capability, facing);
 	}
 
-	@Override
-	public void closeInventory(EntityPlayer player) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getField(int id) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setField(int id, int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getFieldCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void clear() {
-		// TODO Auto-generated method stub
-		
-	}
 }
