@@ -8,10 +8,8 @@ import li.cil.oc.api.Network;
 import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
-import li.cil.oc.api.network.Component;
 import li.cil.oc.api.network.ComponentConnector;
 import li.cil.oc.api.network.Environment;
-import li.cil.oc.api.network.ManagedEnvironment;
 import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
@@ -59,13 +57,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	private List<Integer> colors = new ArrayList<Integer>();
 	private String pageTitle = "";
 
-	private Object oc_fs;
-
-	public PrinterTE() {
-		if (this.node() != null) {
-			initOCFilesystem();
-		}
-	}
+	public PrinterTE() {}
 
 	class InventoryOutput extends ItemStackHandler {
 		InventoryOutput(){
@@ -145,16 +137,6 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		return "openprinter";
 	}
 
-
-	protected ManagedEnvironment oc_fs(){
-		return (ManagedEnvironment) this.oc_fs;
-	}
-
-	private void initOCFilesystem() {
-		oc_fs = li.cil.oc.api.FileSystem.asManagedEnvironment(li.cil.oc.api.FileSystem.fromClass(OpenPrinter.class, OpenPrinter.MODID, "/lua/printer/"), "printer");
-		((Component) oc_fs().node()).setVisibility(Visibility.Network);
-	}
-
 	@Override
 	public Node node() {
 		return node;
@@ -175,20 +157,10 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	}
 
 	@Override
-	public void onConnect(final Node node) {
-		if (node == node()) {
-			node.connect(oc_fs().node());
-		}
-	}
+	public void onConnect(final Node node) {}
 
 	@Override
-	public void onDisconnect(final Node node) {
-		if (node.host() instanceof Context) {
-			node.disconnect(oc_fs().node());
-		} else if (node == this.node) {
-			oc_fs().node().remove();
-		}
-	}
+	public void onDisconnect(final Node node) {}
 
 	@Override
 	public void update() {
@@ -245,9 +217,6 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		if (node != null && node.host() == this) {
 			node.load(nbt.getCompoundTag("oc:node"));
 		}
-		if (oc_fs != null && oc_fs().node() != null) {
-			oc_fs().node().load(nbt.getCompoundTag("oc:fs"));
-		}
 
 		if(nbt.hasKey("inventoryOutput")) {
 			inventoryOutput.deserializeNBT(nbt.getCompoundTag("inventoryOutput"));
@@ -266,11 +235,6 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			final NBTTagCompound nodeNbt = new NBTTagCompound();
 			node.save(nodeNbt);
 			nbt.setTag("oc:node", nodeNbt);
-		}
-		if (oc_fs != null && oc_fs().node() != null) {
-			final NBTTagCompound fsNbt = new NBTTagCompound();
-			oc_fs().node().save(fsNbt);
-			nbt.setTag("oc:fs", fsNbt);
 		}
 
 		nbt.setTag("inventoryScanner", inventoryScanner.serializeNBT());

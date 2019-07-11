@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,6 +33,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import pcl.openprinter.util.ocLootDisk;
 
 
 @Mod(
@@ -77,6 +79,11 @@ public class OpenPrinter {
 		}
 
 		contentRegistry.preInit();
+	}
+
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		ocLootDisk.register();
 	}
 
 	@Mod.EventBusSubscriber
