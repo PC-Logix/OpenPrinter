@@ -31,18 +31,24 @@ public class ShredderTE extends TileEntity implements ITickable {
 
 	public ShredderTE() {}
 
-	public class ShredderInput extends ItemStackHandler {
-		public ShredderInput(){
+	class ShredderInput extends ItemStackHandler {
+		ShredderInput(){
 			super(1);
 		}
 
 		@Override
-		public boolean isItemValid(int slot, ItemStack stack){
+		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
 			return stack.getItem() instanceof PrintedPage
 				|| stack.getItem().equals(Items.WRITTEN_BOOK)
 				|| stack.getItem().equals(Items.WRITABLE_BOOK)
 				|| stack.getItem().equals(Items.PAPER)
 				|| stack.getItem().equals(Items.BOOK);
+		}
+
+		@Override
+		@Nonnull
+		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
+			return isItemValid(slot, stack) ? super.insertItem(slot, stack, simulate) : stack;
 		}
 	}
 
