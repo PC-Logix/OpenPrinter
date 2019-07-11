@@ -124,7 +124,7 @@ public class ShredderTE extends TileEntity implements ITickable {
 		if (this.processingTime > 10) {
 			int outCount = 1;
 
-			if(inputStack.getItem().getRegistryName().equals("bibliocraft:bigbook"))
+			if(inputStack.getItem().getRegistryName().toString().equals("bibliocraft:bigbook"))
 				outCount = 11; // bigbook involves 11 paper sheets
 			else if(inputStack.getItem().equals(Items.BOOK) || inputStack.getItem().equals(Items.WRITABLE_BOOK) || inputStack.getItem().equals(Items.WRITTEN_BOOK))
 				outCount = 3;
