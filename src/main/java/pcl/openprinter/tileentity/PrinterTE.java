@@ -351,10 +351,18 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	}
 
 	private void damageMaterial(short materialSlot, int damage){
-		inventoryMaterials.getStackInSlot(materialSlot).setItemDamage(inventoryMaterials.getStackInSlot(materialSlot).getItemDamage() + damage);
-		if(inventoryMaterials.getStackInSlot(materialSlot).getItemDamage() >= inventoryMaterials.getStackInSlot(materialSlot).getMaxDamage()) {
+		ItemStack slotItem = inventoryMaterials.getStackInSlot(materialSlot);
+		if(slotItem.getCount() > 1){
+			inventoryMaterials.extractItem(materialSlot, 1, false);
+			return;
+		}
+
+		slotItem.setItemDamage(slotItem.getItemDamage() + damage);
+		if(slotItem.getItemDamage() >= slotItem.getMaxDamage()) {
 			inventoryMaterials.setStackInSlot(materialSlot, ItemStack.EMPTY);
 		}
+		else
+			inventoryMaterials.setStackInSlot(materialSlot, slotItem);
 	}
 
 	private int getEmptyOutputSlot(){
