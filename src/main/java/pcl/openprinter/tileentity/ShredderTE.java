@@ -1,5 +1,6 @@
 package pcl.openprinter.tileentity;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -16,6 +17,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import pcl.openprinter.ContentRegistry;
 
+import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.util.ItemUtils;
 
 import javax.annotation.Nonnull;
@@ -23,11 +25,26 @@ import javax.annotation.Nullable;
 
 public class ShredderTE extends TileEntity implements ITickable {
 	private ItemStackHandler inventoryOutput = new ItemStackHandler(9);
-	private ItemStackHandler inventoryInput = new ItemStackHandler(1);
+	private ItemStackHandler inventoryInput = new ShredderInput();
 
 	private int processingTime = 0;
 
 	public ShredderTE() {}
+
+	public class ShredderInput extends ItemStackHandler {
+		public ShredderInput(){
+			super(1);
+		}
+
+		@Override
+		public boolean isItemValid(int slot, ItemStack stack){
+			return stack.getItem() instanceof PrintedPage
+				|| stack.getItem().equals(Items.WRITTEN_BOOK)
+				|| stack.getItem().equals(Items.WRITABLE_BOOK)
+				|| stack.getItem().equals(Items.PAPER)
+				|| stack.getItem().equals(Items.BOOK);
+		}
+	}
 
 	@Deprecated
 	private void readOldInventoryFromNBT(NBTTagCompound nbt){

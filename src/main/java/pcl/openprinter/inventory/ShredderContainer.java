@@ -3,7 +3,6 @@ package pcl.openprinter.inventory;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import pcl.openprinter.inventory.slots.ShredderInputSlot;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import pcl.openprinter.tileentity.ShredderTE;
@@ -20,7 +19,7 @@ public class ShredderContainer extends CustomContainer {
 	public ShredderContainer (InventoryPlayer inventoryPlayer, ShredderTE tileEntity2){
 		tileEntity = tileEntity2;
 		//Blank Paper
-		addSlotToContainer(new ShredderInputSlot(tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), 0, 79, 34));
+		addSlotToContainer(new SlotItemHandler(tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), 0, 79, 34));
 
 		//Output slots
 		for (int i = 0; i < 9; i++) {
