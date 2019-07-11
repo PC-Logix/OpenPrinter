@@ -17,14 +17,11 @@ import org.apache.logging.log4j.Logger;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import pcl.openprinter.gui.GUIHandler;
-import pcl.openprinter.items.PrinterPaperRoll;
 import pcl.openprinter.network.PacketHandler;
 import pcl.openprinter.client.CreativeTab;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -78,6 +75,7 @@ public class OpenPrinter {
 				logger.info("OpenUpdater is not installed, not registering.");
 			}
 		}
+
 		contentRegistry.preInit();
 	}
 
@@ -116,16 +114,5 @@ public class OpenPrinter {
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
 		NetworkRegistry.INSTANCE.registerGuiHandler(OpenPrinter.instance, new GUIHandler());
-	}
-	
-	@SubscribeEvent
-	public void handleCrafting (PlayerEvent.ItemCraftedEvent event) {
-		if (event.crafting.getItem() instanceof PrinterPaperRoll) {
-			for (int i = 0; i < event.craftMatrix.getSizeInventory(); i++) {
-				ItemStack item = event.craftMatrix.getStackInSlot(i);
-				if (!item.isEmpty())
-					event.craftMatrix.setInventorySlotContents(i, new ItemStack(item.getItem(), 1, item.getItemDamage()));
-			}
-		}
 	}
 }
