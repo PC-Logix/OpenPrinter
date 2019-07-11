@@ -52,9 +52,9 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	private ItemStackHandler inventoryScanner = new InventoryScanner();
 	private ItemStackHandler inventoryMaterials = new InventoryMaterial();
 
-	private List<String> lines = new ArrayList<String>();
-	private List<String> align = new ArrayList<String>();
-	private List<Integer> colors = new ArrayList<Integer>();
+	private List<String> lines = new ArrayList<>();
+	private List<String> align = new ArrayList<>();
+	private List<Integer> colors = new ArrayList<>();
 	private String pageTitle = "";
 
 	public PrinterTE() {}
@@ -211,8 +211,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound nbt)
-	{
+	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		if (node != null && node.host() == this) {
 			node.load(nbt.getCompoundTag("oc:node"));
@@ -226,9 +225,34 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		else
 			readOldInventoryFromNBT(nbt); //remove when porting upwards
 
+		if(nbt.hasKey("buffers"))
+			readBuffersFromNBT(nbt.getCompoundTag("buffers"));
+	}
+
+	private NBTTagCompound writeBuffersToNBT(NBTTagCompound nbt){
+		for(int i=0; i < lines.size(); i++){
+			NBTTagCompound lineNBT = new NBTTagCompound();
+			lineNBT.setString("text", lines.get(i));
+			lineNBT.setString("align", align.get(i));
+			lineNBT.setInteger("color", colors.get(i));
+			nbt.setTag("line"+i, lineNBT);
+		}
+
+		return nbt;
+	}
+
+	private void readBuffersFromNBT(NBTTagCompound nbt){
+		lines.clear();
+		for(int i=0; nbt.hasKey("line"+i); i++){
+			NBTTagCompound lineNBT = nbt.getCompoundTag("line"+i);
+			lines.add(lineNBT.getString("text"));
+			align.add(lineNBT.getString("align"));
+			colors.add(lineNBT.getInteger("color"));
+		}
 	}
 
 	@Override
+	@Nonnull
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
 		if (node != null && node.host() == this) {
@@ -241,10 +265,13 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		nbt.setTag("inventoryMaterials", inventoryMaterials.serializeNBT());
 		nbt.setTag("inventoryOutput", inventoryOutput.serializeNBT());
 
+		nbt.setTag("buffers", writeBuffersToNBT(new NBTTagCompound()));
+
 		return super.writeToNBT(nbt);
 	}
 
 	@Override
+	@Nonnull
 	public NBTTagCompound getUpdateTag() {
 		NBTTagCompound tag = new NBTTagCompound();
 		this.writeToNBT(tag);
