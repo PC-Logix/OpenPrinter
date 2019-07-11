@@ -1,3 +1,9 @@
+# Project specific
+
+# ignore doc path
+src/main/resources/assets/openprinter/doc
+
+
 #################
 ## Eclipse
 #################

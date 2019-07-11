@@ -1,6 +1,7 @@
 tile.printer.name=Open Printer
 tile.shredder.name=Open Shredder
 tile.filecabinet.name=Open File Cabinet
+item.manual.name=Manual
 item.printer_paper.name=Printer Paper
 item.printer_paper_roll.name=Printer Paper Roll
 item.printed_page.name=Printed Page

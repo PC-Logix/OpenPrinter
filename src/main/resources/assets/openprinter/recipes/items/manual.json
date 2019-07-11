@@ -1,0 +1,28 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "rtfm"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PB ",
+    "PPr",
+    "   "
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:book"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "openprinter:manual"
+  }
+}

@@ -9,6 +9,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'com.palominolabs.gradle.task:gradle-git-clone-task:0.0.3'
     }
 }
 
@@ -16,6 +17,12 @@ plugins {
   id "com.matthewprenger.cursegradle" version "1.0.7"
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
+
+sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
 
 compileJava.options.encoding = 'UTF-8'
 tasks.withType(JavaCompile) {
@@ -52,10 +59,15 @@ repositories {
         name = "OC repo"
         url = "http://maven.cil.li/"
     }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
 }
 
 dependencies {
     deobfCompile "li.cil.oc:OpenComputers:${opencomputers_version}"
+    compileOnly "li.cil.manual:RTFM:${rtfmVersion}"
 }
 
 minecraft {
@@ -94,12 +106,16 @@ curseforge {
 
 
 processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
         // replace version and mcversion
-        expand 'version':project.version + "." + project.ext.buildNumber, 'mcversion':project.minecraft.version
+        expand 'version':project.version + "-" + project.buildNumber, 'mcversion':project.minecraft.version
     }
 
     // copy everything else, thats not the mcmod.info
@@ -108,10 +124,23 @@ processResources {
     }
 }
 
-// this is needed for IntelliJ so we don't have to copy over the assets manually every time
+// this is needed for IntelliJ so we don't have to copy over the assets manually every time... what?
 idea {
     module {
         outputDir = file('build/classes/main')
     }
 }
 
+task flushWiki(type: Delete) {
+    delete "src/main/resources/assets/openprinter/doc"
+}
+
+task syncGitWiki(type: com.palominolabs.gradle.task.git.clone.GitCloneTask) {
+    dir = file("src/main/resources/assets/openprinter/doc")
+    uri = 'https://github.com/PC-Logix/OpenPrinter.wiki.git'
+    treeish = "origin/master"
+    forceFetch = true
+}
+
+syncGitWiki.dependsOn(flushWiki)
+build.dependsOn(syncGitWiki)

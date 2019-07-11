@@ -9,6 +9,7 @@ import java.net.URL;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -19,6 +20,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pcl.openprinter.gui.GUIHandler;
+import pcl.openprinter.manual.Manual;
 import pcl.openprinter.network.PacketHandler;
 import pcl.openprinter.client.CreativeTab;
 import net.minecraftforge.common.config.Configuration;
@@ -40,9 +42,9 @@ import pcl.openprinter.util.ocLootDisk;
 		modid=OpenPrinter.MODID,
 		name="OpenPrinter",
 		version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber,
-		dependencies = "required-after:OpenComputers@[1.7.1,)"
+		dependencies = "required-after:opencomputers;after:rtfm"
 )
-
+@Mod.EventBusSubscriber
 public class OpenPrinter {
 	public static final String MODID = BuildInfo.modID;
 
@@ -60,12 +62,11 @@ public class OpenPrinter {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(contentRegistry);
-		
-		FMLCommonHandler.instance().bus().register(this);
+
 		PacketHandler.init();
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
+
 
 		if ((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient() && cfg.enableMUD) {
 			logger.info("Registering mod with OpenUpdater");
@@ -77,6 +78,8 @@ public class OpenPrinter {
 				logger.info("OpenUpdater is not installed, not registering.");
 			}
 		}
+
+		Manual.preInit();
 
 		contentRegistry.preInit();
 	}
@@ -103,6 +106,9 @@ public class OpenPrinter {
 			//registerItemModel(ContentRegistry.printerPaperRoll, "printer_paper_roll");
 			registerItemModel(ContentRegistry.shreddedPaper, "shredded_paper");
 			registerItemModel(ContentRegistry.folder, "folder");
+
+			for(ItemStack item : ContentRegistry.modItems)
+				ModelLoader.setCustomModelResourceLocation(item.getItem(), 0, new ModelResourceLocation(item.getItem().getRegistryName(), "inventory"));
 		}
 
 		@SideOnly(Side.CLIENT)

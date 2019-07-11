@@ -4,13 +4,12 @@
 	"description": "OpenPrinter for OpenComputers.",
  	"version": "${version}",
  	"mcversion": "${mcversion}",
-	"url": "",
+	"url": "https://github.com/PC-Logix/OpenPrinter",
 	"updateUrl": "http://modupdates.pc-logix.com/openprinter",
 	"authors": ["Michiyo"],
-	"credits": "Michiyo",
+	"credits": "Michiyo, ben_mkiv",
 	"logoFile": "",
 	"requiredMods": [ "forge" ],
 	"dependencies": [ "opencomputers" ],
-	"dependants": [ ],
-	"useDependencyInformation": "true"
+	"dependants": [ ]
 }]
