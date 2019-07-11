@@ -12,10 +12,10 @@
     "i": {
       "item": "minecraft:iron_nugget"
     },
-    "c": {
+    "p": {
       "item": "#opencomputers_pcb"
     },
-    "p": {
+    "c": {
       "item": "#opencomputers_chip1"
     }
   },
