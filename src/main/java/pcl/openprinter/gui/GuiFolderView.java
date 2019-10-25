@@ -97,8 +97,10 @@ public class GuiFolderView extends GuiScreen {
 
 		updateButtons();
 
-		NBTTagCompound pageNBT = inventory.getStackInSlot(currPage).getTagCompound();
-		PaperGUI.drawPrintedPage(pageNBT, width, height, posX + 16, posY + 16);
+		if(inventory.getStackInSlot(currPage).hasTagCompound()) {
+			NBTTagCompound pageNBT = inventory.getStackInSlot(currPage).getTagCompound();
+			PaperGUI.drawPrintedPage(pageNBT, width, height, posX + 16, posY + 16);
+		}
 
 		super.drawScreen(i, j, f);
 	}
