@@ -56,7 +56,7 @@ public class ContentRegistry {
 
 	public static Item init(Item item, String name)
 	{
-		return item.setUnlocalizedName(name).setRegistryName("openprinter:" + name);
+		return item.setUnlocalizedName("openprinter." + name).setRegistryName("openprinter:" + name);
 	}
 	
 	@SubscribeEvent
@@ -96,7 +96,7 @@ public class ContentRegistry {
 
 
 	public static Block init(Block block, String name) {
-		return block.setUnlocalizedName(name).setRegistryName("openprinter:" + name);
+		return block.setUnlocalizedName("openprinter."+name).setRegistryName("openprinter:" + name);
 	}
 
 }

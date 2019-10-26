@@ -36,7 +36,7 @@ public class FileCabinetGUI extends GuiContainer {
 		if (name.length() > 0) {
 			mc.fontRenderer.drawString(name, (this.xSize -  mc.fontRenderer.getStringWidth(name)) / 2 , 4, 4210752);
 		} else {
-			mc.fontRenderer.drawString(I18n.translateToLocal("gui.string.filecabinet"), 65, 4, 4210752);
+			mc.fontRenderer.drawString(I18n.translateToLocal("gui.openprinter.string.filecabinet"), 65, 4, 4210752);
 		}
 	}
 

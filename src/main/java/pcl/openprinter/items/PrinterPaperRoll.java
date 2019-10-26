@@ -19,7 +19,7 @@ public class PrinterPaperRoll extends Item {
 		maxStackSize = 1;
 		this.setMaxDamage(256);
 		setNoRepair();
-		setUnlocalizedName("printer_paper_roll");
+		setUnlocalizedName("openprinter.printer_paper_roll");
 		//setTextureName("openprinter:PrinterPaperRoll");
 		setCreativeTab(OpenPrinter.CreativeTab);
 	}

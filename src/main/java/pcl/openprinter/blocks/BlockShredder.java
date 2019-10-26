@@ -23,7 +23,7 @@ public class BlockShredder extends BlockContainer {
 	public BlockShredder() {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setUnlocalizedName("shredder");
+		setUnlocalizedName("openprinter.shredder");
 		setHardness(.5f);
 	}
 

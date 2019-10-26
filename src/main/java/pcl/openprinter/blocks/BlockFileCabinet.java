@@ -23,7 +23,7 @@ public class BlockFileCabinet extends BlockContainer {
 	public BlockFileCabinet() {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setUnlocalizedName("filecabinet");
+		setUnlocalizedName("openprinter.filecabinet");
 		setHardness(.5f);
 	}
 	

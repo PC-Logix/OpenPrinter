@@ -34,7 +34,7 @@ public class BlockPrinter extends BlockContainer {
 	public BlockPrinter() {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setUnlocalizedName("printer");
+		setUnlocalizedName("openprinter.printer");
 		setHardness(.5f);
 	}
 

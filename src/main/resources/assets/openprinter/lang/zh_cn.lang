@@ -1,15 +1,15 @@
-tile.printer.name=æ‰“å�°æœº
-item.printer_paper.name=æ‰“å�°çº¸
-item.printer_paper_roll.name=æ‰“å�°å�·çº¸
-item.printed_page.name=æ‰“å�°é¡µé�¢
-item.printer_ink_black.name=é»‘è‰²å¢¨ç›’
-item.printer_ink_color.name=å½©è‰²å¢¨ç›’
-gui.string.printer=æ‰“å�°æœº
-gui.string.blackInk=é»‘è‰²å¢¨ç›’
-gui.string.colorInk=å½©è‰²å¢¨ç›’
-gui.string.paperInput=æ‰“å�°çº¸è¾“å…¥
-gui.string.paperOutput=æ‰“å�°çº¸è¾“å‡º
-gui.string.scannerInput=æ‰«æ��ä»ªè¾“å…¥
+tile.openprinter.printer.name=æ‰“å�°æœº
+item.openprinter.printer_paper.name=æ‰“å�°çº¸
+item.openprinter.printer_paper_roll.name=æ‰“å�°å�·çº¸
+item.openprinter.printed_page.name=æ‰“å�°é¡µé�¢
+item.openprinter.printer_ink_black.name=é»‘è‰²å¢¨ç›’
+item.openprinter.printer_ink_color.name=å½©è‰²å¢¨ç›’
+gui.openprinter.string.printer=æ‰“å�°æœº
+gui.openprinter.string.blackInk=é»‘è‰²å¢¨ç›’
+gui.openprinter.string.colorInk=å½©è‰²å¢¨ç›’
+gui.openprinter.string.paperInput=æ‰“å�°çº¸è¾“å…¥
+gui.openprinter.string.paperOutput=æ‰“å�°çº¸è¾“å‡º
+gui.openprinter.string.scannerInput=æ‰«æ��ä»ªè¾“å…¥
 itemGroup.OpenPrinter=OpenPrinter
 
 openprinter.outdated=OpenPrinter is outdated
