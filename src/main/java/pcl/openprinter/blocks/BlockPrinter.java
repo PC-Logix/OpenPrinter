@@ -9,6 +9,8 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +24,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.util.AABBHelper;
+
+import javax.annotation.Nullable;
 
 public class BlockPrinter extends BlockContainer {
 	private static final AxisAlignedBB emptyBB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
@@ -119,6 +123,52 @@ public class BlockPrinter extends BlockContainer {
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new PrinterTE();
+	}
+
+
+	@Override
+	public void getDrops(net.minecraft.util.NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune){
+		ItemStack dropStack = new ItemStack(state.getBlock());
+
+		NBTTagCompound nbt = new NBTTagCompound();
+
+		TileEntity tile = world.getTileEntity(pos);
+
+		if(tile != null) {
+			nbt.setUniqueId("uuid", ((PrinterTE) tile).getUniqueId());
+			dropStack.setTagCompound(nbt);
+		}
+
+		drops.add(dropStack);
+	}
+
+	@Override
+	public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)    {
+		if (willHarvest) return true; //If it will harvest, delay deletion of the block until after getDrops
+		return super.removedByPlayer(state, world, pos, player, willHarvest);
+	}
+	/**
+	 * Spawns the block's drops in the world. By the time this is called the Block has possibly been set to air via
+	 * Block.removedByPlayer
+	 */
+	@Override
+	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, ItemStack tool)    {
+		super.harvestBlock(world, player, pos, state, te, tool);
+		world.setBlockToAir(pos);
+	}
+
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+
+		if(worldIn.isRemote)
+			return;
+
+		if(stack.hasTagCompound() && stack.getTagCompound().hasUniqueId("uuid")) {
+			TileEntity tile = worldIn.getTileEntity(pos);
+			if(tile instanceof PrinterTE)
+				((PrinterTE) tile).setUniqueId(stack.getTagCompound().getUniqueId("uuid"));
+		}
 	}
 
 }

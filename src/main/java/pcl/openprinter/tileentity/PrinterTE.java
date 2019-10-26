@@ -57,6 +57,8 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	private List<Integer> colors = new ArrayList<>();
 	private String pageTitle = "";
 
+	private UUID uuid = UUID.randomUUID();
+
 	public PrinterTE() {}
 
 	class InventoryOutput extends ItemStackHandler {
@@ -225,6 +227,9 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		else
 			readOldInventoryFromNBT(nbt); //remove when porting upwards
 
+		if(nbt.hasUniqueId("printerUUID"))
+			setUniqueId(nbt.getUniqueId("printerUUID"));
+
 		if(nbt.hasKey("buffers"))
 			readBuffersFromNBT(nbt.getCompoundTag("buffers"));
 	}
@@ -268,6 +273,8 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		nbt.setTag("inventoryOutput", inventoryOutput.serializeNBT());
 
 		nbt.setTag("buffers", writeBuffersToNBT(new NBTTagCompound()));
+
+		nbt.setUniqueId("printerUUID", getUniqueId());
 
 		return super.writeToNBT(nbt);
 	}
@@ -345,7 +352,20 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 				output.put(x, printedPage.getTagCompound().getString("line"+x));
 			}
 		}
-		return new Object[] { outPageTitle, output };
+
+		return new Object[] { outPageTitle, output, scanPageMeta(printedPage) };
+	}
+
+	private static Map<String, String> scanPageMeta(ItemStack scannerInput) {
+		Map<String, String> output = new HashMap<>();
+		if (scannerInput.getItem() instanceof PrintedPage) {
+			if(scannerInput.getTagCompound().hasUniqueId("printerUUID"))
+				output.put("printerUUID", scannerInput.getTagCompound().getUniqueId("printerUUID").toString());
+			if(scannerInput.getTagCompound().hasUniqueId("pageUUID"))
+				output.put("pageUUID", scannerInput.getTagCompound().getUniqueId("pageUUID").toString());
+		}
+
+		return output;
 	}
 
 	@Callback(doc = "function(String:title):boolean; -- prints a name tag")
@@ -448,6 +468,9 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			}
 
 			damageMaterial(PAPER_SLOT, 1);
+
+			output.getTagCompound().setUniqueId("printerUUID", getUniqueId());
+			output.getTagCompound().setUniqueId("pageUUID", UUID.randomUUID());
 
 			inventoryOutput.setStackInSlot(x, output);
 
@@ -567,6 +590,14 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		}
 
 		return super.getCapability(capability, facing);
+	}
+
+	public UUID getUniqueId(){
+		return uuid;
+	}
+
+	public void setUniqueId(UUID uniqueId){
+		this.uuid = uniqueId;
 	}
 
 }
