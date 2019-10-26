@@ -54,6 +54,8 @@ public class OpenPrinter {
 	public static Config cfg = null;
 
 	private static boolean debug = true;
+	public static boolean verbose = false;
+
 	public static final Logger  logger  = LogManager.getFormatterLogger(MODID);
 
 	public static CreativeTabs CreativeTab = new CreativeTab("OpenPrinter");
@@ -67,7 +69,7 @@ public class OpenPrinter {
 		PacketHandler.init();
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
 
-
+		/*
 		if ((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient() && cfg.enableMUD) {
 			logger.info("Registering mod with OpenUpdater");
 			try {
@@ -78,6 +80,7 @@ public class OpenPrinter {
 				logger.info("OpenUpdater is not installed, not registering.");
 			}
 		}
+		*/
 
 		Manual.preInit();
 
@@ -114,13 +117,17 @@ public class OpenPrinter {
 		@SideOnly(Side.CLIENT)
 		private static void registerBlockModel(final Block block, int meta, final String blockName) {
 			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(OpenPrinter.MODID + ":" + blockName.toLowerCase(), "inventory"));
-			OpenPrinter.logger.info("Registering " + blockName.toLowerCase() + " Item Renderer");
+
+			if(OpenPrinter.verbose)
+				OpenPrinter.logger.info("Registering " + blockName.toLowerCase() + " Item Renderer");
 		}
 
 		@SideOnly(Side.CLIENT)
 		private static void registerItemModel(final Item item, final String itemName) {
 			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(OpenPrinter.MODID + ":" + itemName.toLowerCase(), "inventory"));
-			OpenPrinter.logger.info("Registering " + itemName.toLowerCase() + " Item Renderer");
+
+			if(OpenPrinter.verbose)
+				OpenPrinter.logger.info("Registering " + itemName.toLowerCase() + " Item Renderer");
 		}
 	}
 
