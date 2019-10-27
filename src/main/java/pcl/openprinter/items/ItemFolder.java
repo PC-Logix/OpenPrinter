@@ -9,13 +9,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 import pcl.openprinter.OpenPrinter;
 
-
 public class ItemFolder extends Item {
 
 	public ItemFolder() {
 		super();
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setUnlocalizedName("openprinter.folder");
+		setTranslationKey("openprinter.folder");
 	}
 	
 	@Override

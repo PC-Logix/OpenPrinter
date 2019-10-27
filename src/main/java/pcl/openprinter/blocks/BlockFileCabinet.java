@@ -23,7 +23,7 @@ public class BlockFileCabinet extends BlockContainer {
 	public BlockFileCabinet() {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setUnlocalizedName("openprinter.filecabinet");
+		setTranslationKey("openprinter.filecabinet");
 		setHardness(.5f);
 	}
 	
@@ -55,7 +55,7 @@ public class BlockFileCabinet extends BlockContainer {
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		EnumFacing facing = EnumFacing.getHorizontal(meta);
+		EnumFacing facing = EnumFacing.byHorizontalIndex(meta);
 		return this.getDefaultState().withProperty(PROPERTYFACING, facing);
 	}
 

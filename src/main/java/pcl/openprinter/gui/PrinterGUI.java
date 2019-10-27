@@ -2,8 +2,8 @@ package pcl.openprinter.gui;
 
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 
+import net.minecraft.util.text.TextComponentTranslation;
 import org.lwjgl.opengl.GL11;
 
 import pcl.openprinter.OpenPrinter;
@@ -27,10 +27,10 @@ public class PrinterGUI extends ContainerGUI {
         	super.drawGuiContainerForegroundLayer(x, y);
         	GL11.glEnable(GL11.GL_ALPHA_TEST);
         	//the parameters for drawString are: string, x, y, color
-        	mc.fontRenderer.drawSplitString(I18n.translateToLocal("gui.openprinter.string.blackInk"), 25, 25, 40, 0x404040);
-        	mc.fontRenderer.drawSplitString(I18n.translateToLocal("gui.openprinter.string.colorInk"), 55, 25, 40, 0x404040);
-        	mc.fontRenderer.drawSplitString(I18n.translateToLocal("gui.openprinter.string.paperInput"), 125, 25, 40, 0x404040);
-        	mc.fontRenderer.drawString(I18n.translateToLocal("gui.openprinter.string.scannerInput"), 70, 4, 0x404040);
+        	mc.fontRenderer.drawSplitString(new TextComponentTranslation("gui.openprinter.string.blackInk").getUnformattedText(), 25, 25, 40, 0x404040);
+        	mc.fontRenderer.drawSplitString(new TextComponentTranslation("gui.openprinter.string.colorInk").getUnformattedText(), 55, 25, 40, 0x404040);
+        	mc.fontRenderer.drawSplitString(new TextComponentTranslation("gui.openprinter.string.paperInput").getUnformattedText(), 125, 25, 40, 0x404040);
+        	mc.fontRenderer.drawString(new TextComponentTranslation("gui.openprinter.string.scannerInput").getUnformattedText(), 70, 4, 0x404040);
         }
 
         @Override

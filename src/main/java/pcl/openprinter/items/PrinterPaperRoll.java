@@ -1,6 +1,3 @@
-/**
- * 
- */
 package pcl.openprinter.items;
 
 import net.minecraft.entity.Entity;
@@ -8,10 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import pcl.openprinter.OpenPrinter;
-/**
- * @author Caitlyn
- *
- */
+
 public class PrinterPaperRoll extends Item {
 
 	public PrinterPaperRoll() {
@@ -19,8 +13,7 @@ public class PrinterPaperRoll extends Item {
 		maxStackSize = 1;
 		this.setMaxDamage(256);
 		setNoRepair();
-		setUnlocalizedName("openprinter.printer_paper_roll");
-		//setTextureName("openprinter:PrinterPaperRoll");
+		setTranslationKey("openprinter.printer_paper_roll");
 		setCreativeTab(OpenPrinter.CreativeTab);
 	}
 

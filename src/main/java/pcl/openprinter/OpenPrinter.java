@@ -1,11 +1,5 @@
 package pcl.openprinter;
 
-/**
- * @author Caitlyn
- *
- */
-import java.net.URL;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -25,11 +19,9 @@ import pcl.openprinter.network.PacketHandler;
 import pcl.openprinter.client.CreativeTab;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -42,7 +34,9 @@ import pcl.openprinter.util.ocLootDisk;
 		modid=OpenPrinter.MODID,
 		name="OpenPrinter",
 		version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber,
-		dependencies = "required-after:opencomputers;after:rtfm"
+		dependencies =
+				"required-after:opencomputers;" +
+				"after:rtfm"
 )
 @Mod.EventBusSubscriber
 public class OpenPrinter {
@@ -53,7 +47,6 @@ public class OpenPrinter {
 
 	public static Config cfg = null;
 
-	private static boolean debug = true;
 	public static boolean verbose = false;
 
 	public static final Logger  logger  = LogManager.getFormatterLogger(MODID);
@@ -68,19 +61,6 @@ public class OpenPrinter {
 
 		PacketHandler.init();
 		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
-
-		/*
-		if ((event.getSourceFile().getName().endsWith(".jar") || debug) && event.getSide().isClient() && cfg.enableMUD) {
-			logger.info("Registering mod with OpenUpdater");
-			try {
-				Class.forName("pcl.mud.OpenUpdater").getDeclaredMethod("registerMod", ModContainer.class, URL.class, URL.class).invoke(null, FMLCommonHandler.instance().findContainerFor(this),
-						new URL("http://PC-Logix.com/OpenPrinter/get_latest_build.php?mcver=1.12.2"),
-						new URL("http://PC-Logix.com/OpenPrinter/changelog.php?mcver=1.12.2"));
-			} catch (Throwable e) {
-				logger.info("OpenUpdater is not installed, not registering.");
-			}
-		}
-		*/
 
 		Manual.preInit();
 
@@ -103,10 +83,11 @@ public class OpenPrinter {
 			registerBlockModel(ContentRegistry.printerBlock, 0, "printer");
 			registerBlockModel(ContentRegistry.shredderBlock, 0, "shredder");
 			registerBlockModel(ContentRegistry.fileCabinetBlock, 0, "filecabinet");
+			registerBlockModel(ContentRegistry.briefcaseBlock, 0, "briefcase");
+
 			registerItemModel(ContentRegistry.printedPage, "printed_page");
 			registerItemModel(ContentRegistry.printerInkBlack, "printer_ink_black");
 			registerItemModel(ContentRegistry.printerInkColor, "printer_ink_color");
-			//registerItemModel(ContentRegistry.printerPaperRoll, "printer_paper_roll");
 			registerItemModel(ContentRegistry.shreddedPaper, "shredded_paper");
 			registerItemModel(ContentRegistry.folder, "folder");
 

@@ -1,13 +1,16 @@
+tile.openprinter.briefcase.name=Briefcase
+tile.openprinter.filecabinet.name=Open File Cabinet
 tile.openprinter.printer.name=Open Printer
 tile.openprinter.shredder.name=Open Shredder
-tile.openprinter.filecabinet.name=Open File Cabinet
+
+item.openprinter.folder.name=Folder
 item.openprinter.manual.name=OpenPrinter Manual
+item.openprinter.paper_shreds.name=Paper Shreds
 item.openprinter.printer_paper_roll.name=Printer Paper Roll
 item.openprinter.printed_page.name=Printed Page
 item.openprinter.printer_ink_black.name=Black Ink
 item.openprinter.printer_ink_color.name=Color Ink
-item.openprinter.paper_shreds.name=Paper Shreds
-item.openprinter.folder.name=Folder
+
 gui.openprinter.string.blackInk=Black Ink
 gui.openprinter.string.colorInk=Color Ink
 gui.openprinter.string.paperInput=Paper Input

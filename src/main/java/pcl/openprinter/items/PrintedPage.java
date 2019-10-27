@@ -1,6 +1,3 @@
-/**
- * 
- */
 package pcl.openprinter.items;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,18 +10,13 @@ import net.minecraft.world.World;
 import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.gui.PaperGUI;
 
-/**
- * @author Caitlyn
- *
- */
 public class PrintedPage extends Item{
 
 	public PrintedPage() {
 		super();
 		maxStackSize = 1;
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setUnlocalizedName("openprinter.printed_page");
-		//setTextureName("minecraft:paper");
+		setTranslationKey("openprinter.printed_page");
 	}
 	
 	@Override

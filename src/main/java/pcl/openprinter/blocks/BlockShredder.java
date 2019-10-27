@@ -23,7 +23,7 @@ public class BlockShredder extends BlockContainer {
 	public BlockShredder() {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setUnlocalizedName("openprinter.shredder");
+		setTranslationKey("openprinter.shredder");
 		setHardness(.5f);
 	}
 
@@ -55,7 +55,7 @@ public class BlockShredder extends BlockContainer {
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		EnumFacing facing = EnumFacing.getHorizontal(meta);
+		EnumFacing facing = EnumFacing.byHorizontalIndex(meta);
 		return this.getDefaultState().withProperty(PROPERTYFACING, facing);
 	}
 

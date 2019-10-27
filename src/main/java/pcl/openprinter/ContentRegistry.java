@@ -1,15 +1,14 @@
 package pcl.openprinter;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import pcl.openprinter.blocks.BlockBriefcase;
 import pcl.openprinter.blocks.BlockFileCabinet;
 import pcl.openprinter.blocks.BlockPrinter;
 import pcl.openprinter.blocks.BlockShredder;
-import pcl.openprinter.items.ItemFolder;
-import pcl.openprinter.items.ItemPaperShreds;
-import pcl.openprinter.items.PrintedPage;
-import pcl.openprinter.items.PrinterInkBlack;
-import pcl.openprinter.items.PrinterInkColor;
+import pcl.openprinter.items.*;
 import pcl.openprinter.manual.Manual;
+import pcl.openprinter.tileentity.BriefcaseTE;
 import pcl.openprinter.tileentity.FileCabinetTE;
 import pcl.openprinter.tileentity.PrinterTE;
 import pcl.openprinter.tileentity.ShredderTE;
@@ -30,11 +29,13 @@ public class ContentRegistry {
 	public static Block printerBlock;
 	static Block shredderBlock;
 	static Block fileCabinetBlock;
-	public static Item  printedPage;
+	public static Item printedPage;
 	//public static Item  printerPaperRoll;
-	static Item  printerInkColor;
-	static Item  printerInkBlack;
-	public static Item  shreddedPaper;
+	static Item printerInkColor;
+	static Item printerInkBlack;
+	static Block briefcaseBlock;
+	static Item briefcaseItem;
+	public static Item shreddedPaper;
 	static Item folder;
 
 	protected ContentRegistry() {
@@ -48,15 +49,17 @@ public class ContentRegistry {
 
 		printerBlock =init(new BlockPrinter(), "printer");
 		shredderBlock = init(new BlockShredder(), "shredder");
+		briefcaseBlock = init(new BlockBriefcase(), "briefcase");
 		fileCabinetBlock = init(new BlockFileCabinet(), "filecabinet");
-		GameRegistry.registerTileEntity(PrinterTE.class, "PrinterTE");
-		GameRegistry.registerTileEntity(ShredderTE.class, "ShredderTE");
-		GameRegistry.registerTileEntity(FileCabinetTE.class, "FileCabinetTE");
+		GameRegistry.registerTileEntity(PrinterTE.class, new ResourceLocation(OpenPrinter.MODID, "printer_tileentity"));
+		GameRegistry.registerTileEntity(ShredderTE.class, new ResourceLocation(OpenPrinter.MODID, "shredder_tileentity"));
+		GameRegistry.registerTileEntity(BriefcaseTE.class, new ResourceLocation(OpenPrinter.MODID, "briefcase_tileentity"));
+		GameRegistry.registerTileEntity(FileCabinetTE.class, new ResourceLocation(OpenPrinter.MODID, "filecabinet_tileentity"));
 	}
 
 	public static Item init(Item item, String name)
 	{
-		return item.setUnlocalizedName("openprinter." + name).setRegistryName("openprinter:" + name);
+		return item.setTranslationKey("openprinter." + name).setRegistryName("openprinter:" + name);
 	}
 	
 	@SubscribeEvent
@@ -79,12 +82,16 @@ public class ContentRegistry {
 		folder = new ItemFolder();
 		register.getRegistry().register(init(folder, "folder"));
 
+
 		for(ItemStack item : modItems)
 			register.getRegistry().register(item.getItem());
-		
+
+		briefcaseItem = new ItemBriefcase(briefcaseBlock).setCreativeTab(OpenPrinter.CreativeTab).setRegistryName(briefcaseBlock.getRegistryName());
+
 		register.getRegistry().register(new ItemBlock(printerBlock).setCreativeTab(OpenPrinter.CreativeTab).setRegistryName(printerBlock.getRegistryName()));
 		register.getRegistry().register(new ItemBlock(shredderBlock).setCreativeTab(OpenPrinter.CreativeTab).setRegistryName(shredderBlock.getRegistryName()));
 		register.getRegistry().register(new ItemBlock(fileCabinetBlock).setCreativeTab(OpenPrinter.CreativeTab).setRegistryName(fileCabinetBlock.getRegistryName()));
+		register.getRegistry().register(briefcaseItem);
 	}
 	
 	@SubscribeEvent
@@ -92,11 +99,12 @@ public class ContentRegistry {
 		register.getRegistry().register(printerBlock);
 		register.getRegistry().register(shredderBlock);
 		register.getRegistry().register(fileCabinetBlock);
+		register.getRegistry().register(briefcaseBlock);
 	}
 
 
 	public static Block init(Block block, String name) {
-		return block.setUnlocalizedName("openprinter."+name).setRegistryName("openprinter:" + name);
+		return block.setTranslationKey("openprinter."+name).setRegistryName("openprinter:" + name);
 	}
 
 }

@@ -1,0 +1,23 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "top": "openprinter:blocks/block_side",
+      "front": "openprinter:blocks/filingcabinet_front",
+      "side": "openprinter:blocks/block_side"
+    },
+    "model": "openprinter:briefcase"
+  },
+  "variants": {
+    "normal": [{"model": "openprinter:briefcase"}],
+    "inventory": [{"model": "openprinter:briefcase"}],
+    "pitch=north,yaw=north": { "model": "openprinter:briefcase", "y": 180 },
+    "pitch=north,yaw=east":  { "model": "openprinter:briefcase", "y": 270 },
+    "pitch=north,yaw=south": { "model": "openprinter:briefcase" },
+    "pitch=north,yaw=west":  { "model": "openprinter:briefcase", "y": 90 },
+    "pitch=up,yaw=north": { "model": "openprinter:briefcase", "x": 90, "y": 180 },
+    "pitch=up,yaw=east":  { "model": "openprinter:briefcase", "x": 90, "y": 270 },
+    "pitch=up,yaw=south": { "model": "openprinter:briefcase", "x": 90 },
+    "pitch=up,yaw=west":  { "model": "openprinter:briefcase", "x": 90, "y": 90 }
+  }
+}

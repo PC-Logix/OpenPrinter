@@ -34,7 +34,7 @@ public class BlockPrinter extends BlockContainer {
 	public BlockPrinter() {
 		super(Material.IRON );
 		setCreativeTab(OpenPrinter.CreativeTab);
-		setUnlocalizedName("openprinter.printer");
+		setTranslationKey("openprinter.printer");
 		setHardness(.5f);
 	}
 
@@ -66,7 +66,7 @@ public class BlockPrinter extends BlockContainer {
 	@Override
 	public IBlockState getStateFromMeta(int meta)
 	{
-		EnumFacing facing = EnumFacing.getHorizontal(meta);
+		EnumFacing facing = EnumFacing.byHorizontalIndex(meta);
 		return this.getDefaultState().withProperty(PROPERTYFACING, facing);
 	}
 
