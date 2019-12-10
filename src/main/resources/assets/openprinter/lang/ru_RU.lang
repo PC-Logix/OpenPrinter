@@ -1,0 +1,24 @@
+tile.openprinter.briefcase.name=Чемодан
+tile.openprinter.filecabinet.name=Картотека
+tile.openprinter.printer.name=Принтер
+tile.openprinter.shredder.name=Шредер
+
+item.openprinter.folder.name=Папка
+item.openprinter.manual.name=Руководство OpenPrinter
+item.openprinter.paper_shreds.name=Лоскутки бумаги
+item.openprinter.printer_paper_roll.name=Рулон бумаги для принтера
+item.openprinter.printed_page.name=Распечатанная страница
+item.openprinter.printer_ink_black.name=Чёрные чернила
+item.openprinter.printer_ink_color.name=Цветные чернила
+
+gui.openprinter.string.blackInk=Чёрные чернила
+gui.openprinter.string.colorInk=Цветные чернила
+gui.openprinter.string.paperInput=Ввод бумаги
+gui.openprinter.string.paperOutput=Вывод бумаги
+gui.openprinter.string.scannerInput=Ввод сканера
+gui.openprinter.string.shredder=Шредер
+gui.openprinter.string.filecabinet=Картотека
+itemGroup.OpenPrinter=OpenPrinter
+
+openprinter.outdated=Версия OpenPrinter устарела.
+openprinter.uptodate=Версия OpenPrinter актуальна.
