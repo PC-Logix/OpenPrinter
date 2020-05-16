@@ -5,6 +5,7 @@ package pcl.openprinter.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextComponentString;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -13,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+
+import java.awt.*;
 
 /**
  * @author Caitlyn
@@ -128,7 +131,11 @@ public class PaperGUI extends GuiScreen {
 					if (outleng > 30) {
 						parts[0] = limit(parts[0],30);
 					}
-					Integer color = Integer.parseInt(parts[1]);
+
+					Integer color = 0;
+
+					try { color = Integer.parseInt(parts[1]); } catch(Exception ex){} // just catch invalid user inputs
+
 					String alignment = parts[2];
 					if (alignment.equalsIgnoreCase("center")) {
 						mc.fontRenderer.drawString(parts[0], posX + width/2 - mc.fontRenderer.getStringWidth(parts[0])/2, posY, color);
