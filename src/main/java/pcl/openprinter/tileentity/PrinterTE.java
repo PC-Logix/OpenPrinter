@@ -434,7 +434,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			if((inventoryMaterials.getStackInSlot(BLACK_INK_SLOT).isEmpty() && inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).isEmpty())) //No color ink
 				throw new Exception("Please load Ink.");
 
-			if(inventoryMaterials.getStackInSlot(PAPER_SLOT).isEmpty())
+			if (!inventoryMaterials.getStackInSlot(PAPER_SLOT).getItem().equals(Items.PAPER))
 				throw new Exception("Please load Paper.");
 
 			int x = getEmptyOutputSlot();
