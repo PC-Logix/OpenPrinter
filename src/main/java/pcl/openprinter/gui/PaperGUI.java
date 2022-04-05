@@ -90,9 +90,9 @@ public class PaperGUI extends GuiScreen {
 					String alignment = parts[2];
 					if (alignment.equalsIgnoreCase("center")) {
 
-						mc.fontRenderer.drawString(parts[0], width/2 - mc.fontRenderer.getStringWidth(parts[0])/2, height / 2 - offset, color);
+						mc.fontRenderer.drawString(parts[0], xSizeOfTexture/2 - mc.fontRenderer.getStringWidth(parts[0])/2, ySizeOfTexture / 2 - offset, color);
 					} else {
-						mc.fontRenderer.drawString(parts[0], width/2 , height / 2 - offset, color);
+						mc.fontRenderer.drawString(parts[0], xSizeOfTexture/2 , ySizeOfTexture / 2 - offset, color);
 					}
 					offset = offset - 10;
 				}
@@ -109,9 +109,9 @@ public class PaperGUI extends GuiScreen {
 			drawTexturedModalRect(posX, posY, 0, 0, xSizeOfTexture, ySizeOfTexture);
 			int offset = 100;
 			if (stack.hasTagCompound()) {
-				drawPrintedPage(stack.getTagCompound(), width, height, posX + 6, posY + 6);
+				drawPrintedPage(stack.getTagCompound(), xSizeOfTexture, ySizeOfTexture, posX + 6, posY + 6);
 			} else {
-				mc.fontRenderer.drawString("This page intentionally left blank.", width/2 - mc.fontRenderer.getStringWidth("This page intentionally left blank.")/2, height / 2 - offset, 0x000000);
+				mc.fontRenderer.drawString("This page intentionally left blank.", xSizeOfTexture/2 - mc.fontRenderer.getStringWidth("This page intentionally left blank.")/2, ySizeOfTexture / 2 - offset, 0x000000);
 			}
 		}
 
