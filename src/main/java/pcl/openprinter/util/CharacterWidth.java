@@ -43,7 +43,7 @@ public class CharacterWidth {
         int offset = 0;
         for (int i = 0; i < str.length(); i++) {
             if (cc) {
-                // assume any bold character is an extra character wide
+                // assume any bold character is an extra pixel wide
                 switch (Character.toString(str.charAt(i))) {
                     case "l":
                         offset = 1;
