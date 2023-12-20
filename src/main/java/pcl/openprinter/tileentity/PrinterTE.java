@@ -37,6 +37,7 @@ import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
 import pcl.openprinter.util.ItemUtils;
+import pcl.openprinter.util.CharacterWidth;
 
 import javax.annotation.Nonnull;
 
@@ -558,6 +559,16 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	public Object[] charCount(Context context, Arguments args) {
 		return new Object[] { args.checkString(0).replaceAll("(?:§[0-9a-fk-or])+", "").length() };
 	}
+
+        @Callback(doc = "function(String:input):Integer; -- gets the pixel width of a given String", direct = true)
+        public Object[] width(Context context, Arguments args) {
+		return new Object[] { CharacterWidth.calculateWidth(args.checkString(0)) };
+        }
+
+        @Callback(doc = "function():Integer; -- returns the maximum allowed width of a line", direct = true)
+        public Object[] maxWidth(Context context, Arguments args) {
+		return new Object[] { 164 };
+        }
 
 	@Callback(doc = "function():boolean; -- clears the printer buffer")
 	public Object[] clear(Context context, Arguments args) {

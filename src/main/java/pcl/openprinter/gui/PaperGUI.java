@@ -17,6 +17,8 @@ import net.minecraftforge.common.util.Constants;
 
 import java.awt.*;
 
+import pcl.openprinter.util.CharacterWidth;
+
 /**
  * @author Caitlyn
  * 
@@ -84,7 +86,7 @@ public class PaperGUI extends GuiScreen {
 				if(parts.length > 1) {
 					Integer outleng = parts[0].replaceAll("(?:§[0-9a-fk-or])+", "").length();
 					if (outleng > 30) {
-						parts[0] = limit(parts[0],30);
+						parts[0] = CharacterWidth.limitWidth(parts[0],164);
 					}
 					Integer color = Integer.parseInt(parts[1]);
 					String alignment = parts[2];
@@ -129,7 +131,7 @@ public class PaperGUI extends GuiScreen {
 				if(parts.length > 1) {
 					Integer outleng = parts[0].replaceAll("(?:§[0-9a-fk-or])+", "").length();
 					if (outleng > 30) {
-						parts[0] = limit(parts[0],30);
+						parts[0] = CharacterWidth.limitWidth(parts[0],164);
 					}
 
 					Integer color = 0;
