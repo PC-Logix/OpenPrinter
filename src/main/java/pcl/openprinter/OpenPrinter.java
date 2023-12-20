@@ -28,6 +28,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pcl.openprinter.util.ocLootDisk;
+import pcl.openprinter.util.CharacterWidth;
 
 
 @Mod(
@@ -54,9 +55,11 @@ public class OpenPrinter {
 	public static CreativeTabs CreativeTab = new CreativeTab("OpenPrinter");
 	
 	private static ContentRegistry contentRegistry = new ContentRegistry();
+
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+                CharacterWidth.initWidths();
 		MinecraftForge.EVENT_BUS.register(contentRegistry);
 
 		PacketHandler.init();
