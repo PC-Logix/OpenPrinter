@@ -1,0 +1,24 @@
+tile.openprinter.briefcase.name=Валіза
+tile.openprinter.filecabinet.name=Картотека
+tile.openprinter.printer.name=Принтер
+tile.openprinter.shredder.name=Шредер
+
+item.openprinter.folder.name=Папка
+item.openprinter.manual.name=Посібник OpenPrinter
+item.openprinter.paper_shreds.name=Клаптики паперу
+item.openprinter.printer_paper_roll.name=Рулон паперу для принтера
+item.openprinter.printed_page.name=Роздрукована сторінка
+item.openprinter.printer_ink_black.name=Чорні чорнила
+item.openprinter.printer_ink_color.name=Кольорові чорнила
+
+gui.openprinter.string.blackInk=Чорні чорнила
+gui.openprinter.string.colorInk=Кольорові чорнила
+gui.openprinter.string.paperInput=Ввід паперу
+gui.openprinter.string.paperOutput=Вивід паперу
+gui.openprinter.string.scannerInput=Ввід сканера
+gui.openprinter.string.shredder=Шредер
+gui.openprinter.string.filecabinet=Картотека
+itemGroup.OpenPrinter=OpenPrinter
+
+openprinter.outdated=Версия OpenPrinter застаріла.
+openprinter.uptodate=Версия OpenPrinter актуальна.
