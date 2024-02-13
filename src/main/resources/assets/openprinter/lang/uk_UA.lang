@@ -20,5 +20,5 @@ gui.openprinter.string.shredder=Шредер
 gui.openprinter.string.filecabinet=Картотека
 itemGroup.OpenPrinter=OpenPrinter
 
-openprinter.outdated=Версия OpenPrinter застаріла.
-openprinter.uptodate=Версия OpenPrinter актуальна.
+openprinter.outdated=Версія OpenPrinter застаріла.
+openprinter.uptodate=Версія OpenPrinter актуальна.
