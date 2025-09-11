@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import pcl.openprinter.gui.GUIHandler;
@@ -29,6 +30,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import pcl.openprinter.util.ocLootDisk;
 import pcl.openprinter.util.CharacterWidth;
+import pcl.openprinter.items.ItemFolder;
 
 
 @Mod(
@@ -77,6 +79,15 @@ public class OpenPrinter {
 
 	@Mod.EventBusSubscriber
 	public static class ObjectRegistryHandler {
+
+		@SubscribeEvent
+		@SideOnly(Side.CLIENT)
+		public static void onItemColors(ColorHandlerEvent.Item event) {
+			event.getItemColors().registerItemColorHandler(
+					(stack, layer) -> ItemFolder.getFolderColor(stack),
+					ContentRegistry.folder
+			);
+		}
 
 		@SubscribeEvent
 		@SideOnly(Side.CLIENT)
