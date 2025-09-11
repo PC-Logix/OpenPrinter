@@ -18,6 +18,7 @@ public class ItemFolder extends Item {
 
 	public ItemFolder() {
 		super();
+		setMaxStackSize(1);
 		setCreativeTab(OpenPrinter.CreativeTab);
 		setTranslationKey("openprinter.folder");
 	}
