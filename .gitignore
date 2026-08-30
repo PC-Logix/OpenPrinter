@@ -20,8 +20,15 @@ local.properties
 .settings/
 .loadpath
 
-## IDEA
-.idea
+## IntelliJ IDEA
+.idea/*
+!.idea/.gitignore
+!.idea/gradle.xml
+!.idea/misc.xml
+!.idea/modules.xml
+!.idea/vcs.xml
+!.idea/runConfigurations/
+!.idea/runConfigurations/*.xml
 
 # External tool builders
 .externalToolBuilders/
@@ -97,8 +104,10 @@ pip-log.txt
 output.txt
 /bin
 
-#IntelliJ IDEA
+# Generated IntelliJ IDEA project files
 /out/
 *.iml
 *.ipr
 *.iws
+/reference
+OpenPrinter.zip

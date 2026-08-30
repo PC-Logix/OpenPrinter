@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": ["i i", "iSi", "i i"],
+  "key": {
+    "i": { "item": "minecraft:iron_nugget" },
+    "S": { "item": "minecraft:shears" }
+  },
+  "result": { "id": "openprinter:shredder", "count": 1 }
+}

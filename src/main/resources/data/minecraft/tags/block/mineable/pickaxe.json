@@ -1,0 +1,4 @@
+{
+  "replace": false,
+  "values": ["openprinter:printer", "openprinter:shredder", "openprinter:filecabinet"]
+}

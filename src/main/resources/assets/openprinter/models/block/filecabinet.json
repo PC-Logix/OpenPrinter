@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "openprinter:block/block_side",
+    "front": "openprinter:block/filingcabinet_front",
+    "side": "openprinter:block/block_side"
+  }
+}

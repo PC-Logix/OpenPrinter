@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "openprinter:items/manual"
+    "layer0": "openprinter:item/manual"
   }
 }

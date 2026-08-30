@@ -1,12 +1,6 @@
 {
   "pack": {
-    "pack_format": 1,
-    "description": "OpenPrinter"
-  },
-    "language": {
-     "en_us": {
-        "name": "English",
-        "region": "United States"
-     }
+    "description": "OpenPrinter resources",
+    "pack_format": 34
   }
 }

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["RGB", " Z "],
+  "key": {
+    "R": { "item": "minecraft:red_dye" },
+    "G": { "item": "minecraft:green_dye" },
+    "B": { "item": "minecraft:blue_dye" },
+    "Z": { "item": "openprinter:printer_ink_color" }
+  },
+  "result": { "id": "openprinter:printer_ink_color", "count": 1 }
+}

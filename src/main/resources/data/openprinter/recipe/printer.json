@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": ["iri", "cpc", "iri"],
+  "key": {
+    "i": { "item": "minecraft:iron_nugget" },
+    "r": { "item": "minecraft:redstone" },
+    "p": { "tag": "opencomputers:materialcircuitboardprinted" },
+    "c": { "tag": "opencomputers:circuitchip1" }
+  },
+  "result": { "id": "openprinter:printer", "count": 1 }
+}

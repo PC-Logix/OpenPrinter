@@ -1,25 +1,8 @@
 {
-	"forge_marker": 1,
-	"defaults": {
-		"textures": {
-			"all": "openprinter:blocks/printer"
-		},
-		"custom": {
-			"flip-v": true
-		},
-		"model": "openprinter:printer/printer.obj",
-		"transform": "forge:default-block"
-	},
-	"variants": {
-		"normal": [{}],
-		"inventory": [{
-			"transform": "forge:default-block"
-		}],
-		"facing": {
-			"north": {"model": "openprinter:printer/printer.obj", "y": 0},
-			"south": {"model": "openprinter:printer/printer.obj", "y": 180},
-			"west": {"model": "openprinter:printer/printer.obj", "y": 270},
-			"east": {"model": "openprinter:printer/printer.obj", "y": 90}
-		}
-	}
+  "variants": {
+    "facing=north": { "model": "openprinter:block/printer" },
+    "facing=east":  { "model": "openprinter:block/printer", "y": 90 },
+    "facing=south": { "model": "openprinter:block/printer", "y": 180 },
+    "facing=west":  { "model": "openprinter:block/printer", "y": 270 }
+  }
 }

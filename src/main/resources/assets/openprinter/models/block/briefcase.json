@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"2": "openprinter:blocks/briefcase1",
-		"3": "openprinter:blocks/briefcase2",
-		"particle": "openprinter:blocks/briefcase1"
+		"2": "openprinter:block/briefcase1",
+		"3": "openprinter:block/briefcase2",
+		"particle": "openprinter:block/briefcase1"
 	},
 	"elements": [
 		{

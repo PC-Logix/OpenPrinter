@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "openprinter:paper_shreds" },
+    { "item": "minecraft:water_bucket" }
+  ],
+  "result": { "id": "minecraft:paper", "count": 1 }
+}

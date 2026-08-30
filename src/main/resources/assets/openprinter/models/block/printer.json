@@ -1,0 +1,10 @@
+{
+  "loader": "neoforge:obj",
+  "model": "openprinter:models/block/printer/printer.obj",
+  "flip_v": true,
+  "automatic_culling": true,
+  "shade_quads": true,
+  "textures": {
+    "particle": "openprinter:block/printer"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["BBB", " i "],
+  "key": {
+    "B": { "item": "minecraft:black_dye" },
+    "i": { "item": "minecraft:iron_nugget" }
+  },
+  "result": { "id": "openprinter:printer_ink_black", "count": 1 }
+}

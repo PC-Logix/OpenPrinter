@@ -1,133 +1,164 @@
 package pcl.openprinter;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.obj.OBJLoader;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import li.cil.oc.api.FileSystem;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.inventory.MenuType;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredRegister.Blocks;
+import net.neoforged.neoforge.registries.DeferredRegister.Items;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import pcl.openprinter.gui.GUIHandler;
-import pcl.openprinter.manual.Manual;
-import pcl.openprinter.network.PacketHandler;
-import pcl.openprinter.client.CreativeTab;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import pcl.openprinter.util.ocLootDisk;
-import pcl.openprinter.util.CharacterWidth;
-import pcl.openprinter.items.ItemFolder;
+@Mod(OpenPrinter.MOD_ID)
+public final class OpenPrinter {
+    public static final String MOD_ID = "openprinter";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    private static final String TOOLS_DISK_LABEL = "OpenPrinter";
+    private static final String[] TOOLS_DISK_PROGRAMS = {
+            "print", "printercopypage", "printerstatus", "xerox", "printmap"
+    };
+    private static final String[] LUA_ARCHITECTURES = {"Lua 5.2", "Lua 5.3", "LuaJ"};
+    private static ItemStack toolsDisk = ItemStack.EMPTY;
 
+    public static final Blocks BLOCKS = DeferredRegister.createBlocks(MOD_ID);
+    public static final Items ITEMS = DeferredRegister.createItems(MOD_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
+            DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, MOD_ID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, MOD_ID);
+    public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
 
-@Mod(
-		modid=OpenPrinter.MODID,
-		name="OpenPrinter",
-		version=BuildInfo.versionNumber + "." + BuildInfo.buildNumber,
-		dependencies =
-				"required-after:opencomputers;" +
-				"after:rtfm"
-)
-@Mod.EventBusSubscriber
-public class OpenPrinter {
-	public static final String MODID = BuildInfo.modID;
+    public static final DeferredHolder<Block, DeviceBlock> PRINTER = block("printer", DeviceBlock.Kind.PRINTER);
+    public static final DeferredHolder<Block, DeviceBlock> SHREDDER = block("shredder", DeviceBlock.Kind.SHREDDER);
+    public static final DeferredHolder<Block, DeviceBlock> FILE_CABINET = block("filecabinet", DeviceBlock.Kind.FILE_CABINET);
+    public static final DeferredHolder<Block, DeviceBlock> BRIEFCASE = block("briefcase", DeviceBlock.Kind.BRIEFCASE);
 
-	@Instance(value = MODID)
-	public static OpenPrinter instance;
+    public static final DeferredHolder<Item, Item> PRINTED_PAGE = ITEMS.register("printed_page",
+            () -> new PrintedPageItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> BLACK_INK = ITEMS.register("printer_ink_black",
+            () -> new Item(new Item.Properties().stacksTo(1).durability(400)));
+    public static final DeferredHolder<Item, Item> COLOR_INK = ITEMS.register("printer_ink_color",
+            () -> new Item(new Item.Properties().stacksTo(1).durability(400)));
+    public static final DeferredHolder<Item, Item> PAPER_SHREDS = ITEMS.register("paper_shreds",
+            () -> new Item(new Item.Properties()));
+    public static final DeferredHolder<Item, Item> FOLDER = ITEMS.register("folder",
+            () -> new PortableFolderItem(new Item.Properties().stacksTo(1)));
 
-	public static Config cfg = null;
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PrinterBlockEntity>> PRINTER_BE =
+            BLOCK_ENTITIES.register("printer", () -> BlockEntityType.Builder.of(PrinterBlockEntity::new, PRINTER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ShredderBlockEntity>> SHREDDER_BE =
+            BLOCK_ENTITIES.register("shredder", () -> BlockEntityType.Builder.of(ShredderBlockEntity::new, SHREDDER.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StorageBlockEntity>> FILE_CABINET_BE =
+            BLOCK_ENTITIES.register("filecabinet", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> new StorageBlockEntity(pos, state, 30), FILE_CABINET.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StorageBlockEntity>> BRIEFCASE_BE =
+            BLOCK_ENTITIES.register("briefcase", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> new StorageBlockEntity(pos, state, 18), BRIEFCASE.get()).build(null));
 
-	public static boolean verbose = false;
+    public static final DeferredHolder<MenuType<?>, MenuType<DeviceMenu>> DEVICE_MENU = MENUS.register("device",
+            () -> IMenuTypeExtension.create(DeviceMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<PortableStorageMenu>> PORTABLE_MENU = MENUS.register("portable_storage",
+            () -> IMenuTypeExtension.create(PortableStorageMenu::new));
 
-	public static final Logger  logger  = LogManager.getFormatterLogger(MODID);
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB = TABS.register("main", () ->
+            CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.openprinter"))
+                    .icon(() -> new ItemStack(PRINTER.get()))
+                    .displayItems((parameters, output) -> {
+                        output.accept(PRINTER.get());
+                        output.accept(SHREDDER.get());
+                        output.accept(FILE_CABINET.get());
+                        output.accept(BRIEFCASE.get());
+                        output.accept(PRINTED_PAGE.get());
+                        output.accept(BLACK_INK.get());
+                        output.accept(COLOR_INK.get());
+                        output.accept(PAPER_SHREDS.get());
+                        output.accept(FOLDER.get());
+                        if (!toolsDisk.isEmpty()) output.accept(toolsDisk.copy());
+                    }).build());
 
-	public static CreativeTabs CreativeTab = new CreativeTab("OpenPrinter");
-	
-	private static ContentRegistry contentRegistry = new ContentRegistry();
+    public OpenPrinter(IEventBus modBus, ModContainer container) {
+        BLOCKS.register(modBus);
+        ITEMS.register(modBus);
+        BLOCK_ENTITIES.register(modBus);
+        MENUS.register(modBus);
+        TABS.register(modBus);
+        modBus.addListener(this::registerCapabilities);
+        NeoForge.EVENT_BUS.addListener(this::onServerTick);
+        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, PrinterConfig.SPEC);
+        modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) ->
+                event.enqueueWork(OpenPrinter::registerOpenComputersIntegration));
+    }
 
-	
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-                CharacterWidth.initWidths();
-		MinecraftForge.EVENT_BUS.register(contentRegistry);
+    private static DeferredHolder<Block, DeviceBlock> block(String name, DeviceBlock.Kind kind) {
+        DeferredHolder<Block, DeviceBlock> holder = BLOCKS.register(name, () -> {
+            Block.Properties properties = Block.Properties.of().mapColor(MapColor.METAL)
+                    .strength(2.5F).sound(SoundType.METAL);
+            if (kind == DeviceBlock.Kind.PRINTER || kind == DeviceBlock.Kind.BRIEFCASE) {
+                properties.noOcclusion();
+            }
+            return new DeviceBlock(kind, properties);
+        });
+        ITEMS.register(name, () -> kind == DeviceBlock.Kind.BRIEFCASE
+                ? new PortableBlockItem(holder.get(), new Item.Properties().stacksTo(1))
+                : new BlockItem(holder.get(), new Item.Properties()));
+        return holder;
+    }
 
-		PacketHandler.init();
-		cfg = new Config(new Configuration(event.getSuggestedConfigurationFile()));
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        registerItemHandler(event, PRINTER_BE.get());
+        registerItemHandler(event, SHREDDER_BE.get());
+        registerItemHandler(event, FILE_CABINET_BE.get());
+        registerItemHandler(event, BRIEFCASE_BE.get());
+        event.registerBlockEntity(li.cil.oc.common.Capabilities.EnvironmentCapability(), PRINTER_BE.get(),
+                (blockEntity, side) -> blockEntity);
+    }
 
-		Manual.preInit();
+    private static <T extends net.minecraft.world.level.block.entity.BlockEntity & InventoryDevice>
+    void registerItemHandler(RegisterCapabilitiesEvent event, BlockEntityType<T> type) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, type,
+                (blockEntity, side) -> blockEntity.itemHandler(side));
+    }
 
-		contentRegistry.preInit();
-	}
+    private void onServerTick(ServerTickEvent.Post event) {
+        // Block entity tickers do the machine work; keeping the event hook makes later server jobs explicit.
+    }
 
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-		ocLootDisk.register();
-	}
+    private static void registerOpenComputersIntegration() {
+        try {
+            ResourceLocation location = ResourceLocation.fromNamespaceAndPath(MOD_ID, "loot/printer/printercopy");
+            toolsDisk = li.cil.oc.api.Items.registerFloppy(TOOLS_DISK_LABEL, location, DyeColor.GREEN,
+                    () -> FileSystem.asReadOnly(FileSystem.fromResource(location)), true);
+            for (String program : TOOLS_DISK_PROGRAMS) {
+                li.cil.oc.api.IMC.registerProgramDiskLabel(program, TOOLS_DISK_LABEL, LUA_ARCHITECTURES);
+            }
+        } catch (RuntimeException exception) {
+            LOGGER.warn("Could not register the OpenPrinter tools disk", exception);
+        }
+    }
 
-	@Mod.EventBusSubscriber
-	public static class ObjectRegistryHandler {
-
-		@SubscribeEvent
-		@SideOnly(Side.CLIENT)
-		public static void onItemColors(ColorHandlerEvent.Item event) {
-			event.getItemColors().registerItemColorHandler(
-					(stack, layer) -> ItemFolder.getFolderColor(stack),
-					ContentRegistry.folder
-			);
-		}
-
-		@SubscribeEvent
-		@SideOnly(Side.CLIENT)
-		public static void onRegisterModels(ModelRegistryEvent event) {
-			OBJLoader.INSTANCE.addDomain(OpenPrinter.MODID);
-
-			registerBlockModel(ContentRegistry.printerBlock, 0, "printer");
-			registerBlockModel(ContentRegistry.shredderBlock, 0, "shredder");
-			registerBlockModel(ContentRegistry.fileCabinetBlock, 0, "filecabinet");
-			registerBlockModel(ContentRegistry.briefcaseBlock, 0, "briefcase");
-
-			registerItemModel(ContentRegistry.printedPage, "printed_page");
-			registerItemModel(ContentRegistry.printerInkBlack, "printer_ink_black");
-			registerItemModel(ContentRegistry.printerInkColor, "printer_ink_color");
-			registerItemModel(ContentRegistry.shreddedPaper, "shredded_paper");
-			registerItemModel(ContentRegistry.folder, "folder");
-
-			for(ItemStack item : ContentRegistry.modItems)
-				ModelLoader.setCustomModelResourceLocation(item.getItem(), 0, new ModelResourceLocation(item.getItem().getRegistryName(), "inventory"));
-		}
-
-		@SideOnly(Side.CLIENT)
-		private static void registerBlockModel(final Block block, int meta, final String blockName) {
-			ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(OpenPrinter.MODID + ":" + blockName.toLowerCase(), "inventory"));
-
-			if(OpenPrinter.verbose)
-				OpenPrinter.logger.info("Registering " + blockName.toLowerCase() + " Item Renderer");
-		}
-
-		@SideOnly(Side.CLIENT)
-		private static void registerItemModel(final Item item, final String itemName) {
-			ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(OpenPrinter.MODID + ":" + itemName.toLowerCase(), "inventory"));
-
-			if(OpenPrinter.verbose)
-				OpenPrinter.logger.info("Registering " + itemName.toLowerCase() + " Item Renderer");
-		}
-	}
-
-	@EventHandler
-	public void load(FMLInitializationEvent event) {
-		NetworkRegistry.INSTANCE.registerGuiHandler(OpenPrinter.instance, new GUIHandler());
-	}
+    public static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
 }
