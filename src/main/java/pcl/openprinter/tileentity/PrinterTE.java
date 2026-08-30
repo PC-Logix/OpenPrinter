@@ -14,6 +14,7 @@ import li.cil.oc.api.network.Message;
 import li.cil.oc.api.network.Node;
 import li.cil.oc.api.network.Visibility;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemWritableBook;
 import net.minecraft.item.ItemWrittenBook;
@@ -27,6 +28,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.storage.MapData;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -54,6 +56,8 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	private static final int PAGE_PRINT_TICKS = 10;
 	private static final int MAX_BOOK_PRINT_TICKS = 200;
 	private static final int MAX_PRINT_QUEUE = 32;
+	private static final int MAP_COLOR_INK_COST = 20;
+	private static final int MAX_PRINT_COPIES = 64;
 
 	private ComponentConnector node = Network.newNode(this, Visibility.Network).withComponent(getComponentName()).withConnector(32).create();
 	private boolean addedToNetwork = false;
@@ -80,6 +84,8 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		private final String title;
 		private final int copies;
 		private final boolean book;
+		private final boolean image;
+		private final MapPrintImage mapImage;
 		private final boolean sign;
 		private final String author;
 		private final int outputPages;
@@ -89,18 +95,32 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		private PrintJob(List<String> lines, List<String> align, List<Integer> colors,
 						String title, int copies, boolean book, int outputPages){
 			this(UUID.randomUUID(), lines, align, colors, title, copies, book, false,
-					"OpenPrinter", outputPages, 0, 0);
+					false, null, "OpenPrinter", outputPages, 0, 0);
 		}
 
 		private PrintJob(List<String> lines, List<String> align, List<Integer> colors,
 						String title, int copies, boolean book, int outputPages,
 						boolean sign, String author){
 			this(UUID.randomUUID(), lines, align, colors, title, copies, book, sign,
-					author, outputPages, 0, 0);
+					 false, null, author, outputPages, 0, 0);
+		}
+
+		private PrintJob(MapPrintImage mapImage, int copies){
+			this(UUID.randomUUID(), Collections.<String>emptyList(), Collections.<String>emptyList(),
+					Collections.<Integer>emptyList(), mapImage.title(), copies, false, false,
+					true, mapImage, "OpenPrinter", 1, 0, 0);
 		}
 
 		private PrintJob(UUID id, List<String> lines, List<String> align, List<Integer> colors,
 						String title, int copies, boolean book, boolean sign, String author, int outputPages,
+						int copiesDone, int processingTime){
+			this(id, lines, align, colors, title, copies, book, sign, false, null, author,
+					outputPages, copiesDone, processingTime);
+		}
+
+		private PrintJob(UUID id, List<String> lines, List<String> align, List<Integer> colors,
+						String title, int copies, boolean book, boolean sign, boolean image,
+						MapPrintImage mapImage, String author, int outputPages,
 						int copiesDone, int processingTime){
 			this.id = id;
 			this.lines = new ArrayList<>(lines);
@@ -109,6 +129,8 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			this.title = title;
 			this.copies = copies;
 			this.book = book;
+			this.image = image;
+			this.mapImage = mapImage;
 			this.sign = sign;
 			this.author = author;
 			this.outputPages = Math.max(1, outputPages);
@@ -117,6 +139,8 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		}
 
 		private int duration(){
+			if(image)
+				return PAGE_PRINT_TICKS;
 			if(!book)
 				return PAGE_PRINT_TICKS;
 
@@ -133,9 +157,12 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			tag.setInteger("copiesDone", copiesDone);
 			tag.setInteger("processingTime", processingTime);
 			tag.setBoolean("book", book);
+			tag.setBoolean("image", image);
 			tag.setBoolean("sign", sign);
 			tag.setString("author", author);
 			tag.setInteger("outputPages", outputPages);
+			if(mapImage != null)
+				tag.setTag("mapImage", mapImage.writeToNBT());
 
 			NBTTagList savedLines = new NBTTagList();
 			for(int i = 0; i < lines.size(); i++){
@@ -162,6 +189,14 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			}
 
 			UUID id = tag.hasUniqueId("id") ? tag.getUniqueId("id") : UUID.randomUUID();
+			if(tag.getBoolean("image")) {
+				MapPrintImage image = MapPrintImage.readFromNBT(tag.getCompoundTag("mapImage"));
+				return new PrintJob(id, lines, align, colors, image.title(),
+						Math.max(1, tag.getInteger("copies")), false, false, true, image,
+						"OpenPrinter", 1,
+						tag.getInteger("copiesDone"), tag.getInteger("processingTime"));
+			}
+
 			return new PrintJob(id, lines, align, colors, tag.getString("title"),
 					tag.getInteger("copies"), tag.getBoolean("book"), tag.getBoolean("sign"),
 					tag.hasKey("author") ? tag.getString("author") : "OpenPrinter", tag.getInteger("outputPages"),
@@ -179,7 +214,8 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			return stack.getItem() instanceof PrintedPage
 					|| stack.getItem() instanceof ItemFolder
 					|| stack.getItem().equals(Items.WRITABLE_BOOK)
-					|| stack.getItem().equals(Items.WRITTEN_BOOK);
+					|| stack.getItem().equals(Items.WRITTEN_BOOK)
+					|| stack.getItem().equals(Items.FILLED_MAP);
 		}
 
 		@Override
@@ -229,6 +265,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 					case PAPER_SLOT:
 					return stack.getItem() instanceof PrinterPaperRoll
 						|| stack.getItem().equals(Items.PAPER)
+						|| stack.getItem().equals(Items.MAP)
 						|| stack.getItem().equals(Items.WRITABLE_BOOK)
 						|| stack.getItem().equals(Items.NAME_TAG);
 				case COLOR_INK_SLOT:
@@ -300,7 +337,10 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			return;
 
 		try {
-			if(job.book){
+			if(job.image){
+				printMapCopy(job);
+			}
+			else if(job.book){
 				writeBookCopy(job);
 				if(job.copiesDone + 1 >= job.copies)
 					ejectBook(job);
@@ -323,6 +363,17 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	}
 
 	private String getPrintJobBlocker(PrintJob job){
+		if(job.image){
+			if(!inventoryMaterials.getStackInSlot(PAPER_SLOT).getItem().equals(Items.MAP))
+				return "Please load Empty Maps.";
+			if(inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).isEmpty()
+					|| getColorInkLevelValue() < MAP_COLOR_INK_COST)
+				return "Please load enough Color Ink.";
+			if(getEmptyOutputSlot() == -1)
+				return "no empty output slot";
+			return null;
+		}
+
 		if(job.book){
 			ItemStack book = inventoryMaterials.getStackInSlot(PAPER_SLOT);
 			if(!(book.getItem() instanceof ItemWritableBook))
@@ -356,13 +407,18 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			Map<String, Object> entry = new LinkedHashMap<>();
 			entry.put("index", index);
 			entry.put("id", job.id.toString());
-			entry.put("type", job.book ? "book" : "page");
+			entry.put("type", job.image ? "map" : (job.book ? "book" : "page"));
 			entry.put("pages", job.outputPages);
 			entry.put("copies", job.copies);
 			entry.put("copiesCompleted", job.copiesDone);
 			entry.put("copiesRemaining", job.copies - job.copiesDone);
 			entry.put("progress", index == 1 ? job.processingTime : 0);
 			entry.put("duration", job.duration());
+			if(job.image){
+				entry.put("title", job.mapImage.title());
+				entry.put("width", job.mapImage.sourceWidth());
+				entry.put("height", job.mapImage.sourceHeight());
+			}
 
 			if(index == 1){
 				String blocker = getPrintJobBlocker(job);
@@ -665,6 +721,13 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			inventoryMaterials.setStackInSlot(materialSlot, slotItem);
 	}
 
+	private int getColorInkLevelValue(){
+		if(inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).isEmpty())
+			return 0;
+		return OpenPrinter.cfg.printerInkUse
+				- inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).getItemDamage();
+	}
+
 	private int getFolderOutputSlot(){
 		for(int slot = 0; slot < inventoryOutput.getSlots(); slot++)
 			if(inventoryOutput.getStackInSlot(slot).getItem() instanceof ItemFolder)
@@ -803,6 +866,38 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		markDirty();
 	}
 
+	private void printMapCopy(PrintJob job) throws Exception {
+		if(job.mapImage == null)
+			throw new Exception("map image is missing");
+		if(!inventoryMaterials.getStackInSlot(PAPER_SLOT).getItem().equals(Items.MAP))
+			throw new Exception("Please load Empty Maps.");
+		if(getColorInkLevelValue() < MAP_COLOR_INK_COST)
+			throw new Exception("Please load enough Color Ink.");
+		int outputSlot = getEmptyOutputSlot();
+		if(outputSlot == -1)
+			throw new Exception("no empty output slot");
+
+		ItemStack output = ItemMap.setupNewMap(world, getPos().getX(), getPos().getZ(),
+				(byte) 0, false, false);
+		MapData mapData = (MapData) world.loadData(MapData.class, "map_" + output.getMetadata());
+		if(mapData == null || mapData.colors.length != MapPrintImage.SIZE * MapPrintImage.SIZE)
+			throw new Exception("could not create map data");
+		// 1.12 has no locked-map flag. A dimension mismatch makes vanilla's
+		// ItemMap.onUpdate skip its terrain scan, preserving the printed pixels
+		// while keeping the item itself a normal filled map.
+		mapData.dimension = Integer.MIN_VALUE;
+		mapData.trackingPosition = false;
+		System.arraycopy(job.mapImage.colors(), 0, mapData.colors, 0, mapData.colors.length);
+		mapData.markDirty();
+
+		if(job.mapImage.title().length() > 0)
+			output.setStackDisplayName(job.mapImage.title());
+		damageMaterial(COLOR_INK_SLOT, MAP_COLOR_INK_COST);
+		damageMaterial(PAPER_SLOT, 1);
+		inventoryOutput.setStackInSlot(outputSlot, output);
+		markDirty();
+	}
+
 	private ItemStack createSignedBook(ItemStack writableBook, String title, String author){
 		NBTTagCompound tag = new NBTTagCompound();
 		NBTTagList pages = writableBook.hasTagCompound()
@@ -925,6 +1020,44 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		return queuePrint(copies, true, title, author);
 	}
 
+	private int getImageCopies(Map<?, ?> options) throws Exception {
+		Object value = options.get("copies");
+		if(value == null)
+			return 1;
+		if(!(value instanceof Number))
+			throw new Exception("copies must be a number");
+		int copies = ((Number) value).intValue();
+		if(copies < 1 || copies > MAX_PRINT_COPIES)
+			throw new Exception("copies must be between 1 and " + MAX_PRINT_COPIES);
+		return copies;
+	}
+
+	private Object[] queueImage(MapPrintImage image, Map<?, ?> options) throws Exception {
+		if(printJobs.size() >= MAX_PRINT_QUEUE)
+			throw new Exception("print queue is full");
+		PrintJob job = new PrintJob(image, getImageCopies(options));
+		String blocker = getPrintJobBlocker(job);
+		if(blocker != null)
+			throw new Exception(blocker);
+		printJobs.addLast(job);
+		markDirty();
+		return new Object[] { job.id.toString() };
+	}
+
+	@Callback(doc = "function(table:rgbImage[, table:options]):String; -- queues an RGB image for an empty map")
+	public Object[] printMap(Context context, Arguments args) throws Exception {
+		Map<?, ?> image = args.checkTable(0);
+		Map<?, ?> options = args.count() > 1 ? args.checkTable(1) : Collections.emptyMap();
+		return queueImage(MapPrintImage.parse(image, options), options);
+	}
+
+	@Callback(doc = "function(string:imageData[, table:options]):String; -- queues a PNG, JPEG, GIF, or BMP image")
+	public Object[] printImage(Context context, Arguments args) throws Exception {
+		byte[] image = args.checkByteArray(0);
+		Map<?, ?> options = args.count() > 1 ? args.checkTable(1) : Collections.emptyMap();
+		return queueImage(MapPrintImage.decode(image, options), options);
+	}
+
 	@Callback(doc = "function(String:text[, Integer:color, String:alignment]):boolean; -- prints a line to the printer buffer")
 	public Object[] writeln(Context context, Arguments args) throws Exception{
 		if(!args.isString(0))
@@ -993,7 +1126,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		if(inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).isEmpty())
 			return new Object[] { false };
 
-		return new Object[] { OpenPrinter.cfg.printerInkUse - inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).getItemDamage() };
+		return new Object[] { getColorInkLevelValue() };
 	}
 
 	@Callback(doc = "function(String:input):Integer; -- gets the character count for the given String", direct = true)
