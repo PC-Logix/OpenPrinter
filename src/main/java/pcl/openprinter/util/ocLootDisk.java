@@ -13,6 +13,8 @@ public class ocLootDisk {
         //register loot disks
         li.cil.oc.api.Items.registerFloppy("OpenPrinter Copy Tool", EnumDyeColor.GREEN, new OCLootDiskFileSystem("printer/printerCopy"), true);
         IMC.registerProgramDiskLabel("printerCopy", "printerCopy", "Lua 5.2", "Lua 5.3", "LuaJ");
+        li.cil.oc.api.Items.registerFloppy("OpenPrinter Queue Tool", EnumDyeColor.BLUE, new OCLootDiskFileSystem("printer/printerQueue"), true);
+        IMC.registerProgramDiskLabel("printerQueue", "printerQueue", "Lua 5.2", "Lua 5.3", "LuaJ");
     }
 
     private static class OCLootDiskFileSystem implements Callable<FileSystem> {

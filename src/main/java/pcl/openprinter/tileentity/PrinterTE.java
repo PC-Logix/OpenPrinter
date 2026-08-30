@@ -19,11 +19,14 @@ import net.minecraft.item.ItemWritableBook;
 import net.minecraft.item.ItemWrittenBook;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -33,9 +36,11 @@ import pcl.openprinter.OpenPrinter;
 import pcl.openprinter.books.BiblioCraftBigBook;
 import pcl.openprinter.books.VanillaBook;
 import pcl.openprinter.items.PrintedPage;
+import pcl.openprinter.items.ItemFolder;
 import pcl.openprinter.items.PrinterInkBlack;
 import pcl.openprinter.items.PrinterInkColor;
 import pcl.openprinter.items.PrinterPaperRoll;
+import pcl.openprinter.inventory.FolderInventory;
 import pcl.openprinter.util.ItemUtils;
 import pcl.openprinter.util.CharacterWidth;
 
@@ -45,6 +50,10 @@ import static pcl.openprinter.tileentity.PrinterTE.InventoryMaterial.*;
 
 public class PrinterTE extends TileEntity implements ITickable, Environment {
 	private static final double PrinterFormatVersion = 2.0;
+	private static final int MAX_BOOK_PAGES = 100;
+	private static final int PAGE_PRINT_TICKS = 10;
+	private static final int MAX_BOOK_PRINT_TICKS = 200;
+	private static final int MAX_PRINT_QUEUE = 32;
 
 	private ComponentConnector node = Network.newNode(this, Visibility.Network).withComponent(getComponentName()).withConnector(32).create();
 	private boolean addedToNetwork = false;
@@ -57,10 +66,108 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 	private List<String> align = new ArrayList<>();
 	private List<Integer> colors = new ArrayList<>();
 	private String pageTitle = "";
+	private final Deque<PrintJob> printJobs = new ArrayDeque<>();
 
 	private UUID uuid = UUID.randomUUID();
 
 	public PrinterTE() {}
+
+	private static final class PrintJob {
+		private final UUID id;
+		private final List<String> lines;
+		private final List<String> align;
+		private final List<Integer> colors;
+		private final String title;
+		private final int copies;
+		private final boolean book;
+		private final boolean sign;
+		private final String author;
+		private final int outputPages;
+		private int copiesDone;
+		private int processingTime;
+
+		private PrintJob(List<String> lines, List<String> align, List<Integer> colors,
+						String title, int copies, boolean book, int outputPages){
+			this(UUID.randomUUID(), lines, align, colors, title, copies, book, false,
+					"OpenPrinter", outputPages, 0, 0);
+		}
+
+		private PrintJob(List<String> lines, List<String> align, List<Integer> colors,
+						String title, int copies, boolean book, int outputPages,
+						boolean sign, String author){
+			this(UUID.randomUUID(), lines, align, colors, title, copies, book, sign,
+					author, outputPages, 0, 0);
+		}
+
+		private PrintJob(UUID id, List<String> lines, List<String> align, List<Integer> colors,
+						String title, int copies, boolean book, boolean sign, String author, int outputPages,
+						int copiesDone, int processingTime){
+			this.id = id;
+			this.lines = new ArrayList<>(lines);
+			this.align = new ArrayList<>(align);
+			this.colors = new ArrayList<>(colors);
+			this.title = title;
+			this.copies = copies;
+			this.book = book;
+			this.sign = sign;
+			this.author = author;
+			this.outputPages = Math.max(1, outputPages);
+			this.copiesDone = copiesDone;
+			this.processingTime = processingTime;
+		}
+
+		private int duration(){
+			if(!book)
+				return PAGE_PRINT_TICKS;
+
+			return Math.min(MAX_BOOK_PRINT_TICKS,
+					PAGE_PRINT_TICKS + (int) Math.ceil((outputPages - 1) *
+							(double) (MAX_BOOK_PRINT_TICKS - PAGE_PRINT_TICKS) / (MAX_BOOK_PAGES - 1)));
+		}
+
+		private NBTTagCompound writeToNBT(){
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setUniqueId("id", id);
+			tag.setString("title", title);
+			tag.setInteger("copies", copies);
+			tag.setInteger("copiesDone", copiesDone);
+			tag.setInteger("processingTime", processingTime);
+			tag.setBoolean("book", book);
+			tag.setBoolean("sign", sign);
+			tag.setString("author", author);
+			tag.setInteger("outputPages", outputPages);
+
+			NBTTagList savedLines = new NBTTagList();
+			for(int i = 0; i < lines.size(); i++){
+				NBTTagCompound line = new NBTTagCompound();
+				line.setString("text", lines.get(i));
+				line.setString("align", align.get(i));
+				line.setInteger("color", colors.get(i));
+				savedLines.appendTag(line);
+			}
+			tag.setTag("lines", savedLines);
+			return tag;
+		}
+
+		private static PrintJob readFromNBT(NBTTagCompound tag){
+			List<String> lines = new ArrayList<>();
+			List<String> align = new ArrayList<>();
+			List<Integer> colors = new ArrayList<>();
+			NBTTagList savedLines = tag.getTagList("lines", 10);
+			for(int i = 0; i < savedLines.tagCount(); i++){
+				NBTTagCompound line = savedLines.getCompoundTagAt(i);
+				lines.add(line.getString("text"));
+				align.add(line.getString("align"));
+				colors.add(line.getInteger("color"));
+			}
+
+			UUID id = tag.hasUniqueId("id") ? tag.getUniqueId("id") : UUID.randomUUID();
+			return new PrintJob(id, lines, align, colors, tag.getString("title"),
+					tag.getInteger("copies"), tag.getBoolean("book"), tag.getBoolean("sign"),
+					tag.hasKey("author") ? tag.getString("author") : "OpenPrinter", tag.getInteger("outputPages"),
+					tag.getInteger("copiesDone"), tag.getInteger("processingTime"));
+		}
+	}
 
 	class InventoryOutput extends ItemStackHandler {
 		InventoryOutput(){
@@ -69,13 +176,21 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
-			return stack.getItem() instanceof PrintedPage;
+			return stack.getItem() instanceof PrintedPage
+					|| stack.getItem() instanceof ItemFolder
+					|| stack.getItem().equals(Items.WRITABLE_BOOK)
+					|| stack.getItem().equals(Items.WRITTEN_BOOK);
 		}
 
 		@Override
 		@Nonnull
 		public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate){
 			return isItemValid(slot, stack) ? super.insertItem(slot, stack, simulate) : stack;
+		}
+
+		@Override
+		protected void onContentsChanged(int slot){
+			markDirty();
 		}
 	}
 
@@ -111,9 +226,10 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
 			switch(slot){
-				case PAPER_SLOT:
+					case PAPER_SLOT:
 					return stack.getItem() instanceof PrinterPaperRoll
 						|| stack.getItem().equals(Items.PAPER)
+						|| stack.getItem().equals(Items.WRITABLE_BOOK)
 						|| stack.getItem().equals(Items.NAME_TAG);
 				case COLOR_INK_SLOT:
 					return stack.getItem() instanceof PrinterInkColor;
@@ -170,6 +286,125 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		if(!addedToNetwork) {
 			addToNetwork();
 		}
+
+		if((world != null && world.isRemote) || printJobs.isEmpty())
+			return;
+
+		PrintJob job = printJobs.peekFirst();
+		if(getPrintJobBlocker(job) != null){
+			job.processingTime = 0;
+			return;
+		}
+
+		if(++job.processingTime < job.duration())
+			return;
+
+		try {
+			if(job.book){
+				writeBookCopy(job);
+				if(job.copiesDone + 1 >= job.copies)
+					ejectBook(job);
+			}
+			else
+				printPrintedPageCopy(job);
+		}
+		catch(Exception e){
+			// Keep the job queued if a material or output changed between the
+			// blocker check and completion. It will be retried on a later tick.
+			job.processingTime = 0;
+			return;
+		}
+
+		job.processingTime = 0;
+		job.copiesDone++;
+		if(job.copiesDone >= job.copies)
+			printJobs.removeFirst();
+		markDirty();
+	}
+
+	private String getPrintJobBlocker(PrintJob job){
+		if(job.book){
+			ItemStack book = inventoryMaterials.getStackInSlot(PAPER_SLOT);
+			if(!(book.getItem() instanceof ItemWritableBook))
+				return "Please load a writable book.";
+			if(inventoryMaterials.getStackInSlot(BLACK_INK_SLOT).isEmpty())
+				return "Please load Black Ink.";
+			if(getBookPageCount(book) + getBookPages(job.lines).size() > MAX_BOOK_PAGES)
+				return "book is full";
+			if(job.copiesDone + 1 >= job.copies && getEmptyOutputSlot() == -1)
+				return "no empty output slot for finished book";
+			return null;
+		}
+
+		if(inventoryMaterials.getStackInSlot(BLACK_INK_SLOT).isEmpty()
+				|| inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).isEmpty())
+			return "Please load Ink.";
+		if(!inventoryMaterials.getStackInSlot(PAPER_SLOT).getItem().equals(Items.PAPER))
+			return "Please load Paper.";
+		if(!canStorePrintedPage())
+			return getFolderOutputSlot() == -1
+					? "no empty output slot"
+					: "no empty output slot or folder space";
+		return null;
+	}
+
+	@Callback(doc = "function():table; -- returns the printer queue")
+	public Object[] getPrintQueue(Context context, Arguments args) {
+		List<Map<String, Object>> queue = new ArrayList<>();
+		int index = 1;
+		for(PrintJob job : printJobs){
+			Map<String, Object> entry = new LinkedHashMap<>();
+			entry.put("index", index);
+			entry.put("id", job.id.toString());
+			entry.put("type", job.book ? "book" : "page");
+			entry.put("pages", job.outputPages);
+			entry.put("copies", job.copies);
+			entry.put("copiesCompleted", job.copiesDone);
+			entry.put("copiesRemaining", job.copies - job.copiesDone);
+			entry.put("progress", index == 1 ? job.processingTime : 0);
+			entry.put("duration", job.duration());
+
+			if(index == 1){
+				String blocker = getPrintJobBlocker(job);
+				if(blocker != null){
+					entry.put("status", "waiting");
+					entry.put("blocker", blocker);
+				}
+				else
+					entry.put("status", job.processingTime > 0 ? "printing" : "queued");
+			}
+			else
+				entry.put("status", "queued");
+
+			queue.add(entry);
+			index++;
+		}
+		return new Object[] { queue };
+	}
+
+	@Callback(doc = "function():Integer; -- cancels all queued print jobs")
+	public Object[] clearPrintQueue(Context context, Arguments args) {
+		int cleared = printJobs.size();
+		if(cleared > 0){
+			printJobs.clear();
+			markDirty();
+		}
+		return new Object[] { cleared };
+	}
+
+	@Callback(doc = "function(Integer:index):boolean; -- cancels one queued print job")
+	public Object[] removePrintJob(Context context, Arguments args) throws Exception {
+		int index = args.checkInteger(0);
+		if(index < 1 || index > printJobs.size())
+			return new Object[] { false, "invalid queue index" };
+
+		Iterator<PrintJob> iterator = printJobs.iterator();
+		for(int i = 1; i < index; i++)
+			iterator.next();
+		iterator.next();
+		iterator.remove();
+		markDirty();
+		return new Object[] { true };
 	}
 
 	protected void addToNetwork() {
@@ -233,6 +468,14 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 
 		if(nbt.hasKey("buffers"))
 			readBuffersFromNBT(nbt.getCompoundTag("buffers"));
+
+		printJobs.clear();
+		NBTTagList savedJobs = nbt.getTagList("printJobs", 10);
+		for(int i = 0; i < savedJobs.tagCount() && printJobs.size() < MAX_PRINT_QUEUE; i++){
+			PrintJob job = PrintJob.readFromNBT(savedJobs.getCompoundTagAt(i));
+			if(job.copies > job.copiesDone)
+				printJobs.addLast(job);
+		}
 	}
 
 	private NBTTagCompound writeBuffersToNBT(NBTTagCompound nbt){
@@ -274,6 +517,11 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		nbt.setTag("inventoryOutput", inventoryOutput.serializeNBT());
 
 		nbt.setTag("buffers", writeBuffersToNBT(new NBTTagCompound()));
+
+		NBTTagList savedJobs = new NBTTagList();
+		for(PrintJob job : printJobs)
+			savedJobs.appendTag(job.writeToNBT());
+		nbt.setTag("printJobs", savedJobs);
 
 		nbt.setUniqueId("printerUUID", getUniqueId());
 
@@ -417,6 +665,58 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 			inventoryMaterials.setStackInSlot(materialSlot, slotItem);
 	}
 
+	private int getFolderOutputSlot(){
+		for(int slot = 0; slot < inventoryOutput.getSlots(); slot++)
+			if(inventoryOutput.getStackInSlot(slot).getItem() instanceof ItemFolder)
+				return slot;
+
+		return -1;
+	}
+
+	private int getEmptyFolderSlot(int folderSlot){
+		FolderInventory folder = new FolderInventory(inventoryOutput.getStackInSlot(folderSlot));
+		for(int slot = 0; slot < folder.getSlots(); slot++)
+			if(folder.getStackInSlot(slot).isEmpty())
+				return slot;
+
+		return -1;
+	}
+
+	private int getFolderOutputSlotWithSpace(){
+		for(int slot = 0; slot < inventoryOutput.getSlots(); slot++)
+			if(inventoryOutput.getStackInSlot(slot).getItem() instanceof ItemFolder
+					&& getEmptyFolderSlot(slot) != -1)
+				return slot;
+
+		return -1;
+	}
+
+	private boolean canStorePrintedPage(){
+		// Prefer folders, but retain ordinary output slots as overflow when all
+		// loaded folders are full.
+		return getFolderOutputSlotWithSpace() != -1 || getEmptyOutputSlot() != -1;
+	}
+
+	private void storePrintedPage(ItemStack page){
+		int folderSlot = getFolderOutputSlotWithSpace();
+		if(folderSlot != -1){
+			FolderInventory folder = new FolderInventory(inventoryOutput.getStackInSlot(folderSlot));
+			int emptySlot = getEmptyFolderSlot(folderSlot);
+			if(emptySlot == -1)
+				throw new IllegalStateException("folder is full");
+
+			folder.setStackInSlot(emptySlot, page);
+			markDirty();
+			return;
+		}
+
+		int outputSlot = getEmptyOutputSlot();
+		if(outputSlot == -1)
+			throw new IllegalStateException("no empty output slot");
+
+		inventoryOutput.setStackInSlot(outputSlot, page);
+	}
+
 	private int getEmptyOutputSlot(){
 		for(int slot = 0; slot < inventoryOutput.getSlots(); slot++)
 			if(inventoryOutput.getStackInSlot(slot).isEmpty())
@@ -425,66 +725,204 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		return -1;
 	}
 
+	private boolean isWritingBook(){
+		return inventoryMaterials.getStackInSlot(PAPER_SLOT).getItem() instanceof ItemWritableBook;
+	}
 
-	@Callback(doc = "function([Integer:copyCount]):boolean; -- prints the current page")
-	public Object[] print(Context context, Arguments args) throws Exception {
-		int copies = args.optInteger(0, 1);
-		int copiesDone = 0;
+	private int getBookPageCount(ItemStack book){
+		if(!book.hasTagCompound())
+			return 0;
 
-		for (int i = 0; i < copies; i++) {
-			if((inventoryMaterials.getStackInSlot(BLACK_INK_SLOT).isEmpty() || inventoryMaterials.getStackInSlot(COLOR_INK_SLOT).isEmpty())) //No color ink
-				throw new Exception("Please load Ink.");
+		return book.getTagCompound().getTagList("pages", 8).tagCount();
+	}
 
-			if (!inventoryMaterials.getStackInSlot(PAPER_SLOT).getItem().equals(Items.PAPER))
-				throw new Exception("Please load Paper.");
-
-			int x = getEmptyOutputSlot();
-
-			if(x == -1)
-				throw new Exception("no empty output slot");
-
-			ItemStack output = new ItemStack(ContentRegistry.printedPage);
-			output.setTagCompound(new NBTTagCompound());
-			if(pageTitle.length() > 0) {
-				output.getTagCompound().setString("pageTitle", pageTitle);
-				output.setStackDisplayName(pageTitle);
-			}
-			output.getTagCompound().setDouble("version", PrinterFormatVersion);
-			int iter = 0;
-			for (String s : lines) {
-				output.getTagCompound().setString("line"+iter, lines.get(iter) + "∞" + colors.get(iter) + "∞" + align.get(iter));
-
-				if (colors.get(iter) != 0x000000) {
-					damageMaterial(COLOR_INK_SLOT, 1);
-				} else {
-					damageMaterial(BLACK_INK_SLOT, 1);
-				}
-				if(lines.get(iter).matches(".*§[0-9a-f].*")) {
-					Pattern regex = Pattern.compile("§[0-9a-f]*");
-					Matcher matcher = regex.matcher(lines.get(iter));
-					while (matcher.find())
-						damageMaterial(COLOR_INK_SLOT, 1);
-				}
-				iter++;
-			}
-
-			damageMaterial(PAPER_SLOT, 1);
-
-			output.getTagCompound().setUniqueId("printerUUID", getUniqueId());
-			output.getTagCompound().setUniqueId("pageUUID", UUID.randomUUID());
-
-			inventoryOutput.setStackInSlot(x, output);
-
-			copiesDone++;
-
+	private List<String> getBookPages(List<String> sourceLines){
+		StringBuilder text = new StringBuilder();
+		for(int i = 0; i < sourceLines.size(); i++){
+			if(i > 0)
+				text.append('\n');
+			text.append(sourceLines.get(i));
 		}
 
+		List<String> pages = new ArrayList<>();
+		if(text.length() == 0){
+			pages.add("");
+			return pages;
+		}
+
+		for(int start = 0; start < text.length(); start += 256)
+			pages.add(text.substring(start, Math.min(start + 256, text.length())));
+
+		return pages;
+	}
+
+	private void validateBookLines(List<String> sourceLines, List<Integer> sourceColors) throws Exception {
+		for(int i = 0; i < sourceLines.size(); i++){
+			if(sourceColors.get(i) != 0x000000 || sourceLines.get(i).indexOf('§') != -1)
+				throw new Exception("Books only support plain black text.");
+		}
+	}
+
+	private void writeBookCopy(PrintJob job) throws Exception {
+		ItemStack book = inventoryMaterials.getStackInSlot(PAPER_SLOT);
+		if(!(book.getItem() instanceof ItemWritableBook))
+			throw new Exception("Please load a writable book.");
+
+		validateBookLines(job.lines, job.colors);
+		List<String> pages = getBookPages(job.lines);
+		if(getBookPageCount(book) + pages.size() > MAX_BOOK_PAGES)
+			throw new Exception("book is full");
+
+		for(String page : pages){
+			NBTTagCompound tag = book.hasTagCompound() ? book.getTagCompound() : new NBTTagCompound();
+			NBTTagList bookPages = tag.getTagList("pages", 8);
+			bookPages.appendTag(new NBTTagString(page));
+			tag.setTag("pages", bookPages);
+			book.setTagCompound(tag);
+		}
+
+		for(int line = 0; line < job.lines.size(); line++)
+			damageMaterial(BLACK_INK_SLOT, 1);
+
+		markDirty();
+	}
+
+	private void ejectBook(PrintJob job) throws Exception {
+		int outputSlot = getEmptyOutputSlot();
+		if(outputSlot == -1)
+			throw new Exception("no empty output slot for finished book");
+
+		ItemStack book = inventoryMaterials.getStackInSlot(PAPER_SLOT);
+		if(!(book.getItem() instanceof ItemWritableBook))
+			throw new Exception("Please load a writable book.");
+		if(job.sign)
+			book = createSignedBook(book, job.title, job.author);
+
+		inventoryMaterials.setStackInSlot(PAPER_SLOT, ItemStack.EMPTY);
+		inventoryOutput.setStackInSlot(outputSlot, book);
+		markDirty();
+	}
+
+	private ItemStack createSignedBook(ItemStack writableBook, String title, String author){
+		NBTTagCompound tag = new NBTTagCompound();
+		NBTTagList pages = writableBook.hasTagCompound()
+				? writableBook.getTagCompound().getTagList("pages", 8)
+				: new NBTTagList();
+		NBTTagList signedPages = new NBTTagList();
+		for(int i = 0; i < pages.tagCount(); i++)
+			signedPages.appendTag(new NBTTagString(ITextComponent.Serializer.componentToJson(
+					new TextComponentString(pages.getStringTagAt(i)))));
+
+		tag.setTag("pages", signedPages);
+		tag.setString("title", title);
+		tag.setString("author", author);
+		tag.setBoolean("resolved", true);
+
+		ItemStack signedBook = new ItemStack(Items.WRITTEN_BOOK);
+		signedBook.setTagCompound(tag);
+		return signedBook;
+	}
+
+	private void printPrintedPageCopy(PrintJob job) throws Exception {
+		if(!canStorePrintedPage())
+			throw new Exception("no empty output slot or folder space");
+
+		ItemStack output = new ItemStack(ContentRegistry.printedPage);
+		output.setTagCompound(new NBTTagCompound());
+		if(job.title.length() > 0) {
+			output.getTagCompound().setString("pageTitle", job.title);
+			output.setStackDisplayName(job.title);
+		}
+		output.getTagCompound().setDouble("version", PrinterFormatVersion);
+		for(int iter = 0; iter < job.lines.size(); iter++) {
+			output.getTagCompound().setString("line"+iter,
+					job.lines.get(iter) + "∞" + job.colors.get(iter) + "∞" + job.align.get(iter));
+
+			if (job.colors.get(iter) != 0x000000)
+				damageMaterial(COLOR_INK_SLOT, 1);
+			else
+				damageMaterial(BLACK_INK_SLOT, 1);
+			if(job.lines.get(iter).matches(".*§[0-9a-f].*")) {
+				Pattern regex = Pattern.compile("§[0-9a-f]*");
+				Matcher matcher = regex.matcher(job.lines.get(iter));
+				while (matcher.find())
+					damageMaterial(COLOR_INK_SLOT, 1);
+			}
+		}
+
+		damageMaterial(PAPER_SLOT, 1);
+
+		output.getTagCompound().setUniqueId("printerUUID", getUniqueId());
+		output.getTagCompound().setUniqueId("pageUUID", UUID.randomUUID());
+		storePrintedPage(output);
+	}
+
+	private void clearPrintBuffer(){
 		pageTitle = "";
 		lines.clear();
 		colors.clear();
 		align.clear();
+	}
 
-		return new Object[] { copiesDone == copies };
+	private Object[] queuePrint(int copies, boolean sign, String title, String author) throws Exception {
+		if(copies <= 0){
+			clearPrintBuffer();
+			return new Object[] { true };
+		}
+		if(printJobs.size() >= MAX_PRINT_QUEUE)
+			throw new Exception("print queue is full");
+
+		boolean book = isWritingBook();
+		if(sign && !book)
+			throw new Exception("printAndSign requires a writable book.");
+
+		PrintJob job = new PrintJob(lines, align, colors, title, copies, book,
+				book ? getBookPages(lines).size() : 1, sign, author);
+		if(book){
+			validateBookLines(job.lines, job.colors);
+			if(getBookPageCount(inventoryMaterials.getStackInSlot(PAPER_SLOT))
+					+ job.outputPages * copies > MAX_BOOK_PAGES)
+				throw new Exception("book is full");
+		}
+		else {
+			String blocker = getPrintJobBlocker(job);
+			if(blocker != null)
+				throw new Exception(blocker);
+		}
+
+		printJobs.addLast(job);
+		clearPrintBuffer();
+		markDirty();
+		return new Object[] { true };
+	}
+
+	@Callback(doc = "function([Integer:copyCount]):boolean; -- queues the current page or book for printing")
+	public Object[] print(Context context, Arguments args) throws Exception {
+		return queuePrint(args.optInteger(0, 1), false, pageTitle, "OpenPrinter");
+	}
+
+	@Callback(doc = "function(String:title[, String:author][, Integer:copyCount]):boolean; -- queues and seals a writable book")
+	public Object[] printAndSign(Context context, Arguments args) throws Exception {
+		String title = args.checkString(0);
+		String author = "OpenPrinter";
+		int copies = 1;
+		if(args.count() > 1){
+			if(args.isString(1))
+				author = args.checkString(1);
+			else
+				copies = args.checkInteger(1);
+		}
+		if(args.count() > 2)
+			copies = args.checkInteger(2);
+
+		if(title.length() == 0)
+			throw new Exception("Book title cannot be empty.");
+		if(title.length() > 32)
+			throw new Exception("Book title cannot be longer than 32 characters.");
+		if(author.length() == 0)
+			throw new Exception("Book author cannot be empty.");
+
+		return queuePrint(copies, true, title, author);
 	}
 
 	@Callback(doc = "function(String:text[, Integer:color, String:alignment]):boolean; -- prints a line to the printer buffer")
@@ -532,6 +970,9 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 		if(inventoryMaterials.getStackInSlot(PAPER_SLOT).isEmpty())
 			return new Object[] { 0 };
 
+		if(isWritingBook())
+			return new Object[] { MAX_BOOK_PAGES - getBookPageCount(inventoryMaterials.getStackInSlot(PAPER_SLOT)) };
+
 		if (inventoryMaterials.getStackInSlot(PAPER_SLOT).getItem() instanceof PrinterPaperRoll) {
 			return new Object[] { 256 - inventoryMaterials.getStackInSlot(PAPER_SLOT).getItemDamage() };
 		} else {
@@ -572,10 +1013,7 @@ public class PrinterTE extends TileEntity implements ITickable, Environment {
 
 	@Callback(doc = "function():boolean; -- clears the printer buffer")
 	public Object[] clear(Context context, Arguments args) {
-		lines.clear();
-		colors.clear();
-		align.clear();
-		pageTitle = "";
+		clearPrintBuffer();
 		return new Object[] { true };
 	}
 

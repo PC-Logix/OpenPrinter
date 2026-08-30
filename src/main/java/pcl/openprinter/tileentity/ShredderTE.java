@@ -17,6 +17,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import pcl.openprinter.ContentRegistry;
 
+import pcl.openprinter.inventory.FolderInventory;
+import pcl.openprinter.items.ItemFolder;
 import pcl.openprinter.items.PrintedPage;
 import pcl.openprinter.util.ItemUtils;
 
@@ -39,6 +41,7 @@ public class ShredderTE extends TileEntity implements ITickable {
 		@Override
 		public boolean isItemValid(int slot, @Nonnull ItemStack stack){
 			return stack.getItem() instanceof PrintedPage
+				|| stack.getItem() instanceof ItemFolder
 				|| stack.getItem().equals(Items.WRITTEN_BOOK)
 				|| stack.getItem().equals(Items.WRITABLE_BOOK)
 				|| stack.getItem().equals(Items.PAPER)
@@ -122,15 +125,22 @@ public class ShredderTE extends TileEntity implements ITickable {
 
 		++this.processingTime;
 		if (this.processingTime > 10) {
-			int outCount = 1;
-
-			if(inputStack.getItem().getRegistryName().toString().equals("bibliocraft:bigbook"))
-				outCount = 11; // bigbook involves 11 paper sheets
-			else if(inputStack.getItem().equals(Items.BOOK) || inputStack.getItem().equals(Items.WRITABLE_BOOK) || inputStack.getItem().equals(Items.WRITTEN_BOOK))
-				outCount = 3;
+			int outCount = getShredCount(inputStack);
 
 			ItemStack left = new ItemStack(ContentRegistry.shreddedPaper, outCount);
 
+			// Check the complete result before consuming the input. This matters
+			// for folders because they can produce more than one output stack
+			// while the shredder output may be full.
+			for (int slot = 0; slot < inventoryOutput.getSlots(); slot++) {
+				left = inventoryOutput.insertItem(slot, left, true);
+				if(left.isEmpty())
+					break;
+			}
+			if(!left.isEmpty())
+				return;
+
+			left = new ItemStack(ContentRegistry.shreddedPaper, outCount);
 			for (int slot = 0; slot < inventoryOutput.getSlots(); slot++) {
 				left = inventoryOutput.insertItem(slot, left, false);
 				if(left.isEmpty())
@@ -139,6 +149,29 @@ public class ShredderTE extends TileEntity implements ITickable {
 			inventoryInput.extractItem(0, 1, false);
 			this.processingTime = 0;
 		}
+	}
+
+	private int getShredCount(ItemStack inputStack){
+		if(inputStack.getItem() instanceof ItemFolder){
+			int outCount = 3; // The folder recipe uses three sheets of paper.
+			FolderInventory folder = new FolderInventory(inputStack);
+			for(int slot = 0; slot < folder.getSlots(); slot++){
+				ItemStack page = folder.getStackInSlot(slot);
+				if(page.getItem() instanceof PrintedPage)
+					outCount += page.getCount();
+			}
+			return outCount;
+		}
+
+		if(inputStack.getItem().getRegistryName().toString().equals("bibliocraft:bigbook"))
+			return 11; // bigbook involves 11 paper sheets
+
+		if(inputStack.getItem().equals(Items.BOOK)
+				|| inputStack.getItem().equals(Items.WRITABLE_BOOK)
+				|| inputStack.getItem().equals(Items.WRITTEN_BOOK))
+			return 3;
+
+		return 1;
 	}
 
 	public void removed(){

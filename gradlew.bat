@@ -20,14 +20,42 @@ set APP_HOME=%DIRNAME%
 if defined JAVA_HOME goto findJavaFromJavaHome
 
 set JAVA_EXE=java.exe
-%JAVA_EXE% -version >NUL 2>&1
+"%JAVA_EXE%" -version >NUL 2>&1
+if not "%ERRORLEVEL%" == "0" goto findJava8
+
+"%JAVA_EXE%" -version 2>&1 | findstr /C:"1.8" >NUL
 if "%ERRORLEVEL%" == "0" goto init
 
+goto findJava8
+
+:findJava8
+@rem Gradle 4.x and ForgeGradle 2.3 require Java 8. If JAVA_HOME or PATH
+@rem points to a newer JDK, look for a conventional installed Java 8 JDK.
+set JAVA8_HOME=
+
+if defined ProgramFiles (
+    for /d %%D in ("%ProgramFiles%\Eclipse Adoptium\jdk-8*" "%ProgramFiles%\Java\jdk1.8*" "%ProgramFiles%\Java\jdk-8*" "%ProgramFiles%\Microsoft\jdk-8*") do (
+        if not defined JAVA8_HOME if exist "%%~fD\bin\java.exe" set JAVA8_HOME=%%~fD
+    )
+)
+
+if defined ProgramFiles(x86) if not defined JAVA8_HOME (
+    for /d %%D in ("%ProgramFiles(x86)%\Eclipse Adoptium\jdk-8*" "%ProgramFiles(x86)%\Java\jdk1.8*" "%ProgramFiles(x86)%\Java\jdk-8*") do (
+        if not defined JAVA8_HOME if exist "%%~fD\bin\java.exe" set JAVA8_HOME=%%~fD
+    )
+)
+
+if defined JAVA8_HOME (
+    set JAVA_HOME=%JAVA8_HOME%
+    set JAVA_EXE=%JAVA8_HOME%\bin\java.exe
+    echo Using Java 8: %JAVA8_HOME%
+    goto init
+)
+
 echo.
-echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+echo ERROR: This project requires Java 8, but no Java 8 JDK could be found.
 echo.
-echo Please set the JAVA_HOME variable in your environment to match the
-echo location of your Java installation.
+echo Install a Java 8 JDK or set JAVA_HOME to its installation directory.
 
 goto fail
 
@@ -35,15 +63,13 @@ goto fail
 set JAVA_HOME=%JAVA_HOME:"=%
 set JAVA_EXE=%JAVA_HOME%/bin/java.exe
 
-if exist "%JAVA_EXE%" goto init
+if not exist "%JAVA_EXE%" goto findJava8
 
-echo.
-echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%
-echo.
-echo Please set the JAVA_HOME variable in your environment to match the
-echo location of your Java installation.
+"%JAVA_EXE%" -version 2>&1 | findstr /C:"1.8" >NUL
+if "%ERRORLEVEL%" == "0" goto init
 
-goto fail
+echo JAVA_HOME points to a non-Java-8 JDK: %JAVA_HOME%
+goto findJava8
 
 :init
 @rem Get command-line arguments, handling Windowz variants
